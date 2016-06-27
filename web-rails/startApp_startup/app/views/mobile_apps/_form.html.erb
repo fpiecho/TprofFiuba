@@ -29,6 +29,13 @@
     </div>
     <%=f.error_span(:description) %>
   </div>
+  <div class="form-group">
+    <%= f.label :apptype, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.select :apptype, ['Tabs','SideMenu','Blank'], :selected => 'Tabs' %>
+    </div>
+    <%=f.error_span(:apptype) %>
+  </div>
 
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">

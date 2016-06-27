@@ -28,7 +28,12 @@ class MobileAppsController < ApplicationController
 
     respond_to do |format|
       if @mobile_app.save
-        format.html { redirect_to @mobile_app, notice: 'Mobile app was successfully created.' }
+        name = @mobile_app.title;
+        appsPath = Rails.root.join('mobileApps');
+        appType = @mobile_app.apptype;
+        %x[cd #{appsPath} && ionic start #{name} #{appType}]
+        appPath = appsPath.join(name)
+        format.html { redirect_to @mobile_app, notice: 'Mobile app ' + name +' was successfully created.' }
         format.json { render :show, status: :created, location: @mobile_app }
       else
         format.html { render :new }
@@ -69,6 +74,6 @@ class MobileAppsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def mobile_app_params
-      params.require(:mobile_app).permit(:title, :description)
+      params.require(:mobile_app).permit(:title, :description, :apptype)
     end
 end

@@ -8,6 +8,8 @@
   <dd><%= @mobile_app.title %></dd>
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @mobile_app.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:apptype) %>:</strong></dt>
+  <dd><%= @mobile_app.apptype %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

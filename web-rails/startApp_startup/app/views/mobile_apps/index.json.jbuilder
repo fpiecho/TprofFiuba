@@ -1,4 +1,4 @@
 json.array!(@mobile_apps) do |mobile_app|
-  json.extract! mobile_app, :id, :title, :description
+  json.extract! mobile_app, :id, :title, :description, :apptype
   json.url mobile_app_url(mobile_app, format: :json)
 end
