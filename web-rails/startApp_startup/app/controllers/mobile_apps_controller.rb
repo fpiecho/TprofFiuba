@@ -27,17 +27,22 @@ class MobileAppsController < ApplicationController
     @mobile_app = MobileApp.new(mobile_app_params)
 
     respond_to do |format|
-      if @mobile_app.save
-        name = @mobile_app.title;
-        appsPath = Rails.root.join('mobileApps');
-        appType = @mobile_app.apptype;
-        %x[cd #{appsPath} && ionic start #{name} #{appType}]
-        appPath = appsPath.join(name)
-        format.html { redirect_to @mobile_app, notice: 'Mobile app ' + name +' was successfully created.' }
-        format.json { render :show, status: :created, location: @mobile_app }
-      else
-        format.html { render :new }
-        format.json { render json: @mobile_app.errors, status: :unprocessable_entity }
+      if !mobile_app_params[:title].blank?
+        if @mobile_app.save
+          name = @mobile_app.title;
+          appsPath = Rails.root.join('mobileApps');
+          appType = @mobile_app.apptype.downcase;
+          appPath = appsPath.join(name);
+          %x[cd #{appsPath} && ionic start #{name} #{appType}]
+          %x[cd #{appPath} && ionic platform add android]
+
+          system("cd #{appPath} && ionic serve --nobrowser --address localhost &");
+          format.html { redirect_to @mobile_app, notice: 'Mobile app ' + name +' was successfully created.' }
+          format.json { render :show, status: :created, location: @mobile_app }
+        else
+          format.html { render :new }
+          format.json { render json: @mobile_app.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
