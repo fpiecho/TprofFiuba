@@ -14,3 +14,96 @@
  *= require_tree .
  *= require_self
  */
+
+
+html, body {
+    height: 100%;
+    background-image: url("prueba1.jpg");
+	background-size: 100% 100%;
+}
+
+/* Genericos */
+
+h2{
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+/* Header */
+.navbarCustom{
+	margin-bottom: 0px;
+}
+
+/* Content */
+
+.mainContainerCustom{
+	margin: 0px;
+    width: 100%;
+    max-height: auto 100%;
+}
+
+
+/* Login */
+
+.mainLoginContainer{
+	width:100%;
+	height: 500px;
+	text-align: center;
+	padding-top: 50px;
+}
+
+.cellPhoneContainer{
+	width: 22%;
+	height: 90%;
+	background-image: url("smartphone.png");
+	background-size: 100% 100%;
+	padding: 52px 21px 37px 20px;
+	text-align: center;
+    display: inline-block;
+}
+
+.loginContent{
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	background-color: #E2E2E2;
+}
+
+.loginContent .textInput{
+	width: 90%;
+	padding: 3px 5px;
+}
+
+.rememberContainer{
+	text-align: left;
+	width: 90%;
+	display: inline-block;
+}
+.rememberContainer label{
+	font-weight: normal;
+}
+
+.loginContent .completeButton{
+	width: 90%;
+	background-color: #325A9A;
+	color: white;
+	padding: 6px 0px;
+    font-weight: bold;
+    border: 1px solid black;
+    border-style: outset;
+}
+
+.optionContainer{
+	width: 90%;
+    text-align: left;
+    display: inline-block;
+    margin-top: 5px;
+}
+.optionContainer a:hover{
+	background-color: transparent;
+	text-decoration: underline;
+	color: #000;
+}
+.optionContainer a:visited{
+	color: #000;
+}
