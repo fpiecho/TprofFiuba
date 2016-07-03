@@ -1,1 +1,1 @@
-json.extract! @mobile_app, :id, :title, :description, :created_at, :updated_at
+json.extract! @mobile_app, :id, :title, :description, :apptype, :created_at, :updated_at

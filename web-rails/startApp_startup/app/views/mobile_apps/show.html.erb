@@ -8,7 +8,11 @@
   <dd><%= @mobile_app.title %></dd>
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @mobile_app.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:apptype) %>:</strong></dt>
+  <dd><%= @mobile_app.apptype %></dd>
 </dl>
+<center><iframe src="http://localhost:8100" height="500px"></iframe></center>
+<br><br>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               mobile_apps_path, :class => 'btn btn-default'  %>
