@@ -1,16 +1,21 @@
-<h2>Forgot your password?</h2>
+<div class="mainLoginContainer">
+  <div class="cellPhoneContainer">
+    <div class="loginHeadContent"><div><%= Time.zone.now.to_s(:time) %></div></div>
+    <div class="loginContent">
+      <h2>Recuperar Contraseña</h2>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= devise_error_messages! %>
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <%= devise_error_messages! %>
+        <div class="field">
+          <%= f.email_field :email, placeholder: "Email", :class => "textInput", autofocus: true %>
+        </div>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
+        <div class="actions">
+          <%= f.submit "ENVIAR INSTRUCCIONES", :class => "completeButton" %>
+        </div>
+      <% end %>
+      
+      <%= render "users/shared/links" %>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
