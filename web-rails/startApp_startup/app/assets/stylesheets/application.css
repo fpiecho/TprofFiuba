@@ -29,9 +29,15 @@ h2{
 	margin-bottom: 15px;
 }
 
+
 /* Header */
 .navbarCustom{
 	margin-bottom: 0px;
+	background-color: #E2E2E2;
+}
+
+.navbarCustom .container{
+	margin-left: 0px;
 }
 
 /* Content */
@@ -53,14 +59,30 @@ h2{
 }
 
 .cellPhoneContainer{
-	width: 22%;
+	width: 240px;
 	height: 90%;
 	background-image: url("smartphone.png");
 	background-size: 100% 100%;
-	padding: 52px 21px 37px 20px;
+	padding: 37px 18px 52px 18px;
 	text-align: center;
     display: inline-block;
 }
+
+.loginHeadContent{
+    height: 15px;
+    width: 100%;
+    position: relative;
+}
+.loginHeadContent >div{
+	position: absolute;
+    right: 0px;
+    background-color: #494949;
+    width: 18%;
+    line-height: 15px;
+    font-size: 10px;
+    color: white;
+}
+
 
 .loginContent{
 	width: 100%;

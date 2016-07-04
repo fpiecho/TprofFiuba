@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   
   resources :mobile_apps
-  devise_for :users, controllers: { sessions: 'users/sessions' }
+  devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations' }
   
 
   get 'welcome/index'
