@@ -20,7 +20,7 @@
         <td><%= mobile_app.title %></td>
         <td><%= mobile_app.description %></td>
         <td><%= mobile_app.apptype %></td>
-        <td><%=l mobile_app.created_at %></td>
+        <td><%= mobile_app.created_at %></td>
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
                       mobile_app_path(mobile_app), :class => 'btn btn-default btn-xs' %>
