@@ -5,7 +5,7 @@ class MobileAppsController < ApplicationController
   # GET /mobile_apps
   # GET /mobile_apps.json
   def index
-    @mobile_apps = MobileApp.all
+    @mobile_apps = current_user.mobile_apps
   end
 
   # GET /mobile_apps/1
@@ -29,6 +29,7 @@ class MobileAppsController < ApplicationController
 
     respond_to do |format|
       if !mobile_app_params[:title].blank?
+        @mobile_app.user_id = current_user.id
         if @mobile_app.save
           name = @mobile_app.title;
           appsPath = Rails.root.join('mobileApps');
@@ -52,12 +53,14 @@ class MobileAppsController < ApplicationController
   # PATCH/PUT /mobile_apps/1.json
   def update
     respond_to do |format|
-      if @mobile_app.update(mobile_app_params)
-        format.html { redirect_to @mobile_app, notice: 'Mobile app was successfully updated.' }
-        format.json { render :show, status: :ok, location: @mobile_app }
-      else
-        format.html { render :edit }
-        format.json { render json: @mobile_app.errors, status: :unprocessable_entity }
+      if(@mobile_app.user_id.equal? current_user.id)
+        if @mobile_app.update(mobile_app_params)
+          format.html { redirect_to @mobile_app, notice: 'Mobile app was successfully updated.' }
+          format.json { render :show, status: :ok, location: @mobile_app }
+        else
+          format.html { render :edit }
+          format.json { render json: @mobile_app.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -65,10 +68,15 @@ class MobileAppsController < ApplicationController
   # DELETE /mobile_apps/1
   # DELETE /mobile_apps/1.json
   def destroy
-    @mobile_app.destroy
-    respond_to do |format|
-      format.html { redirect_to mobile_apps_url, notice: 'Mobile app was successfully destroyed.' }
-      format.json { head :no_content }
+    if(@mobile_app.user_id.equal? current_user.id)
+      title = @mobile_app.title 
+      @mobile_app.destroy
+      appPath = Rails.root.join('mobileApps').join(title);
+      FileUtils.rm_rf(appPath)
+      respond_to do |format|
+        format.html { redirect_to mobile_apps_url, notice: 'Mobile app was successfully destroyed.' }
+        format.json { head :no_content }
+      end
     end
   end
 
