@@ -1,6 +1,13 @@
 class MobileAppsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_mobile_app, only: [:show, :edit, :update, :destroy]
+  before_filter :require_permission, only: [:edit, :show]
+
+  def require_permission
+    if current_user.id != MobileApp.find(params[:id]).user_id
+      redirect_to root_path
+    end
+  end
 
   # GET /mobile_apps
   # GET /mobile_apps.json
@@ -28,23 +35,23 @@ class MobileAppsController < ApplicationController
     @mobile_app = MobileApp.new(mobile_app_params)
 
     respond_to do |format|
-      if !mobile_app_params[:title].blank?
-        @mobile_app.user_id = current_user.id
-        if @mobile_app.save
-          name = @mobile_app.title;
-          appsPath = Rails.root.join('mobileApps');
-          appType = @mobile_app.apptype.downcase;
-          appPath = appsPath.join(name);
-          %x[cd #{appsPath} && ionic start #{name} #{appType}]
-          %x[cd #{appPath} && ionic platform add android]
+      @mobile_app.user_id = current_user.id
+      if @mobile_app.save
+        name = @mobile_app.title;
+        appsPath = Rails.root.join('mobileApps');
+        appType = @mobile_app.apptype.downcase;
+        userPath = appsPath.join(current_user.id.to_s)
+        FileUtils.mkdir_p(userPath) unless File.directory?(userPath)
+        appPath = userPath.join(name);
+        %x[cd #{userPath} && ionic start #{name} #{appType}]
+        %x[cd #{appPath} && ionic platform add android]
 
-          system("cd #{appPath} && ionic serve --nobrowser --address localhost &");
-          format.html { redirect_to @mobile_app, notice: 'Mobile app ' + name +' was successfully created.' }
-          format.json { render :show, status: :created, location: @mobile_app }
-        else
-          format.html { render :new }
-          format.json { render json: @mobile_app.errors, status: :unprocessable_entity }
-        end
+        system("cd #{appPath} && ionic serve --nobrowser --address localhost &");
+        format.html { redirect_to @mobile_app, notice: 'Mobile app ' + name +' was successfully created.' }
+        format.json { render :show, status: :created, location: @mobile_app }
+      else
+        format.html { render :new }
+        format.json { render json: @mobile_app.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -71,7 +78,7 @@ class MobileAppsController < ApplicationController
     if(@mobile_app.user_id.equal? current_user.id)
       title = @mobile_app.title 
       @mobile_app.destroy
-      appPath = Rails.root.join('mobileApps').join(title);
+      appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(title);
       FileUtils.rm_rf(appPath)
       respond_to do |format|
         format.html { redirect_to mobile_apps_url, notice: 'Mobile app was successfully destroyed.' }
