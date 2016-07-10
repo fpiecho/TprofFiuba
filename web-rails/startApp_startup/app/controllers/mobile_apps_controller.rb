@@ -18,6 +18,10 @@ class MobileAppsController < ApplicationController
   # GET /mobile_apps/1
   # GET /mobile_apps/1.json
   def show
+    appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
+    free_port = Selenium::WebDriver::PortProber.above(3000)       
+    system("cd #{appPath} && ionic serve -p #{free_port} --nobrowser --address localhost &");
+    @mobile_app.port = free_port.to_s
   end
 
   # GET /mobile_apps/new
@@ -43,10 +47,9 @@ class MobileAppsController < ApplicationController
         userPath = appsPath.join(current_user.id.to_s)
         FileUtils.mkdir_p(userPath) unless File.directory?(userPath)
         appPath = userPath.join(name);
-        %x[cd #{userPath} && ionic start #{name} #{appType}]
+        %x[cd #{userPath} && ionic start "#{name}" #{appType}]
         %x[cd #{appPath} && ionic platform add android]
 
-        system("cd #{appPath} && ionic serve --nobrowser --address localhost &");
         format.html { redirect_to @mobile_app, notice: 'Mobile app ' + name +' was successfully created.' }
         format.json { render :show, status: :created, location: @mobile_app }
       else

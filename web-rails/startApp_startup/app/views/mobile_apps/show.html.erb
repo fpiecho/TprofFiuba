@@ -11,7 +11,7 @@
   <dt><strong><%= model_class.human_attribute_name(:apptype) %>:</strong></dt>
   <dd><%= @mobile_app.apptype %></dd>
 </dl>
-<center><iframe src="http://localhost:8100" height="500px"></iframe></center>
+<center><iframe src="http://localhost:<%= @mobile_app.port %>" height="500px"></iframe></center>
 <br><br>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
