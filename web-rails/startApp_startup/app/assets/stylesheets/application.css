@@ -18,7 +18,7 @@
 
 html, body {
     height: 100%;
-    background-image: url("prueba1.jpg");
+    background-image: url("background.jpg");
 	background-size: 100% 100%;
 }
 
@@ -27,6 +27,13 @@ html, body {
 h2{
 	margin-top: 15px;
 	margin-bottom: 15px;
+}
+
+hr{
+	margin-top: 10px;
+    margin-bottom: 10px;
+    border: 0;
+    border-top: 1px solid #000000;
 }
 
 
@@ -60,10 +67,10 @@ h2{
 
 .cellPhoneContainer{
 	width: 240px;
-	height: 90%;
+	height: 93%;
 	background-image: url("smartphone.png");
 	background-size: 100% 100%;
-	padding: 37px 18px 52px 18px;
+	padding: 38px 18px 53px 18px;
 	text-align: center;
     display: inline-block;
 }
@@ -129,3 +136,21 @@ h2{
 .optionContainer a:visited{
 	color: #000;
 }
+
+.facebookLoginButton{
+	width: 90%;
+    height: 35px;
+    background-image: url("facebookLogin.png");
+    background-size: 100% 100%;
+    display: inline-block;
+    padding: 9px 1px 9px 20px;
+    color: #FFFFFF;
+
+}
+.facebookLoginButton:visited{
+	color: #FFFFFF;
+}
+.facebookLoginButton:hover{
+	color: #FFFFFF;
+	text-decoration: none;
+}	

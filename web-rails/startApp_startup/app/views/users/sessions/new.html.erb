@@ -28,6 +28,11 @@
       <% end %>
       
       <%= render "users/shared/links" %>
+
+      <hr/>
+      <div class="actions">
+        <%= link_to "Ingresar con facebook", user_omniauth_authorize_path(:facebook), :class => "facebookLoginButton" %>
+      </div>
     </div>
   </div>
 </div>
