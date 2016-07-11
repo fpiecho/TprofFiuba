@@ -1,0 +1,100 @@
+/* Stylesheet for user views */
+
+/* Login */
+
+.mainLoginContainer{
+	width:100%;
+	height: 500px;
+	text-align: center;
+	padding-top: 50px;
+}
+
+.cellPhoneContainer{
+	width: 240px;
+	height: 93%;
+	background-image: url("smartphone.png");
+	background-size: 100% 100%;
+	padding: 38px 18px 53px 18px;
+	text-align: center;
+    display: inline-block;
+}
+
+.loginHeadContent{
+    height: 15px;
+    width: 100%;
+    position: relative;
+}
+.loginHeadContent >div{
+	position: absolute;
+    right: 0px;
+    background-color: #494949;
+    width: 18%;
+    line-height: 15px;
+    font-size: 10px;
+    color: white;
+}
+
+
+.loginContent{
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	background-color: #E2E2E2;
+}
+
+.loginContent .textInput{
+	width: 90%;
+	padding: 3px 5px;
+}
+
+.rememberContainer{
+	text-align: left;
+	width: 90%;
+	display: inline-block;
+}
+.rememberContainer label{
+	font-weight: normal;
+}
+
+.loginContent .completeButton{
+	width: 90%;
+	background-color: #325A9A;
+	color: white;
+	padding: 6px 0px;
+    font-weight: bold;
+    border: 1px solid black;
+    border-style: outset;
+}
+
+.optionContainer{
+	width: 90%;
+    text-align: left;
+    display: inline-block;
+    margin-top: 5px;
+}
+.optionContainer a:hover{
+	background-color: transparent;
+	text-decoration: underline;
+	color: #000;
+}
+.optionContainer a:visited{
+	color: #000;
+}
+
+.facebookLoginButton{
+	width: 90%;
+    height: 35px;
+    background-image: url("facebookLogin.png");
+    background-size: 100% 100%;
+    display: inline-block;
+    padding: 9px 1px 9px 20px;
+    color: #FFFFFF;
+
+}
+.facebookLoginButton:visited{
+	color: #FFFFFF;
+}
+.facebookLoginButton:hover{
+	color: #FFFFFF;
+	text-decoration: none;
+}
