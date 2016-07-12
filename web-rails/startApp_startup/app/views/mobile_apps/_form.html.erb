@@ -32,7 +32,7 @@
   <div class="form-group">
     <%= f.label :apptype, :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
-      <%= f.select :apptype, ['Tabs','SideMenu','Blank'], :selected => 'Tabs' %>
+      <%= f.select :apptype, ['Tabs','SideMenu','Blank'], :selected => @mobile_app.apptype %>
     </div>
     <%=f.error_span(:apptype) %>
   </div>

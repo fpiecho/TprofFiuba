@@ -5,6 +5,7 @@ class MobileApp < ActiveRecord::Base
 
 	validate :user_app_title_used, :on => [ :create, :update ]
 	validate :freeze_title, :on => :update
+	validate :freeze_apptype, :on => :update
 
 
 	def user_app_title_used
@@ -18,5 +19,9 @@ class MobileApp < ActiveRecord::Base
     def freeze_title
     	errors.add(:title, " cannot be changed") if self.title_changed?
   	end
+
+	def freeze_apptype
+		errors.add(:apptype, " cannot be changed") if self.apptype_changed?
+	end
 
 end

@@ -19,8 +19,11 @@ class MobileAppsController < ApplicationController
   # GET /mobile_apps/1.json
   def show
     appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
-    free_port = Selenium::WebDriver::PortProber.above(3000)       
-    system("cd #{appPath} && ionic serve -p #{free_port} --nobrowser --address localhost &");
+    free_port = Selenium::WebDriver::PortProber.above(3000)
+    Thread.new {
+      system("cd #{appPath} && ionic serve -p #{free_port} --nobrowser --address localhost");
+    }
+    sleep 1.5
     @mobile_app.port = free_port.to_s
   end
 
