@@ -36,6 +36,22 @@ hr{
     border-top: 1px solid #000000;
 }
 
+/* Genericos de bootstrap*/
+
+.page-header{
+	margin: 20px 0px 20px;
+}
+
+.btn-primary, .btn-primary:visited{
+	color: #FFFFFF;
+}
+.btn-danger, .btn-danger:visited{
+	color: #FFFFFF;
+}
+.btn-default{
+	background-color: #FFFFFF;
+}
+
 
 /* Header */
 .navbarCustom{
@@ -55,3 +71,43 @@ hr{
     max-height: auto 100%;
 }
 
+
+/* Logged Content */
+
+.internalRow{
+	width: 100%;
+	display: inline-flex;
+}
+.internalContent{
+	margin: 20px auto;
+	padding: 10px;
+    width: 90%;
+    background-color: #e2e2e2;
+
+}
+
+/* Mobile apps (TODO: move to proper css file) */
+
+.appPreviewContainer{
+	width: 350px;
+    height: 639px;
+    background-image: url("smartphone.png");
+    background-size: 100% 100%;
+    padding: 59px 18px 53px 18px;
+    text-align: center;
+    display: inline-block;
+}
+.appPreviewHeadContent{
+    height: 22px;
+    width: 307px;
+    position: relative;
+}
+.appPreviewHeadContent >div{
+	position: absolute;
+    right: 0px;
+    background-color: #494949;
+    width: 18%;
+    line-height: 22px;
+    font-size: 13px;
+    color: white;
+}

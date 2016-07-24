@@ -3,6 +3,8 @@ class MobileAppsController < ApplicationController
   before_action :set_mobile_app, only: [:show, :edit, :update, :destroy]
   before_filter :require_permission, only: [:edit, :show]
 
+  layout "application_internal_styled"
+
   def require_permission
     if current_user.id != MobileApp.find(params[:id]).user_id
       redirect_to root_path

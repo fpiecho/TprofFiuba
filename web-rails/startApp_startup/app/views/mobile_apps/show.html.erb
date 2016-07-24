@@ -1,25 +1,29 @@
 <%- model_class = MobileApp -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h2>App Móvil</h2>
 </div>
 
 <dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:title) %>:</strong></dt>
+  <dt><strong><%= "Titulo:" %></strong></dt>
   <dd><%= @mobile_app.title %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dt><strong><%= "Descripción:" %></strong></dt>
   <dd><%= @mobile_app.description %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:apptype) %>:</strong></dt>
+  <dt><strong><%= "Tipo de aplicación:" %></strong></dt>
   <dd><%= @mobile_app.apptype %></dd>
 </dl>
-<center><iframe src="http://localhost:<%= @mobile_app.port %>" height="500px"></iframe></center>
+
+<center><div class="appPreviewContainer">
+  <div class="appPreviewHeadContent"><div><%= Time.zone.now.to_s(:time) %></div></div>
+  <iframe src="http://localhost:<%= @mobile_app.port %>" height="500px" width="300px"></iframe>
+<div></center>
 <br><br>
 
-<%= link_to t('.back', :default => t("helpers.links.back")),
+<%= link_to t('.back', :default => "Volver"),
               mobile_apps_path, :class => 'btn btn-default'  %>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
+<%= link_to t('.edit', :default => "Editar"),
               edit_mobile_app_path(@mobile_app), :class => 'btn btn-default' %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+<%= link_to t('.destroy', :default => "Eliminar"),
               mobile_app_path(@mobile_app),
               :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "¿Estas seguro?")) },
               :class => 'btn btn-danger' %>
