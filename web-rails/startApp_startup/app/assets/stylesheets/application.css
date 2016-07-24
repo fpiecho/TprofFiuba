@@ -53,6 +53,15 @@ hr{
 }
 
 
+.alert{
+	position: absolute;
+    top: 50px;
+    left: 2.5%;
+    width: 95%;
+    z-index: 1002;
+}
+
+
 /* Header */
 .navbarCustom{
 	margin-bottom: 0px;
@@ -61,6 +70,11 @@ hr{
 
 .navbarCustom .container{
 	margin-left: 0px;
+}
+
+.navbarCustom .userMenu{
+	position: absolute;
+	right: 5px;
 }
 
 /* Content */

@@ -51,7 +51,14 @@
             <% if user_signed_in? %>
               <li><%= link_to "Mis apps", mobile_apps_path %><li>
               <li class="divider"></li>
-              <li><%= link_to "Salir", destroy_user_session_path, :method => :delete  %></li>
+              <li class="dropdown userMenu">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= current_user.email %>
+                <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><%= link_to "Cambiar contraseña", edit_user_registration_path %></li>
+                  <li><%= link_to "Salir", destroy_user_session_path, :method => :delete  %></li>
+                </ul>
+              </li>
             <% else %>
               <li><%= link_to "Ingresar", new_user_session_path %></li>
             <% end %>
@@ -62,8 +69,8 @@
 
     <div class="mainContainerCustom container">
       <div class="row internalRow">
+        <%= bootstrap_flash %>
         <div class="col-lg-12 internalContent">
-          <%= bootstrap_flash %>
           <%= yield %>
         </div>
       </div><!--/row-->
