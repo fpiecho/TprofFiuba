@@ -16,21 +16,21 @@
   <% end %>
 
   <div class="form-group">
-    <%= f.label :title, :class => 'control-label col-lg-2' %>
+    <%= f.label :title, "Título", :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
     <%=f.error_span(:title) %>
   </div>
   <div class="form-group">
-    <%= f.label :description, :class => 'control-label col-lg-2' %>
+    <%= f.label :description, "Descripción", :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
       <%= f.text_field :description, :class => 'form-control' %>
     </div>
     <%=f.error_span(:description) %>
   </div>
   <div class="form-group">
-    <%= f.label :apptype, :class => 'control-label col-lg-2' %>
+    <%= f.label :apptype, "Tipo de aplicación", :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
       <%= f.select :apptype, ['Tabs','SideMenu','Blank'], :selected => @mobile_app.apptype %>
     </div>
@@ -39,8 +39,8 @@
 
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">
-      <%= f.submit nil, :class => 'btn btn-primary' %>
-      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+      <%= f.submit "Guardar", :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => "Cancelar"),
                 mobile_apps_path, :class => 'btn btn-default' %>
     </div>
   </div>
