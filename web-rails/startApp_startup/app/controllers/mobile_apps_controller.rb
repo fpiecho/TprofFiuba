@@ -1,6 +1,6 @@
 class MobileAppsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_mobile_app, only: [:show, :edit, :update, :destroy]
+  before_action :set_mobile_app, only: [:show, :edit, :update, :destroy, :build]
   before_filter :require_permission, only: [:edit, :show]
 
   layout "application_internal_styled"
@@ -94,6 +94,23 @@ class MobileAppsController < ApplicationController
       end
     end
   end
+
+
+  # GET /mobile_apps/build/1
+  def build
+    if(@mobile_app.user_id.equal? current_user.id)
+      appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
+      keyPath = Rails.root.join('release-key.keystore')
+      apkPath = appPath.join('platforms/android/build/outputs/apk/android-release-unsigned.apk');
+        system("cd #{appPath} && cordova build --release android");
+        system("cd #{appPath} && jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore #{keyPath} -storepass 123123 -keypass 123123 #{apkPath} appready");
+      send_file apkPath, :x_sendfile=>true
+    end
+  end
+
+
+
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

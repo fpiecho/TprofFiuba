@@ -51,6 +51,13 @@ hr{
 .btn-default{
 	background-color: #FFFFFF;
 }
+.btn-build{
+	background-color: #00DD00;
+}
+.btn-build:hover{
+	background-color: #00BB00;
+}
+
 
 
 .alert{
