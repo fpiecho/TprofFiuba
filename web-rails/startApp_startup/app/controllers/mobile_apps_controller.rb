@@ -1,6 +1,6 @@
 class MobileAppsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_mobile_app, only: [:show, :edit, :update, :destroy, :build]
+  before_action :set_mobile_app, only: [:show, :edit, :update, :destroy, :build, :new_page, :set_content]
   before_filter :require_permission, only: [:edit, :show]
 
   layout "application_internal_styled"
@@ -23,9 +23,9 @@ class MobileAppsController < ApplicationController
     appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
     free_port = Selenium::WebDriver::PortProber.above(3000)
     Thread.new {
-      system("cd #{appPath} && ionic serve -p #{free_port} --nobrowser --address localhost");
+      system("cd \"#{appPath}\"  && ionic serve -p #{free_port} --nobrowser --address localhost");
     }
-    sleep 1.5
+    sleep 25
     @mobile_app.port = free_port.to_s
   end
 
@@ -52,8 +52,8 @@ class MobileAppsController < ApplicationController
         userPath = appsPath.join(current_user.id.to_s)
         FileUtils.mkdir_p(userPath) unless File.directory?(userPath)
         appPath = userPath.join(name);
-        %x[cd #{userPath} && ionic start "#{name}" #{appType}]
-        %x[cd #{appPath} && ionic platform add android]
+        %x[cd #{userPath} && ionic start "#{name}" #{appType} --v2]
+        %x[cd \"#{appPath}\" && ionic platform add android]
 
         format.html { redirect_to @mobile_app, notice: 'Mobile app ' + name +' was successfully created.' }
         format.json { render :show, status: :created, location: @mobile_app }
@@ -102,11 +102,58 @@ class MobileAppsController < ApplicationController
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
       keyPath = Rails.root.join('release-key.keystore')
       apkPath = appPath.join('platforms/android/build/outputs/apk/android-release-unsigned.apk');
-        system("cd #{appPath} && cordova build --release android");
-        system("cd #{appPath} && jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore #{keyPath} -storepass 123123 -keypass 123123 #{apkPath} appready");
+        system("cd \"#{appPath}\" && cordova build --release android");
+        system("cd \"#{appPath}\" && jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore #{keyPath} -storepass 123123 -keypass 123123 #{apkPath} appready");
       send_file apkPath, :x_sendfile=>true
     end
   end
+
+
+  #POST /mobile_apps/pages/:id/:name
+  def new_page
+    if(@mobile_app.user_id.equal? current_user.id)
+      name = params[:name]
+      appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
+      tabPath = appPath.join('app').join('pages').join(name)
+      if (File.directory?(tabPath))
+        respond_to do |format|
+          format.html { redirect_to @mobile_app, notice: 'Page already created.' }
+          format.json { render :show, status: :created, location: @mobile_app }
+        end
+      else
+        MobileAppsHelper.new_page(appPath, name, @mobile_app.apptype)
+        respond_to do |format|
+          format.html { redirect_to @mobile_app, notice: 'Page ' + name +' was successfully created.' }
+          format.json { render :show, status: :created, location: @mobile_app }
+        end
+      end
+    end
+  end
+
+
+  #POST /mobile_apps/content/:id/:name
+  def set_content
+    if(@mobile_app.user_id.equal? current_user.id)
+      name = params[:name]
+      content = params[:content]
+      appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
+      tabPath = appPath.join('app').join('pages').join(name).join(name + '.html')
+      if (File.exist?(tabPath))
+        MobileAppsHelper.set_content(appPath, name, content)
+        respond_to do |format|
+          format.html { redirect_to @mobile_app, notice: 'Tab ' + name +' was successfully edited.' }
+          format.json { render :show, status: :created, location: @mobile_app }
+        end
+        
+      else
+        respond_to do |format|
+          format.html { redirect_to @mobile_app, notice: 'Tab does not exist.' }
+          format.json { render :show, status: :created, location: @mobile_app }
+        end        
+      end
+    end
+  end
+
 
 
 

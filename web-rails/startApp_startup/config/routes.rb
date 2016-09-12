@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   get 'welcome/index'
   match '/mobile_apps/build/:id', to: 'mobile_apps#build', as: 'build', :via => [:get,:post], :as => :mobile_apps_build
+  match '/mobile_apps/pages/:id/:name', to: 'mobile_apps#new_page', as: 'new_tab', :via => [:get,:post], :as => :mobile_apps_new_page
+  match '/mobile_apps/content/:id/:name', to: 'mobile_apps#set_content', as: 'set_content', :via => [:get,:post], :as => :mobile_apps_set_content
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
