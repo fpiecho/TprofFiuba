@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :mobile_app_screens
   resources :mobile_apps
   devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations', 
                                     passwords: 'users/passwords',
@@ -8,6 +9,8 @@ Rails.application.routes.draw do
 
   get 'welcome/index'
   match '/mobile_apps/build/:id', to: 'mobile_apps#build', as: 'build', :via => [:get,:post], :as => :mobile_apps_build
+
+  match '/mobile_apps/menu/:id', to: 'mobile_apps#menu', as: 'menu', :via => [:get,:post], :as => :mobile_apps_menu
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -20,6 +20,9 @@
         <td><%= mobile_app.apptype %></td>
         <td><%= mobile_app.created_at.strftime("%d/%m/%Y") %></td>
         <td>
+          <%= link_to t('.screen', :default => "Pantallas"),
+                      mobile_apps_menu_path(mobile_app), :class => 'btn btn-default btn-xs' %>
+
           <%= link_to t('.show', :default => "Ver"),
                       mobile_app_path(mobile_app), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.edit', :default => "Editar"),

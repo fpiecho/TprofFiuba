@@ -64,6 +64,17 @@ class MobileAppsController < ApplicationController
     end
   end
 
+  def menu
+    # Por ahora redirige a las pantallas, pero en el futuro crearia un menu que seria como el "tablero" de la app, 
+    #y desde ahi voy a las diferentes opciones
+    if (params[:id])
+      session[:mobile_app_current_id] = params[:id]  
+      redirect_to mobile_app_screens_path
+    else
+      redirect_to mobile_apps_path, notice: 'Debes seleccionar una aplicación.'
+    end
+  end
+
   # PATCH/PUT /mobile_apps/1
   # PATCH/PUT /mobile_apps/1.json
   def update

@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160710062301) do
+ActiveRecord::Schema.define(version: 20160911030300) do
+
+  create_table "mobile_app_screens", force: :cascade do |t|
+    t.string   "mobile_app"
+    t.string   "name"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "mobile_app_id"
+    t.text     "raw_html"
+    t.text     "editor_html"
+  end
+
+  add_index "mobile_app_screens", ["mobile_app_id"], name: "index_mobile_app_screens_on_mobile_app_id"
 
   create_table "mobile_apps", force: :cascade do |t|
     t.string   "title"
