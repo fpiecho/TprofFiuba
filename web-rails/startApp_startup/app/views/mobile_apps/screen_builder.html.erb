@@ -1,0 +1,46 @@
+<%- model_class = MobileApp -%>
+<div class="page-header">
+  <h2>Edición de la App</h2>
+</div>
+<%= form_for @mobile_app, :html => { :class => "form-horizontal mobile_app" } do |f| %>
+
+  <% if @mobile_app.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@mobile_app.errors.count, "error") %> prohibited this mobile_app from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @mobile_app.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :title, "Título", :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:title) %>
+  </div>
+  
+
+  <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-10">
+      <%= f.submit "Guardar", :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => "Cancelar"),
+                mobile_apps_path, :class => 'btn btn-default' %>
+    </div>
+  </div>
+
+<% end %>
+
+<% 
+#Necesito crear un modelo que represente UNA pantalla (despues esa pantalla se mapea a un archivo html que va a ir a parar al directorio de ionic)
+#Pertenecen a una mobileApp, ver como se traduce esto para ionic (una carpeta por pantalla parece)
+
+%>
+

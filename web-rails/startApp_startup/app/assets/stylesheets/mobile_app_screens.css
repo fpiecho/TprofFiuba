@@ -1,0 +1,76 @@
+/* Stylesheet for mobile app screen views */
+
+/* Creator */
+
+.build-screen-section-title{
+	margin: 10px 0;
+	font-size: 15px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.build-screen-container{
+	width:100%;
+	height:100%;
+	display:inline-flex;
+	position: relative;
+}
+
+.build-screen-elem-options-container{
+	width:25%;
+}
+.build-screen-elem-options{
+	height:390px;
+	background-color: #CCCCCC;
+}
+
+.build-screen-area{
+	width:257px;
+	height:390px;
+	margin-left: 3px;
+	background-color: #AAAAAA;
+}
+
+.build-screen-buttons-options-container{
+	width:25%;
+	position: absolute;
+	right: 0px;
+}
+.build-screen-buttons-container{
+	height: 300px;
+	background-color: #666666;
+}
+.build-screen-button-div{
+	width:100%;
+	height:50px;
+	background-color: #EEEEEE;
+	padding-left:5px;
+	cursor: pointer;
+}
+
+
+
+.screenEditionContainer{
+	width: 300px;
+    height: 500px;
+    background-image: url("smartphone.png");
+    background-size: 100% 100%;
+    padding: 46px 18px 53px 18px;
+    text-align: center;
+    display: inline-block;
+    margin: auto;
+}
+.screenEditionHeadContent{
+    height: 18px;
+    width: 260px;
+    position: relative;
+}
+.screenEditionHeadContent >div{
+	position: absolute;
+    right: 0px;
+    background-color: #494949;
+    width: 18%;
+    line-height: 18px;
+    font-size: 13px;
+    color: white;
+}

@@ -1,0 +1,46 @@
+<%= form_for(@mobile_app_screen) do |f| %>
+  <% if @mobile_app_screen.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@mobile_app_screen.errors.count, "error") %> prohibited this mobile_app_screen from being saved:</h2>
+
+      <ul>
+      <% @mobile_app_screen.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= params[:mobile_app] %>
+    <%= hidden_field_tag(:mobile_app, params[:mobile_app]) %>
+  </div>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+
+
+  <%= render 'creator' %>
+  <%= hidden_field_tag(:raw_html, "", :id => "raw-html-input") %>
+  <%= hidden_field_tag(:editor_html, "", :id => "editor-html-input") %>
+
+  <div class="form-group">
+    <div class="col-lg-10">
+      <%= submit_tag "Guardar", :id => "save_mobile_app_screen", :class => "btn btn-primary", :onclick => "saveHtmlValues();" %>
+      <%= link_to t('.cancel', :default => "Cancelar"),
+                mobile_app_screens_path, :class => 'btn btn-default' %>
+    </div>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  
+    //Antes de hacer el submit guardo el html generado en el input
+  
+    function saveHtmlValues(){
+      $("#raw-html-input").val($("#build-screen-area").html());
+      $("#editor-html-input").val($("#build-screen-elem-options").html());
+    }
+  
+</script>

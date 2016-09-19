@@ -1,0 +1,59 @@
+
+<div class="build-screen-container">
+	<div class="build-screen-elem-options-container">
+		<div class="build-screen-section-title">Constructor</div>
+		<div id="build-screen-elem-options" class="build-screen-elem-options">
+			<%= @mobile_app_screen.editor_html.html_safe if @mobile_app_screen.editor_html %>
+		</div>
+	</div>
+
+	<center><div class="screenEditionContainer">
+  	  <div class="screenEditionHeadContent"><div><%= Time.zone.now.to_s(:time) %></div></div>
+  	  <div id="build-screen-area" class="build-screen-area">
+	    <%= @mobile_app_screen.raw_html.html_safe if @mobile_app_screen.raw_html %>
+	  </div>
+	<div></center>
+
+	<div class="build-screen-buttons-options-container">
+		<div class="build-screen-section-title">Herramientas</div>
+		<div class="build-screen-buttons-container">
+			<div id="div-button" class="build-screen-button-div tooltipCustom" onclick="addPanelElement()">
+				<span style="margin: auto 0px;line-height:15px;">Contenedor</span>
+				<span class="tooltiptext">Agregar</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	function deleteElem(elemId, elemEditorId){
+		$("#"+elemId).remove();
+		$("#"+elemEditorId).remove();
+	}
+
+	function addPanelElement(){
+		biggerDivIndex = -1;
+		//Busco el idx del div mayor asi me aseguro de no repetir ids
+		$('#build-screen-area .builder-elem-div').each(function(){
+			elemId = $(this).attr('id');
+			elemNumber = parseInt(elemId.replace("builder-div-",""));
+			if(elemNumber > biggerDivIndex){
+				biggerDivIndex = elemNumber;
+			}
+		});
+		biggerDivIndex++;
+
+		elementId = "builder-div-" + biggerDivIndex;
+		elem = '<div id="' + elementId + '" class="builder-elem-div" style="width:100%; height:10%; background-color: #0000DD; border:1px solid black;"></div>';
+		$("#build-screen-area").append(elem);
+
+		elementEditorId = "builder-editor-div-" + biggerDivIndex;
+		elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" style="width:100%; height:10%; background-color: #E2E2E2; border:1px solid black; text-align:right; display:inline-flex;">Contenedor'
+			elemEditor += '<div class="deleteButton" style="width:20px;cursor:pointer;" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">X</div>';
+		elemEditor += '</div>';
+		$("#build-screen-elem-options").append(elemEditor);
+
+		//podria tener en el editor, un elemento que tenga los atributos que se van seteando, width:100%;color:red;...etc y parseo por el punto y coma. El atributo que no esta, tiene que tener el valor default (nunca se seteo)
+	}
+</script>
