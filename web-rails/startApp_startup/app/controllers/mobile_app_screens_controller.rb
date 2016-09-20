@@ -5,7 +5,7 @@ class MobileAppScreensController < ApplicationController
   # GET /mobile_app_screens
   # GET /mobile_app_screens.json
   def index
-    @mobile_app_screens = MobileAppScreen.all
+    @mobile_app_screens = MobileAppScreen.where(mobile_app: @mobile_app)
   end
 
   # GET /mobile_app_screens/1
@@ -102,7 +102,7 @@ class MobileAppScreensController < ApplicationController
         end
       end
                   
-      redirect_to mobile_apps_path, notice: 'Debes seleccionar una aplicación.'
+      redirect_to mobile_apps_path, alert: 'Debes seleccionar una aplicación.'
     end
 
 end

@@ -71,7 +71,7 @@ class MobileAppsController < ApplicationController
       session[:mobile_app_current_id] = params[:id]  
       redirect_to mobile_app_screens_path
     else
-      redirect_to mobile_apps_path, notice: 'Debes seleccionar una aplicación.'
+      redirect_to mobile_apps_path, alert: 'Debes seleccionar una aplicación.'
     end
   end
 
