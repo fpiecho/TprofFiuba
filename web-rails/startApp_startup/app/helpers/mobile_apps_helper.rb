@@ -1,4 +1,41 @@
 module MobileAppsHelper
+
+	def self.create_app(name, userPath, appType)
+		FileUtils.mkdir_p(userPath) unless File.directory?(userPath)
+        appPath = userPath.join(name);
+        modelName = get_model_name(appType);
+        modelPath = Rails.root.join('modelos').join(modelName);
+        FileUtils.cp_r modelPath, appPath
+        replace_on_app_creation(appPath, name, modelName);
+
+	end
+
+	def self.replace_on_app_creation(appPath, appName, modelName)
+		replace(appPath.join('package.json'), modelName) { |match| appName }
+		replace(appPath.join('ionic.config.json'), modelName) { |match| appName }
+		replace(appPath.join('config.xml'), modelName) { |match| appName }
+		replace(appPath.join('plugins/android.json'), modelName) { |match| appName }
+		replace(appPath.join('platforms/android/AndroidManifest.xml'), modelName) { |match| appName }
+		replace(appPath.join('platforms/android/android.json'), modelName) { |match| appName }
+		replace(appPath.join('platforms/android/res/values/strings.xml'), modelName) { |match| appName }
+		replace(appPath.join('platforms/android/res/xml/config.xml'), modelName) { |match| appName }
+
+		androidDirectory = appPath.join('platforms/android/src/com/ionicframework')
+		oldDirectory = Dir.entries(androidDirectory).sort_by {|x| x.length}.last()
+		number = /\d+/.match(oldDirectory)[0]
+		FileUtils.mv androidDirectory.join(oldDirectory), androidDirectory.join(appName + number)
+
+		replace(androidDirectory.join(appName + number).join('MainActivity.java'), modelName) { |match| appName }
+	end
+
+	def self.get_model_name(appType)
+		if(appType == 'tabs')
+			return 'moldet'
+		else
+			return 'moldes'
+		end
+	end
+
 	def self.new_page(appPath, tabName, appType)
 		system("cd \"#{appPath}\" && ionic g page \"#{tabName}\"");
 
@@ -7,8 +44,6 @@ module MobileAppsHelper
 		else
 			new_menu_page(appPath, tabName)
 		end
-		
-
 	end
 
 	def self.new_menu_page(appPath, tabName)
@@ -29,7 +64,6 @@ module MobileAppsHelper
   			f << importCore
 		end
 
-
 		#tabs.html
 		tabsPath = appPath.join('app').join('pages').join('tabs').join('tabs.html')
 		tabLine = '<ion-tab [root]="tab' + tabName + '" tabTitle="' + tabName +'" tabIcon="' + tabName + '"></ion-tab>' + "\n"
@@ -44,12 +78,32 @@ module MobileAppsHelper
 	end
 
 	def self.replace(filepath, regexp, *args, &block)
-	  content = File.read(filepath).gsub(regexp, *args, &block)
-	  File.open(filepath, 'wb') { |file| file.write(content) }
+		content = File.read(filepath).gsub(regexp, *args, &block)
+		File.open(filepath, 'wb') { |file| file.write(content) }
 	end
 
 	def self.set_content(appPath, tabName, content)
 		tabPath = appPath.join('app').join('pages').join(tabName).join(tabName + '.html')
 		replace(tabPath, /<ion-content padding>\n(.*\n)*<\/ion-content>/) { |match| "<ion-content padding>" + "\n" + content + "\n" + "</ion-content>"}
+	end
+
+
+	def self.delete_page(appPath, tabName, appType)
+		FileUtils.rm_rf(appPath.join('app').join('pages').join(tabName))
+
+		if (appType == 'Tabs')
+			delete_tab(appPath, tabName)
+		else
+			delete_menu_page(appPath, tabName)
+		end
+	end
+
+	def self.delete_menu_page(appPath, tabName)
+		#app.ts
+		tabsTsPath = appPath.join('app').join('app.ts')
+		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
+		replace(tabsTsPath, "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" "\n" ) { |match| '' }
+		replace(tabsTsPath, ",[]*{ title: '" + tabName + "', component: " + tabNameForPage + "Page }" + "\n") { |match|  }
+
 	end
 end

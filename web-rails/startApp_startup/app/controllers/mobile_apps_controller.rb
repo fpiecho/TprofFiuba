@@ -25,7 +25,7 @@ class MobileAppsController < ApplicationController
     Thread.new {
       system("cd \"#{appPath}\"  && ionic serve -p #{free_port} --nobrowser --address localhost");
     }
-    sleep 25
+    sleep 20
     @mobile_app.port = free_port.to_s
   end
 
@@ -47,13 +47,9 @@ class MobileAppsController < ApplicationController
       @mobile_app.user_id = current_user.id
       if @mobile_app.save
         name = @mobile_app.title;
-        appsPath = Rails.root.join('mobileApps');
         appType = @mobile_app.apptype.downcase;
-        userPath = appsPath.join(current_user.id.to_s)
-        FileUtils.mkdir_p(userPath) unless File.directory?(userPath)
-        appPath = userPath.join(name);
-        %x[cd #{userPath} && ionic start "#{name}" #{appType} --v2]
-        %x[cd \"#{appPath}\" && ionic platform add android]
+        userPath = Rails.root.join('mobileApps').join(current_user.id.to_s)
+        MobileAppsHelper.create_app(name, userPath, appType)
 
         format.html { redirect_to @mobile_app, notice: 'Mobile app ' + name +' was successfully created.' }
         format.json { render :show, status: :created, location: @mobile_app }
@@ -135,6 +131,27 @@ class MobileAppsController < ApplicationController
         MobileAppsHelper.new_page(appPath, name, @mobile_app.apptype)
         respond_to do |format|
           format.html { redirect_to @mobile_app, notice: 'Page ' + name +' was successfully created.' }
+          format.json { render :show, status: :created, location: @mobile_app }
+        end
+      end
+    end
+  end
+
+  #DELETE /mobile_apps/pages/:id/:name
+  def delete_page
+    if(@mobile_app.user_id.equal? current_user.id)
+      name = params[:name]
+      appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
+      tabPath = appPath.join('app').join('pages').join(name)
+      if (File.directory?(tabPath))
+        MobileAppsHelper.delete_page(appPath, name, @mobile_app.apptype)
+        respond_to do |format|
+          format.html { redirect_to @mobile_app, notice: 'Page deleted.' }
+          format.json { render :show, status: :created, location: @mobile_app }
+        end
+      else
+        respond_to do |format|
+          format.html { redirect_to @mobile_app, notice: 'Page ' + name +' does not exist' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
       end
