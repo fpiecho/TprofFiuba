@@ -1,4 +1,24 @@
 
+<div id="pop">
+   <div id="cerrar">X</div>
+   <div id="contenido">
+
+		
+		<div class="">
+			<span>Color fondo:</span>
+			<input id="designInput-background-color" type="text" name="background-color">
+		</div>
+
+		<div class="">
+			<span>Altura:</span>
+			<input id="designInput-height" type="text" name="height">
+		</div>
+
+   		<div id="designPopupSaveButton" class="DesignPopupSaveButton">GUARDAR</div>
+   </div>
+</div>
+
+
 <div class="build-screen-container">
 	<div class="build-screen-elem-options-container">
 		<div class="build-screen-section-title">Constructor</div>
@@ -49,11 +69,95 @@
 		$("#build-screen-area").append(elem);
 
 		elementEditorId = "builder-editor-div-" + biggerDivIndex;
-		elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" style="width:100%; height:10%; background-color: #E2E2E2; border:1px solid black; text-align:right; display:inline-flex;">Contenedor'
-			elemEditor += '<div class="deleteButton" style="width:20px;cursor:pointer;" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">X</div>';
+		elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">Contenedor'
+			elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">X</div>';
+			elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
 		elemEditor += '</div>';
 		$("#build-screen-elem-options").append(elemEditor);
 
 		//podria tener en el editor, un elemento que tenga los atributos que se van seteando, width:100%;color:red;...etc y parseo por el punto y coma. El atributo que no esta, tiene que tener el valor default (nunca se seteo)
 	}
+
+	function showDesignPopup(elemId, elemEditorId) {
+   		$("#designPopupSaveButton").on("click", function(){saveDivSettings(elemId, elemEditorId);});
+
+   		stylesString = $("#"+elemEditorId).attr("data-styles");
+
+   		stylesArray = stylesString.split(";");
+
+		stylesArray.forEach(function(item){
+			if(item != ""){
+				particularStyleArray = item.split(":");
+				$("#designInput-"+particularStyleArray[0]).val(particularStyleArray[1]);
+			}
+		});   		
+
+		/*stylePosition = styles.indexOf("background-color");
+		if(stylePosition > -1){
+			stylePosition
+		}*/
+
+
+   		$("#pop").show();
+		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
+
+	} 
+
+	$("#cerrar").click(function (){
+	  	$("#pop").hide();
+	  	$("#designPopupSaveButton").off("click");
+	  	$("#pop input").each(function(){
+			$(this).val("");
+		});
+	});
+
+	$(document).ready(function (){
+		//Esconder el popup
+   		$("#pop").hide();
+
+   	});
+
+   	function saveDivSettings(elemId, elemEditorId) {
+   		//Valido todo y si todo esta bien recien ahi empiezo a setear los valores
+   		$("#pop input").each(function(){
+   			//validar el dato?
+   			styleAttribute = $(this).attr('name');
+
+   			//valido que tipo de div es? que campo esta afectando
+   			//validateFieldValue(styleAttribute, $(this).val());
+   		});
+
+
+   		//$("#"+elemEditorId).attr("data-styles", "");
+   		$("#pop input").each(function(){
+   			//validar el dato?
+   			styleAttribute = $(this).attr('name');
+
+   			$("#"+elemId).css(styleAttribute, $(this).val());
+
+   			editorTag = $("#"+elemEditorId).attr("data-styles");
+
+   			editorTag += styleAttribute + ":" + $(this).val() + ";";
+   			$("#"+elemEditorId).attr("data-styles", editorTag);
+
+   			//valido que tipo de div es? que campo esta afectando
+   		});
+		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
+
+		$("#pop").hide();
+		$("#designPopupSaveButton").off("click");
+		$("#pop input").each(function(){
+			$(this).val("");
+		});
+
+	}
+
+	function validateFieldValue(styleAttribute, value){
+		if(value.test('^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$')){
+			alert("pepe");
+		}
+	}
+
+	//Usar regexp para validar (uso un hash por nombre de atributo que contenga la regexp a validar)
+
 </script>
