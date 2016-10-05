@@ -90,7 +90,7 @@
 }
 
 /* POPUP para modificacion de estilos de los componentes */
-#pop{
+#designPopup{
   z-index:2;
   position:absolute;
   border: 1px solid #333333;
@@ -100,7 +100,7 @@
   height: 50%;
   margin: 0 auto;
 }
-#cerrar{
+#designPopupCloseButton{
   float:right;
   margin-right:5px;
   cursor:pointer;

@@ -1,12 +1,13 @@
 
-<div id="pop">
-   <div id="cerrar">X</div>
+<div id="designPopup">
+   <div id="designPopupCloseButton">X</div>
    <div id="contenido">
 
 		
+		
 		<div class="">
 			<span>Color fondo:</span>
-			<input id="designInput-background-color" type="text" name="background-color">
+			<input id="designInput-background-color" class="jscolor {hash:true}" type="text" name="background-color">
 		</div>
 
 		<div class="">
@@ -98,39 +99,51 @@
 		}*/
 
 
-   		$("#pop").show();
+   		$("#designPopup").show();
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
 
 	} 
 
-	$("#cerrar").click(function (){
-	  	$("#pop").hide();
-	  	$("#designPopupSaveButton").off("click");
-	  	$("#pop input").each(function(){
-			$(this).val("");
-		});
+	$("#designPopupCloseButton").click(function (){
+	  	closeDesignerPopup();
 	});
 
 	$(document).ready(function (){
 		//Esconder el popup
-   		$("#pop").hide();
+   		$("#designPopup").hide();
 
    	});
 
+	function closeDesignerPopup(){
+		$("#designPopup").hide();
+	  	$("#designPopupSaveButton").off("click");
+	  	$("#designPopup input").each(function(){
+			$(this).val("");
+		});
+	}
+
    	function saveDivSettings(elemId, elemEditorId) {
+   		//("#designInput-background-color").val();
+
    		//Valido todo y si todo esta bien recien ahi empiezo a setear los valores
-   		$("#pop input").each(function(){
-   			//validar el dato?
+   		allFieldsValid = true;
+   		$("#designPopup input").each(function(){
    			styleAttribute = $(this).attr('name');
 
-   			//valido que tipo de div es? que campo esta afectando
-   			//validateFieldValue(styleAttribute, $(this).val());
+   			if(!validateFieldValue(styleAttribute, $(this).val())){
+   				alert($(this).val());
+   				allFieldsValid = false;
+   				//agregar mensaje de error en algun lado
+   			}
    		});
 
+   		if(!allFieldsValid){
+   			alert("revisate los campos pibe");
+   			return;
+   		}
 
    		//$("#"+elemEditorId).attr("data-styles", "");
-   		$("#pop input").each(function(){
-   			//validar el dato?
+   		$("#designPopup input").each(function(){
    			styleAttribute = $(this).attr('name');
 
    			$("#"+elemId).css(styleAttribute, $(this).val());
@@ -139,25 +152,20 @@
 
    			editorTag += styleAttribute + ":" + $(this).val() + ";";
    			$("#"+elemEditorId).attr("data-styles", editorTag);
-
-   			//valido que tipo de div es? que campo esta afectando
    		});
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
 
-		$("#pop").hide();
-		$("#designPopupSaveButton").off("click");
-		$("#pop input").each(function(){
-			$(this).val("");
-		});
+		closeDesignerPopup();
 
 	}
 
 	function validateFieldValue(styleAttribute, value){
-		if(value.test('^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$')){
-			alert("pepe");
+		//La variable con las regex de validacion esta en creator_validation.js
+		var re = new RegExp(elementsValidations[styleAttribute]);
+		if(re.test(value)){
+			return true;
 		}
+		return false;
 	}
-
-	//Usar regexp para validar (uso un hash por nombre de atributo que contenga la regexp a validar)
 
 </script>
