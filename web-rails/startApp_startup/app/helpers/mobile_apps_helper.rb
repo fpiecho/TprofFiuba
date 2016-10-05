@@ -50,15 +50,23 @@ module MobileAppsHelper
 		#app.ts
 		tabsTsPath = appPath.join('app').join('app.ts')
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
-		replace(tabsTsPath, '@Component({') { |match| "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" "\n" + "#{match}" }
+		replace(tabsTsPath, '@Component({') { |match| "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
 		replace(tabsTsPath, '];') { |match| ",{ title: '" + tabName + "', component: " + tabNameForPage + "Page }" + "\n" + "#{match}" }
+
+		#app.core.css
+		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
+		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
+		
+		File.open(coreCssPath, "a+") do |f|
+  			f << importCore
+		end
 
 	end
 
 	def self.new_tab(appPath, tabName)
 		#app.core.css
 		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
-		coreCssPath = appPath.join('app').join('theme').join('app/theme/app.core.scss')
+		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
 		
 		File.open(coreCssPath, "a+") do |f|
   			f << importCore
@@ -70,11 +78,11 @@ module MobileAppsHelper
 		replace(tabsPath, /^<\/ion-tabs>/mi) { |match| tabLine + "#{match}"}
 
 		#tabs.ts
-		tabsTsPath = appPath.join('app').join('pages').join('tabs.ts') 
+		tabsTsPath = appPath.join('app').join('pages').join('tabs').join('tabs.ts') 
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]
 		replace(tabsTsPath, 'constructor() {') { |match| "#{match}" + "\n" + "this.tab" + tabName + " = " + tabNameForPage + "Page;"}
 		replace(tabsTsPath, 'export class TabsPage {') { |match| "#{match}" + "\n" + "private tab" + tabName + ": any;"}
-		replace(tabsTsPath, '@Component({') { |match| "import {" + tabNameForPage +"Page} from '../" + tabName +"/" + tabName + "';" "\n" + "#{match}" }
+		replace(tabsTsPath, '@Component({') { |match| "import {" + tabNameForPage +"Page} from '../" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
 	end
 
 	def self.replace(filepath, regexp, *args, &block)
@@ -100,10 +108,34 @@ module MobileAppsHelper
 
 	def self.delete_menu_page(appPath, tabName)
 		#app.ts
-		tabsTsPath = appPath.join('app').join('app.ts')
+		appTsPath = appPath.join('app').join('app.ts')
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
-		replace(tabsTsPath, "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" "\n" ) { |match| '' }
-		replace(tabsTsPath, ",[]*{ title: '" + tabName + "', component: " + tabNameForPage + "Page }" + "\n") { |match|  }
+		replace(appTsPath, "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" + "\n" ) { |match| '' }
+		replace(appTsPath, /,((?!,)[\S\s])*{ title: '#{tabName}', component: #{tabNameForPage}Page }/) { |match| '' }
 
+		#app.core.css
+		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
+		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
+		replace(coreCssPath, importCore) { |match|  }
+
+	end
+
+	def self.delete_tab(appPath, tabName)
+		#app.core.css
+		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
+		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
+		replace(coreCssPath, importCore) { |match|  }
+
+		#tabs.html
+		tabsPath = appPath.join('app').join('pages').join('tabs').join('tabs.html')
+		tabLine = '<ion-tab [root]="tab' + tabName + '" tabTitle="' + tabName +'" tabIcon="' + tabName + '"></ion-tab>' + "\n"
+		replace(tabsPath, tabLine) { |match| ''}
+
+		#tabs.ts
+		tabsTsPath = appPath.join('app').join('pages').join('tabs').join('tabs.ts') 
+		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]
+		replace(tabsTsPath, "this.tab" + tabName + " = " + tabNameForPage + "Page;"+ "\n") { |match| ''  }
+		replace(tabsTsPath, "private tab" + tabName + ": any;"+ "\n") { |match| ''}
+		replace(tabsTsPath, "import {" + tabNameForPage +"Page} from '../" + tabName +"/" + tabName + "';" + "\n") { |match|  '' }
 	end
 end

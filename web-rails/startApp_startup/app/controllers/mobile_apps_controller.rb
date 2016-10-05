@@ -1,6 +1,6 @@
 class MobileAppsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_mobile_app, only: [:show, :edit, :update, :destroy, :build, :new_page, :set_content]
+  before_action :set_mobile_app, only: [:show, :edit, :update, :destroy, :build, :new_page, :set_content, :delete_page]
   before_filter :require_permission, only: [:edit, :show]
 
   layout "application_internal_styled"
@@ -45,6 +45,7 @@ class MobileAppsController < ApplicationController
 
     respond_to do |format|
       @mobile_app.user_id = current_user.id
+      @mobile_app.title = @mobile_app.title.gsub(/\s+/, "");
       if @mobile_app.save
         name = @mobile_app.title;
         appType = @mobile_app.apptype.downcase;
@@ -119,7 +120,7 @@ class MobileAppsController < ApplicationController
   #POST /mobile_apps/pages/:id/:name
   def new_page
     if(@mobile_app.user_id.equal? current_user.id)
-      name = params[:name]
+      name = params[:name].gsub(/\s+/, "")
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
       tabPath = appPath.join('app').join('pages').join(name)
       if (File.directory?(tabPath))
