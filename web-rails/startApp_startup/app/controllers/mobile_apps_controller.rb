@@ -20,13 +20,17 @@ class MobileAppsController < ApplicationController
   # GET /mobile_apps/1
   # GET /mobile_apps/1.json
   def show
-    appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
-    free_port = Selenium::WebDriver::PortProber.above(3000)
-    Thread.new {
-      system("cd \"#{appPath}\"  && ionic serve -p #{free_port} --nobrowser --address localhost");
-    }
-    sleep 20
-    @mobile_app.port = free_port.to_s
+    start_app = params[:s]
+    if(start_app != 'f')
+      appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
+      free_port = Selenium::WebDriver::PortProber.above(3000)
+      Thread.new {
+        system("cd \"#{appPath}\"  && ionic serve -p #{free_port} --nobrowser --address localhost");
+      }
+      sleep 20
+      @mobile_app.port = free_port.to_s
+      @mobile_app.save
+    end
   end
 
   # GET /mobile_apps/new
@@ -125,13 +129,13 @@ class MobileAppsController < ApplicationController
       tabPath = appPath.join('app').join('pages').join(name)
       if (File.directory?(tabPath))
         respond_to do |format|
-          format.html { redirect_to @mobile_app, notice: 'Page already created.' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page already created.' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
       else
         MobileAppsHelper.new_page(appPath, name, @mobile_app.apptype)
         respond_to do |format|
-          format.html { redirect_to @mobile_app, notice: 'Page ' + name +' was successfully created.' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page ' + name +' was successfully created.' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
       end
@@ -147,14 +151,15 @@ class MobileAppsController < ApplicationController
       if (File.directory?(tabPath))
         MobileAppsHelper.delete_page(appPath, name, @mobile_app.apptype)
         respond_to do |format|
-          format.html { redirect_to @mobile_app, notice: 'Page deleted.' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page deleted.' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
       else
         respond_to do |format|
-          format.html { redirect_to @mobile_app, notice: 'Page ' + name +' does not exist' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page ' + name +' does not exist' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
+        
       end
     end
   end
@@ -170,13 +175,13 @@ class MobileAppsController < ApplicationController
       if (File.exist?(tabPath))
         MobileAppsHelper.set_content(appPath, name, content)
         respond_to do |format|
-          format.html { redirect_to @mobile_app, notice: 'Tab ' + name +' was successfully edited.' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Tab ' + name +' was successfully edited.' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
         
       else
         respond_to do |format|
-          format.html { redirect_to @mobile_app, notice: 'Tab does not exist.' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Tab does not exist.' }
           format.json { render :show, status: :created, location: @mobile_app }
         end        
       end
