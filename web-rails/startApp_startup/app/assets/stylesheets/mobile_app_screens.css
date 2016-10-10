@@ -87,6 +87,8 @@
 .builder-editor-elem-div .deleteButton{
   width:20px;
   cursor:pointer;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 /* POPUP para modificacion de estilos de los componentes */
@@ -100,21 +102,43 @@
   height: 50%;
   margin: 0 auto;
 }
-#designPopupCloseButton{
-  float:right;
-  margin-right:5px;
-  cursor:pointer;
-  font:Verdana, Arial, Helvetica, sans-serif;
-  font-size:12px;
-  font-weight:bold;
-  color:#FFFFFF;
-  background-color:#666666;
-  width:12px;
-  position:relative;
-  margin-top:-1px;
-  text-align:center;
-}
 
 .DesignPopupSaveButton{
   cursor: pointer;
+}
+
+#designPopupErrorMessage strong{
+  display: block;
+  text-align: left;
+}
+
+
+.form-control-div input {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555555;
+    background-image: none;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.form-horizontal .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+#designPopup .form-group {
+    margin-top: 15px;
+}
+
+#designPopup .alert{
+  top: 0px;
+  position: relative;
 }

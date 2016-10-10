@@ -1,23 +1,45 @@
 
 <div id="designPopup">
-   <div id="designPopupCloseButton">X</div>
+   
    <div id="contenido">
+   	
+   		<div class="modal-header">
+        	<button id="designPopupCloseButton" type="button" class="close" data-dismiss="modal">&times;</button>
+        	<h4 class="modal-title">Editor del elemento</h4>
+        </div>
 
-		
-		
-		<div class="">
-			<span>Color fondo:</span>
-			<input id="designInput-background-color" class="jscolor {hash:true}" type="text" name="background-color">
+		<div id="designPopupErrorMessage" class="alert alert-danger" style="display:none">
+			<a href="#" class="close" onclick="hidePopupErrorMessage()">&times;</a>
 		</div>
 
-		<div class="">
-			<span>Altura:</span>
-			<input id="designInput-height" type="text" name="height">
+
+		<div class="form-horizontal">
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="designInput-background-color">Color fondo:</label>
+			  <div class="col-sm-10 form-control-div">
+			    <input id="designInput-background-color" type="text" class="jscolor {hash:true,styleElement:'none'}" name="background-color"> 
+			  </div>
+		  	</div>
+			
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="designInput-height">Altura:</label>
+			  <div class="col-sm-10">
+			    <input id="designInput-height" type="text" class="form-control" name="height"> 
+			  </div>
+		  	</div>
+
+	   		
+	   		<div class="form-group"> 
+			  <div class="col-sm-offset-2 col-sm-10">
+			  	<div id="designPopupSaveButton" class="DesignPopupSaveButton btn btn-default">GUARDAR</div>
+			  </div>
+			</div>
 		</div>
 
-   		<div id="designPopupSaveButton" class="DesignPopupSaveButton">GUARDAR</div>
    </div>
 </div>
+
+
 
 
 <div class="build-screen-container">
@@ -91,7 +113,7 @@
 				particularStyleArray = item.split(":");
 				$("#designInput-"+particularStyleArray[0]).val(particularStyleArray[1]);
 			}
-		});   		
+		}); 		
 
 		/*stylePosition = styles.indexOf("background-color");
 		if(stylePosition > -1){
@@ -112,9 +134,18 @@
 		//Esconder el popup
    		$("#designPopup").hide();
 
+  });
+
+	function hidePopupErrorMessage(){		
+		$("#designPopupErrorMessage strong").each(function(){
+   		$(this).remove();
    	});
+   	$("#designPopupErrorMessage").hide();
+	}
 
 	function closeDesignerPopup(){
+		hidePopupErrorMessage();
+
 		$("#designPopup").hide();
 	  	$("#designPopupSaveButton").off("click");
 	  	$("#designPopup input").each(function(){
@@ -131,14 +162,17 @@
    			styleAttribute = $(this).attr('name');
 
    			if(!validateFieldValue(styleAttribute, $(this).val())){
-   				alert($(this).val());
    				allFieldsValid = false;
+   				errorMessage = '<strong>- ';
+   				errorMessage += elementsValidations[styleAttribute]["errorMessage"];
+   				errorMessage += '</strong>';
+   				$("#designPopupErrorMessage").append(errorMessage);
    				//agregar mensaje de error en algun lado
    			}
    		});
 
    		if(!allFieldsValid){
-   			alert("revisate los campos pibe");
+   			$("#designPopupErrorMessage").show();
    			return;
    		}
 
@@ -161,7 +195,7 @@
 
 	function validateFieldValue(styleAttribute, value){
 		//La variable con las regex de validacion esta en creator_validation.js
-		var re = new RegExp(elementsValidations[styleAttribute]);
+		var re = new RegExp(elementsValidations[styleAttribute]["validation"]);
 		if(re.test(value)){
 			return true;
 		}
