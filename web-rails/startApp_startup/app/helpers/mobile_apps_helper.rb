@@ -61,6 +61,12 @@ module MobileAppsHelper
   			f << importCore
 		end
 
+		#page.html 
+		pagePath = appPath.join('app').join('pages').join(tabName).join(tabName + '.html')
+		replace(pagePath, '<ion-navbar>') { |match| "#{match}" + '<button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>' }
+
 	end
 
 	def self.new_tab(appPath, tabName)
