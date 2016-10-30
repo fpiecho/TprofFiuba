@@ -144,4 +144,10 @@ module MobileAppsHelper
 		replace(tabsTsPath, "private tab" + tabName + ": any;"+ "\n") { |match| ''}
 		replace(tabsTsPath, "import {" + tabNameForPage +"Page} from '../" + tabName +"/" + tabName + "';" + "\n") { |match|  '' }
 	end
+
+	def self.get_pages(appPath)
+		tabsPath = appPath.join('app').join('pages')
+		return Dir.entries(tabsPath).delete_if {|i| i == "." || i == ".." || i == "tabs"}
+
+	end
 end

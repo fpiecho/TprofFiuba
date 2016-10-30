@@ -1,6 +1,7 @@
 class MobileAppsController < ApplicationController
+  helper_method :get_pages
   before_action :authenticate_user!
-  before_action :set_mobile_app, only: [:show, :edit, :update, :destroy, :build, :new_page, :set_content, :delete_page]
+  before_action :set_mobile_app, only: [:show, :edit, :update, :destroy, :build, :new_page, :set_content, :delete_page, :get_pages]
   before_filter :require_permission, only: [:edit, :show]
 
   layout "application_internal_styled"
@@ -30,6 +31,8 @@ class MobileAppsController < ApplicationController
       sleep 20
       @mobile_app.port = free_port.to_s
       @mobile_app.save
+    else
+      sleep 1
     end
   end
 
@@ -188,8 +191,10 @@ class MobileAppsController < ApplicationController
     end
   end
 
-
-
+  def get_pages
+    appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
+    return MobileAppsHelper.get_pages(appPath)
+  end
 
 
 

@@ -1,3 +1,76 @@
 // Place all the styles related to the MobileApps controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.appPreviewContainer{
+    margin-left: 250px;
+}
+
+.tabs-container{
+	margin-right: 100px;
+	width:25%;
+	position: absolute;
+	right: 0px;
+}
+
+.build-tab-container{
+	width:100%;
+	height:100%;
+	display:inline-flex;
+	position: relative;
+}
+
+.build-tab-section-title{
+	margin: 10px 0;
+	font-size: 15px;
+	font-weight: bold;
+	color: #000000;
+}
+
+.build-tab-buttons-container{
+	height: 300px;
+	background-color: #666666;
+}
+
+.build-tab-button-div{
+	width:100%;
+	height:50px;
+	background-color: #EEEEEE;
+	padding-left:5px;
+	cursor: pointer;
+	border-style: solid;
+	border-width: 1px;
+    border-color: black;
+}
+
+.btn-tab-danger{
+ 	color: #FFFFFF;
+ 	background-color: #d9534f;
+ 	height: 28px;
+ 	font-size: 10px;
+}
+
+.tab-create-div{
+	width:100%;
+	padding-left:190px;
+	padding-top:7px;
+}
+
+#tabPopup{
+  z-index:2;
+  position:absolute;
+  border: 1px solid #333333;
+  text-align:center;
+  background:#F6F6F6;
+  width: 25%;
+  height: 35%;
+  margin-top: 300px;
+}
+
+#tabPopup .form-group {
+    margin-top: 15px;
+}
+
+#tabPopup .alert{
+  top: 0px;
+}
