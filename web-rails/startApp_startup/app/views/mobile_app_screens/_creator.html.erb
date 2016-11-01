@@ -17,7 +17,7 @@
 			<div class="form-group">
 			  <label class="control-label col-sm-2" for="designInput-background-color">Color fondo:</label>
 			  <div class="col-sm-10 form-control-div">
-			    <input id="designInput-background-color" type="text" class="jscolor {hash:true,styleElement:'none'}" name="background-color"> 
+			    <input id="designInput-background-color" type="text" class="jscolor {hash:true, styleElement:'none'}" name="background-color"> 
 			  </div>
 		  	</div>
 			
@@ -37,6 +37,31 @@
 		</div>
 
    </div>
+</div>
+
+
+
+<div id="elemsCreationPopup">
+   
+  <div id="contenidoElems">
+   	
+  	<div class="modal-header">
+     	<button id="elemsCreationPopupCloseButton" type="button" class="close" data-dismiss="modal" onclick="closeAddElementsPopup();">&times;</button>
+     	<h4 class="modal-title">Agregar del elemento</h4>
+    </div>
+
+
+	<div class="build-screen-buttons-options-container">
+		<div class="build-screen-section-title">Herramientas</div>
+		<div class="build-screen-buttons-container">
+			<div id="div-button-elem-creator" class="build-screen-button-div tooltipCustom">
+				<span style="margin: auto 0px;line-height:15px;">Contenedor</span>
+				<span class="tooltiptext">Agregar</span>
+			</div>
+		</div>
+	</div>
+
+  </div>
 </div>
 
 
@@ -70,12 +95,13 @@
 
 
 <script type="text/javascript">
+
 	function deleteElem(elemId, elemEditorId){
 		$("#"+elemId).remove();
 		$("#"+elemEditorId).remove();
 	}
 
-	function addPanelElement(){
+	function addPanelElement(parentElem = "", parentElemEditor = ""){
 		biggerDivIndex = -1;
 		//Busco el idx del div mayor asi me aseguro de no repetir ids
 		$('#build-screen-area .builder-elem-div').each(function(){
@@ -89,14 +115,26 @@
 
 		elementId = "builder-div-" + biggerDivIndex;
 		elem = '<div id="' + elementId + '" class="builder-elem-div" style="width:100%; height:10%; background-color: #0000DD; border:1px solid black;"></div>';
-		$("#build-screen-area").append(elem);
+		
+		if(parentElem != '')
+			$("#"+parentElem).append(elem);
+		else
+			$("#build-screen-area").append(elem);
 
 		elementEditorId = "builder-editor-div-" + biggerDivIndex;
-		elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">Contenedor'
-			elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">X</div>';
-			elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
+		elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">'
+			elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Contenedor'
+				elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
+				elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
+				elemEditor += '<div class="deleteButton" onclick="insertElem(\''+elementId+'\', \''+elementEditorId+'\')">AGREGAR ELEM</div>';
+			elemEditor += '</div>';
 		elemEditor += '</div>';
-		$("#build-screen-elem-options").append(elemEditor);
+		
+		if(parentElemEditor != '')
+			$("#"+parentElemEditor).append(elemEditor);
+		else
+			$("#build-screen-elem-options").append(elemEditor);
+
 
 		//podria tener en el editor, un elemento que tenga los atributos que se van seteando, width:100%;color:red;...etc y parseo por el punto y coma. El atributo que no esta, tiene que tener el valor default (nunca se seteo)
 	}
@@ -132,7 +170,8 @@
 
 	$(document).ready(function (){
 		//Esconder el popup
-   		$("#designPopup").hide();
+   	$("#designPopup").hide();
+   	$("#elemsCreationPopup").hide();	
 
   });
 
@@ -147,10 +186,15 @@
 		hidePopupErrorMessage();
 
 		$("#designPopup").hide();
-	  	$("#designPopupSaveButton").off("click");
-	  	$("#designPopup input").each(function(){
+	  $("#designPopupSaveButton").off("click");
+	  $("#designPopup input").each(function(){
 			$(this).val("");
 		});
+	}
+
+	function closeAddElementsPopup(){
+		$("#elemsCreationPopup").hide();
+	  $("#div-button-elem-creator").off("click");
 	}
 
    	function saveDivSettings(elemId, elemEditorId) {
@@ -201,5 +245,14 @@
 		}
 		return false;
 	}
+
+	function insertElem(elemId, elemEditorId) {
+		$("#div-button-elem-creator").on("click", function(){addPanelElement(elemId, elemEditorId); closeAddElementsPopup();});
+
+   	$("#elemsCreationPopup").show();
+		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
+
+	}
+	
 
 </script>
