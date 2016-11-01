@@ -1,4 +1,5 @@
 <%- model_class = MobileApp -%>
+
 <div class="page-header">
   <h2>App Móvil</h2>
 </div>
@@ -12,20 +13,109 @@
   <dd><%= @mobile_app.apptype %></dd>
 </dl>
 
-<center><div class="appPreviewContainer">
-  <div class="appPreviewHeadContent"><div><%= Time.zone.now.to_s(:time) %></div></div>
-  <iframe src="http://localhost:<%= @mobile_app.port %>" height="500px" width="300px"></iframe>
-<div></center>
-<br><br>
+<div class="build-tab-container">
 
-<%= link_to t('.back', :default => "Volver"),
-              mobile_apps_path, :class => 'btn btn-default'  %>
-<%= link_to t('.edit', :default => "Editar"),
-              edit_mobile_app_path(@mobile_app), :class => 'btn btn-default' %>
-<%= link_to t('.build', :default => "Build"), mobile_apps_build_path,
-              :class => 'btn btn-build'  %>
-<%= link_to t('.destroy', :default => "Eliminar"),
-              mobile_app_path(@mobile_app),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "¿Estas seguro?")) },
-              :class => 'btn btn-danger' %>
+  <center>
+  <div class="appPreviewContainer" >
+    <div class="appPreviewHeadContent"><div><%= Time.zone.now.to_s(:time) %></div></div>
+    <iframe src="http://localhost:<%= @mobile_app.port %>" height="500px" width="300px"></iframe>
+    
+  <div> </center>
+
+<div id="tabPopup" style="display: none;">
+   
+   <div id="contenido">
+    
+    <div class="modal-header">
+        <button id="designPopupCloseButton" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar tab</h4>
+    </div>
+
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="designInput-background-color">Título:</label>
+        <div class="col-sm-10 form-control-div">
+          <input id="tab-title" type="text" class="form-control" name="title"> 
+        </div>
+        </div>
+      
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="designInput-height">Tipo:</label>
+        <div class="col-sm-10">
+          <select id="tab-type" type="text" class="form-control" name="type"> 
+            <option value="1"></option>
+            <option value="2">Pantalla custom</option>
+          </select>
+        </div>
+        </div>
+
+        
+        <div class="form-group"> 
+        <div class="col-sm-offset-2 col-sm-10">
+          <button id="designPopupSaveButton" class="DesignPopupSaveButton btn btn-default" onclick="saveTab()">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+   </div>
+</div>
+  <div class="tabs-container">
+    <div class="build-tab-section-title">Tabs</div>
+      <div class="build-tab-buttons-container">
+      <% get_pages.each do |element| %>
+        <div id="div-button" class="build-tab-button-div">
+          <span style="margin: auto 1px;line-height:15px;"><%= element %></li> </span>
+          <%= link_to t('.tab', :default => "x"),
+                  mobile_apps_delete_page_path(:name => element),
+                  :method => 'delete',
+                  :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "¿Estas seguro?")) },
+                  :class => 'btn btn-tab-danger pull-right' %>
+        </div>
+      <% end %>
+      </div>
+      <div class = "tab-create-div">
+        <button id="showPopupButton" type="button" class="btn btn-default" onclick="showPopup()">Agregar</button>
+      </div>
+  </div>
+</div>
+<br><br><br><br>
+<div class='buttons'>
+  <%= link_to t('.back', :default => "Volver"),
+                mobile_apps_path, :class => 'btn btn-default'  %>
+  <%= link_to t('.edit', :default => "Editar"),
+                edit_mobile_app_path(@mobile_app), :class => 'btn btn-default' %>
+  <%= link_to t('.build', :default => "Build"), mobile_apps_build_path,
+                :class => 'btn btn-build'  %>
+  <%= link_to t('.destroy', :default => "Eliminar"),
+                mobile_app_path(@mobile_app),
+                :method => 'delete',
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "¿Estas seguro?")) },
+                :class => 'btn btn-danger' %>
+</div class='buttons'>
+
+<script type="text/javascript">
+  $("#designPopupCloseButton").click(function (){
+      $("#tabPopup").hide();
+  })
+
+  function showPopup(){
+    $("#showPopupButton").click(function (){
+        $("#tabPopup").show();
+    })
+  }
+
+  function saveTab(){
+    var title = document.getElementById('tab-title').value; 
+    $.ajax({
+      type: "POST",
+      url: "/mobile_apps/pages/<%= @mobile_app.id %>/" + title
+    });
+    if (window.location.href.indexOf("?s=f") == -1){
+      window.location.href = window.location.href + "?s=f";
+      window.location.load();
+    }
+    else{
+      location.reload();   
+    }
+  }
+</script>
