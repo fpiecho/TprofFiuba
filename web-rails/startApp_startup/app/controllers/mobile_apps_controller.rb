@@ -1,7 +1,7 @@
 class MobileAppsController < ApplicationController
   helper_method :get_pages
   before_action :authenticate_user!
-  before_action :set_mobile_app, only: [:show, :edit, :update, :destroy, :build, :new_page, :set_content, :delete_page, :get_pages]
+  before_action :set_mobile_app, only: [:show, :edit, :update, :destroy, :build, :new_page, :set_content, :delete_page, :get_pages, :page_exists]
   before_filter :require_permission, only: [:edit, :show]
 
   layout "application_internal_styled"
@@ -22,8 +22,8 @@ class MobileAppsController < ApplicationController
   # GET /mobile_apps/1.json
   def show
     start_app = params[:s]
-    if(start_app != 'f')
-      appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
+    appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
+    if(start_app != 'f')      
       free_port = Selenium::WebDriver::PortProber.above(3000)
       Thread.new {
         system("cd \"#{appPath}\"  && ionic serve -p #{free_port} --nobrowser --address localhost");
@@ -32,6 +32,11 @@ class MobileAppsController < ApplicationController
       @mobile_app.port = free_port.to_s
       @mobile_app.save
     else
+      #villerada para que refresque
+      #coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
+      #File.open(coreCssPath, "a+") do |f|
+      #  f << " "
+      #end
       sleep 1
     end
   end
@@ -194,6 +199,12 @@ class MobileAppsController < ApplicationController
   def get_pages
     appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
     return MobileAppsHelper.get_pages(appPath)
+  end
+
+  def page_exists
+    name = params[:name]
+    appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
+    render :text => MobileAppsHelper.page_exists(appPath, name)
   end
 
 

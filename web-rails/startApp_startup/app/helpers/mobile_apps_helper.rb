@@ -40,9 +40,9 @@ module MobileAppsHelper
 		system("cd \"#{appPath}\" && ionic g page \"#{tabName}\"");
 
 		if (appType == 'Tabs')
-			new_tab(appPath, tabName)
+			new_tab(appPath, tabName.downcase)
 		else
-			new_menu_page(appPath, tabName)
+			new_menu_page(appPath, tabName.downcase)
 		end
 	end
 
@@ -81,14 +81,14 @@ module MobileAppsHelper
 		#tabs.html
 		tabsPath = appPath.join('app').join('pages').join('tabs').join('tabs.html')
 		tabLine = '<ion-tab [root]="tab' + tabName + '" tabTitle="' + tabName +'" tabIcon="' + tabName + '"></ion-tab>' + "\n"
-		replace(tabsPath, /^<\/ion-tabs>/mi) { |match| tabLine + "#{match}"}
+		replace(tabsPath, /<\/ion-tabs>/mi) { |match| tabLine + "#{match}"}
 
 		#tabs.ts
 		tabsTsPath = appPath.join('app').join('pages').join('tabs').join('tabs.ts') 
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]
 		replace(tabsTsPath, 'constructor() {') { |match| "#{match}" + "\n" + "this.tab" + tabName + " = " + tabNameForPage + "Page;"}
-		replace(tabsTsPath, 'export class TabsPage {') { |match| "#{match}" + "\n" + "private tab" + tabName + ": any;"}
-		replace(tabsTsPath, '@Component({') { |match| "import {" + tabNameForPage +"Page} from '../" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
+		replace(tabsTsPath, 'export class TabsPage {') { |match| "#{match}" + "\n" + "public tab" + tabName + ": any;"}
+		replace(tabsTsPath, '@Component({') { |match| "import { " + tabNameForPage +"Page } from '../" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
 	end
 
 	def self.replace(filepath, regexp, *args, &block)
@@ -103,12 +103,16 @@ module MobileAppsHelper
 
 
 	def self.delete_page(appPath, tabName, appType)
-		FileUtils.rm_rf(appPath.join('app').join('pages').join(tabName))
+		tabsPath = appPath.join('app').join('pages');
+		count = Dir.entries(tabsPath).delete_if {|i| i == "." || i == ".." || i == "tabs"}.count;
+		if(count > 1)
+			FileUtils.rm_rf(tabsPath.join(tabName))
 
-		if (appType == 'Tabs')
-			delete_tab(appPath, tabName)
-		else
-			delete_menu_page(appPath, tabName)
+			if (appType == 'Tabs')
+				delete_tab(appPath, tabName)
+			else
+				delete_menu_page(appPath, tabName)
+			end
 		end
 	end
 
@@ -134,20 +138,23 @@ module MobileAppsHelper
 
 		#tabs.html
 		tabsPath = appPath.join('app').join('pages').join('tabs').join('tabs.html')
-		tabLine = '<ion-tab [root]="tab' + tabName + '" tabTitle="' + tabName +'" tabIcon="' + tabName + '"></ion-tab>' + "\n"
-		replace(tabsPath, tabLine) { |match| ''}
+		replace(tabsPath, /<ion-tab \[root\]=\".*\" tabTitle=\"#{tabName}\" tabIcon=\".*\"><\/ion-tab>\n/) { |match| ''}
 
 		#tabs.ts
 		tabsTsPath = appPath.join('app').join('pages').join('tabs').join('tabs.ts') 
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]
-		replace(tabsTsPath, "this.tab" + tabName + " = " + tabNameForPage + "Page;"+ "\n") { |match| ''  }
-		replace(tabsTsPath, "private tab" + tabName + ": any;"+ "\n") { |match| ''}
-		replace(tabsTsPath, "import {" + tabNameForPage +"Page} from '../" + tabName +"/" + tabName + "';" + "\n") { |match|  '' }
+		replace(tabsTsPath, /this.tab.* = #{tabNameForPage}Page;\n/) { |match| ''  }
+		replace(tabsTsPath, "public tab" + tabName + ": any;"+ "\n") { |match| ''}
+		replace(tabsTsPath, "import { " + tabNameForPage +"Page } from '../" + tabName +"/" + tabName + "';" + "\n") { |match|  '' }
 	end
 
 	def self.get_pages(appPath)
 		tabsPath = appPath.join('app').join('pages')
 		return Dir.entries(tabsPath).delete_if {|i| i == "." || i == ".." || i == "tabs"}
+	end
 
+	def self.page_exists(appPath, name)
+		tabsPath = appPath.join('app').join('pages')
+		return Dir.entries(tabsPath).include?(name)
 	end
 end

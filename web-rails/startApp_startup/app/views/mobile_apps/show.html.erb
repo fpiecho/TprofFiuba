@@ -31,6 +31,11 @@
         <h4 class="modal-title">Agregar tab</h4>
     </div>
 
+    <div id="designPopupErrorMessage" class="alert alert-danger" style="display:none">
+      <a href="#" class="close" onclick="hidePopupErrorMessage()">&times;</a>
+      <div id="errorMessageDescription"></div>
+    </div>
+
     <div class="form-horizontal">
       <div class="form-group">
         <label class="control-label col-sm-2" for="designInput-background-color">Título:</label>
@@ -61,7 +66,7 @@
 </div>
   <div class="tabs-container">
     <div class="build-tab-section-title">Tabs</div>
-      <div class="build-tab-buttons-container">
+      <div class="build-tab-buttons-container" style="overflow-y:auto;"">
       <% get_pages.each do |element| %>
         <div id="div-button" class="build-tab-button-div">
           <span style="margin: auto 1px;line-height:15px;"><%= element %></li> </span>
@@ -99,13 +104,40 @@
   })
 
   function showPopup(){
-    $("#showPopupButton").click(function (){
-        $("#tabPopup").show();
-    })
+    $("#tabPopup").show();
   }
 
   function saveTab(){
+    //Valido todo y si todo esta bien recien ahi empiezo a setear los valores
+    allFieldsValid = true;
     var title = document.getElementById('tab-title').value; 
+    $("#errorMessageDescription").text("");
+    if (title == null || title.trim() === ''){
+      allFieldsValid = false;
+      errorMessage = '<strong>- ';
+      errorMessage += "The title should not be empty";
+      errorMessage += '</strong>';
+      $("#errorMessageDescription").append(errorMessage);
+    }
+    else{
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "GET", "pages/<%= @mobile_app.id %>/" + title + "/exists", false );
+      xmlHttp.send(null);
+      var exists = xmlHttp.responseText;
+      if(exists === "true"){
+        allFieldsValid = false;
+        errorMessage = '<strong>- ';
+        errorMessage += "Tab " + title + " already exists";
+        errorMessage += '</strong>';
+        $("#errorMessageDescription").append(errorMessage);
+       }
+    }
+
+    if(!allFieldsValid){
+      $("#designPopupErrorMessage").show();
+      return;
+    }
+
     $.ajax({
       type: "POST",
       url: "/mobile_apps/pages/<%= @mobile_app.id %>/" + title
@@ -117,5 +149,12 @@
     else{
       location.reload();   
     }
+  }
+
+  function hidePopupErrorMessage(){   
+    $("#designPopupErrorMessage strong").each(function(){
+      $(this).remove();
+    });
+    $("#designPopupErrorMessage").hide();
   }
 </script>

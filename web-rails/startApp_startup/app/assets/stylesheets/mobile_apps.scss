@@ -74,3 +74,13 @@
 #tabPopup .alert{
   top: 0px;
 }
+
+#designPopup .alert{
+  top: 0px;
+  position: relative;
+}
+
+#designPopupErrorMessage strong{
+  display: block;
+  text-align: left;
+}
