@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   match '/mobile_apps/pages/:id/:name', to: 'mobile_apps#new_page', as: 'new_tab', :via => [:get,:post], :as => :mobile_apps_new_page
   match '/mobile_apps/pages/:id/:name', to: 'mobile_apps#delete_page', as: 'delete_page', :via => [:delete], :as => :mobile_apps_delete_page
   match '/mobile_apps/content/:id/:name', to: 'mobile_apps#set_content', as: 'set_content', :via => [:get,:post], :as => :mobile_apps_set_content
+  match '/mobile_apps/pages/:id/:name/exists', to: 'mobile_apps#page_exists', as: 'page_exists', :via => [:get], :as => :mobile_apps_page_exists
 
   match '/mobile_apps/menu/:id', to: 'mobile_apps#menu', as: 'menu', :via => [:get,:post], :as => :mobile_apps_menu
 
