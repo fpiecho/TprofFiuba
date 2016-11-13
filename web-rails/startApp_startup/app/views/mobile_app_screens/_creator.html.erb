@@ -1,17 +1,16 @@
-
-<div id="designPopup">
-   
-   <div id="contenido">
-   	
-   		<div class="modal-header">
-        	<button id="designPopupCloseButton" type="button" class="close" data-dismiss="modal">&times;</button>
-        	<h4 class="modal-title">Editor del elemento</h4>
-        </div>
+<!-- ********************************************** -->
+<!-- Pop up para editar el contenido de un elemento -->
+<!-- ********************************************** -->
+<div id="designPopup"> 
+  <div id="contenido">
+  	<div class="modal-header">
+     	<button id="designPopupCloseButton" type="button" class="close" data-dismiss="modal">&times;</button>
+  	 	<h4 class="modal-title">Editor del elemento</h4>
+    </div>
 
 		<div id="designPopupErrorMessage" class="alert alert-danger" style="display:none">
 			<a href="#" class="close" onclick="hidePopupErrorMessage()">&times;</a>
 		</div>
-
 
 		<div class="form-horizontal">
 			<div class="form-group">
@@ -19,53 +18,50 @@
 			  <div class="col-sm-10 form-control-div">
 			    <input id="designInput-background-color" type="text" class="jscolor {hash:true, styleElement:'none'}" name="background-color"> 
 			  </div>
-		  	</div>
+		 	</div>
 			
 			<div class="form-group">
 			  <label class="control-label col-sm-2" for="designInput-height">Altura:</label>
 			  <div class="col-sm-10">
 			    <input id="designInput-height" type="text" class="form-control" name="height"> 
 			  </div>
-		  	</div>
-
+		 	</div>
 	   		
-	   		<div class="form-group"> 
+	  	<div class="form-group"> 
 			  <div class="col-sm-offset-2 col-sm-10">
 			  	<div id="designPopupSaveButton" class="DesignPopupSaveButton btn btn-default">GUARDAR</div>
 			  </div>
 			</div>
 		</div>
-
-   </div>
+  </div>
 </div>
 
-
-
-<div id="elemsCreationPopup">
-   
+<!-- ********************************************** -->
+<!-- Pop up para agregar elementos dentro de otro   -->
+<!-- ********************************************** -->
+<div id="elemsCreationPopup">   
   <div id="contenidoElems">
-   	
   	<div class="modal-header">
      	<button id="elemsCreationPopupCloseButton" type="button" class="close" data-dismiss="modal" onclick="closeAddElementsPopup();">&times;</button>
      	<h4 class="modal-title">Agregar del elemento</h4>
     </div>
 
-
-	<div class="build-screen-buttons-options-container">
-		<div class="build-screen-section-title">Herramientas</div>
-		<div class="build-screen-buttons-container">
-			<div id="div-button-elem-creator" class="build-screen-button-div tooltipCustom">
-				<span style="margin: auto 0px;line-height:15px;">Contenedor</span>
-				<span class="tooltiptext">Agregar</span>
+		<div class="build-screen-buttons-options-container">
+			<div class="build-screen-section-title">Elementos</div>
+			<div class="build-screen-buttons-container">
+				<div id="div-button-elem-creator" class="build-screen-button-div tooltipCustom">
+					<span style="margin: auto 0px;line-height:15px;">Contenedor</span>
+					<span class="tooltiptext">Agregar</span>
+				</div>
 			</div>
 		</div>
-	</div>
-
   </div>
 </div>
 
 
-
+<!-- ********************************************** -->
+<!-- Aca arranca la pantalla                        -->
+<!-- ********************************************** -->
 
 <div class="build-screen-container">
 	<div class="build-screen-elem-options-container">
@@ -94,13 +90,19 @@
 </div>
 
 
+<!-- ********************************************** -->
+<!-- Funciones de JS                                -->
+<!-- ********************************************** -->
+
 <script type="text/javascript">
 
+	//Borra un elemento y sus elementos hijos de la pantalla
 	function deleteElem(elemId, elemEditorId){
 		$("#"+elemId).remove();
 		$("#"+elemEditorId).remove();
 	}
 
+	//Agrega un elemento a la pantalla
 	function addPanelElement(parentElem = "", parentElemEditor = ""){
 		biggerDivIndex = -1;
 		//Busco el idx del div mayor asi me aseguro de no repetir ids
@@ -113,6 +115,7 @@
 		});
 		biggerDivIndex++;
 
+		//Elemento de pantalla visible
 		elementId = "builder-div-" + biggerDivIndex;
 		elem = '<div id="' + elementId + '" class="builder-elem-div" style="width:100%; height:10%; background-color: #0000DD; border:1px solid black;"></div>';
 		
@@ -121,6 +124,7 @@
 		else
 			$("#build-screen-area").append(elem);
 
+		//Elemento de edicion complementario
 		elementEditorId = "builder-editor-div-" + biggerDivIndex;
 		elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">'
 			elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Contenedor'
@@ -139,6 +143,7 @@
 		//podria tener en el editor, un elemento que tenga los atributos que se van seteando, width:100%;color:red;...etc y parseo por el punto y coma. El atributo que no esta, tiene que tener el valor default (nunca se seteo)
 	}
 
+	//Se abre el popup de edicion del elemento en cuestion
 	function showDesignPopup(elemId, elemEditorId) {
    		$("#designPopupSaveButton").on("click", function(){saveDivSettings(elemId, elemEditorId);});
 
@@ -158,16 +163,16 @@
 			stylePosition
 		}*/
 
-
    		$("#designPopup").show();
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
-
 	} 
 
+	//Se asigna la funcion de cierre al popup de edicion
 	$("#designPopupCloseButton").click(function (){
 	  	closeDesignerPopup();
 	});
 
+	//Inicialia los popups ocultos
 	$(document).ready(function (){
 		//Esconder el popup
    	$("#designPopup").hide();
@@ -175,6 +180,7 @@
 
   });
 
+	//Esconde los mensajes de error del popup (para que se dejen de mostrar si cierra el popup y lo vuelve a abrir)
 	function hidePopupErrorMessage(){		
 		$("#designPopupErrorMessage strong").each(function(){
    		$(this).remove();
@@ -182,6 +188,7 @@
    	$("#designPopupErrorMessage").hide();
 	}
 
+	//Se cierra el popup de edicion (Se limpianciertas cosas cuando se cierra)
 	function closeDesignerPopup(){
 		hidePopupErrorMessage();
 
@@ -192,51 +199,52 @@
 		});
 	}
 
+	//Se cierra el popup de agregado de elementos
 	function closeAddElementsPopup(){
 		$("#elemsCreationPopup").hide();
 	  $("#div-button-elem-creator").off("click");
 	}
 
-   	function saveDivSettings(elemId, elemEditorId) {
-   		//("#designInput-background-color").val();
+	//Se guarda los cambios hechos en la edicion de un elemento
+ 	function saveDivSettings(elemId, elemEditorId) {
+ 		//("#designInput-background-color").val();
+ 		//Valido todo y si todo esta bien recien ahi empiezo a setear los valores
+ 		allFieldsValid = true;
+ 		$("#designPopup input").each(function(){
+ 			styleAttribute = $(this).attr('name');
 
-   		//Valido todo y si todo esta bien recien ahi empiezo a setear los valores
-   		allFieldsValid = true;
-   		$("#designPopup input").each(function(){
-   			styleAttribute = $(this).attr('name');
+ 			if(!validateFieldValue(styleAttribute, $(this).val())){
+ 				allFieldsValid = false;
+ 				errorMessage = '<strong>- ';
+ 				errorMessage += elementsValidations[styleAttribute]["errorMessage"];
+ 				errorMessage += '</strong>';
+ 				$("#designPopupErrorMessage").append(errorMessage);
+ 				//agregar mensaje de error en algun lado
+ 			}
+ 		});
 
-   			if(!validateFieldValue(styleAttribute, $(this).val())){
-   				allFieldsValid = false;
-   				errorMessage = '<strong>- ';
-   				errorMessage += elementsValidations[styleAttribute]["errorMessage"];
-   				errorMessage += '</strong>';
-   				$("#designPopupErrorMessage").append(errorMessage);
-   				//agregar mensaje de error en algun lado
-   			}
-   		});
+ 		if(!allFieldsValid){
+ 			$("#designPopupErrorMessage").show();
+ 			return;
+ 		}
 
-   		if(!allFieldsValid){
-   			$("#designPopupErrorMessage").show();
-   			return;
-   		}
+ 		//$("#"+elemEditorId).attr("data-styles", "");
+ 		$("#designPopup input").each(function(){
+ 			styleAttribute = $(this).attr('name');
 
-   		//$("#"+elemEditorId).attr("data-styles", "");
-   		$("#designPopup input").each(function(){
-   			styleAttribute = $(this).attr('name');
+ 			$("#"+elemId).css(styleAttribute, $(this).val());
 
-   			$("#"+elemId).css(styleAttribute, $(this).val());
+ 			editorTag = $("#"+elemEditorId).attr("data-styles");
 
-   			editorTag = $("#"+elemEditorId).attr("data-styles");
-
-   			editorTag += styleAttribute + ":" + $(this).val() + ";";
-   			$("#"+elemEditorId).attr("data-styles", editorTag);
-   		});
+ 			editorTag += styleAttribute + ":" + $(this).val() + ";";
+ 			$("#"+elemEditorId).attr("data-styles", editorTag);
+ 		});
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
 
 		closeDesignerPopup();
-
 	}
 
+	//Valida el valor del atributo (edicion del elemento) segun las regex definidas apra el atributo
 	function validateFieldValue(styleAttribute, value){
 		//La variable con las regex de validacion esta en creator_validation.js
 		var re = new RegExp(elementsValidations[styleAttribute]["validation"]);
@@ -246,13 +254,12 @@
 		return false;
 	}
 
+	//Agrega un elemto hijo adentro de otro
 	function insertElem(elemId, elemEditorId) {
 		$("#div-button-elem-creator").on("click", function(){addPanelElement(elemId, elemEditorId); closeAddElementsPopup();});
 
    	$("#elemsCreationPopup").show();
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
-
 	}
-	
 
 </script>

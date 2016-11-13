@@ -46,6 +46,7 @@
 	background-color: #EEEEEE;
 	padding-left:5px;
 	cursor: pointer;
+  text-align: left;
 }
 
 
@@ -149,4 +150,18 @@
 #designPopup .alert{
   top: 0px;
   position: relative;
+}
+
+
+/*POPUP de agregado de elementos*/
+#elemsCreationPopup .build-screen-buttons-options-container{
+  position: relative;
+}
+
+#elemsCreationPopup .build-screen-buttons-container{
+  height: 150px;
+}
+
+#elemsCreationPopup .build-screen-section-title{
+  color: #000000;
 }
