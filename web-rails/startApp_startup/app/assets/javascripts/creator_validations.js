@@ -9,5 +9,9 @@ var elementsValidations = {
 	"height": {
 		"validation": "^([0-9]{1,2}|100)%$",
 		"errorMessage": "Altura inválida"
+	},
+	"value": {
+		"validation": "^.*$",
+		"errorMessage": "Texto inválido"
 	}
 };

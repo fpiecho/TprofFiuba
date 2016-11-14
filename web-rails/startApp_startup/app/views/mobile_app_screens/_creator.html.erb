@@ -13,17 +13,24 @@
 		</div>
 
 		<div class="form-horizontal">
-			<div class="form-group">
+			<div class="form-group designElement contenedor-element">
 			  <label class="control-label col-sm-2" for="designInput-background-color">Color fondo:</label>
 			  <div class="col-sm-10 form-control-div">
 			    <input id="designInput-background-color" type="text" class="jscolor {hash:true, styleElement:'none'}" name="background-color"> 
 			  </div>
 		 	</div>
 			
-			<div class="form-group">
+			<div class="form-group designElement contenedor-element">
 			  <label class="control-label col-sm-2" for="designInput-height">Altura:</label>
 			  <div class="col-sm-10">
 			    <input id="designInput-height" type="text" class="form-control" name="height"> 
+			  </div>
+		 	</div>
+
+		 	<div class="form-group designElement texto-element">
+			  <label class="control-label col-sm-2" for="designInput-height">Texto:</label>
+			  <div class="col-sm-10">
+			    <input id="designInput-value" type="text" class="form-control" name="value"> 
 			  </div>
 		 	</div>
 	   		
@@ -49,8 +56,12 @@
 		<div class="build-screen-buttons-options-container">
 			<div class="build-screen-section-title">Elementos</div>
 			<div class="build-screen-buttons-container">
-				<div id="div-button-elem-creator" class="build-screen-button-div tooltipCustom">
+				<div id="div-button-elem-container-creator" class="build-screen-button-div tooltipCustom">
 					<span style="margin: auto 0px;line-height:15px;">Contenedor</span>
+					<span class="tooltiptext">Agregar</span>
+				</div>
+				<div id="div-button-elem-text-creator" class="build-screen-button-div tooltipCustom">
+					<span style="margin: auto 0px;line-height:15px;">Texto</span>
 					<span class="tooltiptext">Agregar</span>
 				</div>
 			</div>
@@ -81,10 +92,16 @@
 	<div class="build-screen-buttons-options-container">
 		<div class="build-screen-section-title">Herramientas</div>
 		<div class="build-screen-buttons-container">
-			<div id="div-button" class="build-screen-button-div tooltipCustom" onclick="addPanelElement()">
+			<div id="div-button" class="build-screen-button-div tooltipCustom" onclick="addPanelElement('contenedor')">
 				<span style="margin: auto 0px;line-height:15px;">Contenedor</span>
 				<span class="tooltiptext">Agregar</span>
 			</div>
+
+			<div id="div-button" class="build-screen-button-div tooltipCustom" onclick="addPanelElement('texto')">
+				<span style="margin: auto 0px;line-height:15px;">Texto</span>
+				<span class="tooltiptext">Agregar</span>
+			</div>
+
 		</div>
 	</div>
 </div>
@@ -103,7 +120,7 @@
 	}
 
 	//Agrega un elemento a la pantalla
-	function addPanelElement(parentElem = "", parentElemEditor = ""){
+	function addPanelElement(elementType, parentElem = "", parentElemEditor = ""){
 		biggerDivIndex = -1;
 		//Busco el idx del div mayor asi me aseguro de no repetir ids
 		$('#build-screen-area .builder-elem-div').each(function(){
@@ -117,7 +134,14 @@
 
 		//Elemento de pantalla visible
 		elementId = "builder-div-" + biggerDivIndex;
-		elem = '<div id="' + elementId + '" class="builder-elem-div" style="width:100%; height:10%; background-color: #0000DD; border:1px solid black;"></div>';
+		
+		if(elementType=="texto"){
+			elem = '<span id="' + elementId + '" class="builder-elem-div" style="font-size: 10px; color: #000000;">Texto</span>';	
+		}else{
+			//Container es el default
+			elem = '<div id="' + elementId + '" class="builder-elem-div" style="width:100%; height:10%; background-color: #0000DD; border:1px solid black;"></div>';
+		}
+		
 		
 		if(parentElem != '')
 			$("#"+parentElem).append(elem);
@@ -126,14 +150,26 @@
 
 		//Elemento de edicion complementario
 		elementEditorId = "builder-editor-div-" + biggerDivIndex;
-		elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">'
-			elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Contenedor'
-				elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
-				elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
-				elemEditor += '<div class="deleteButton" onclick="insertElem(\''+elementId+'\', \''+elementEditorId+'\')">AGREGAR ELEM</div>';
-			elemEditor += '</div>';
-		elemEditor += '</div>';
 		
+		if(elementType=="texto"){
+			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">'
+				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Texto'
+					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
+					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
+				elemEditor += '</div>';
+			elemEditor += '</div>';
+		}else{
+			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">'
+				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Contenedor'
+					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
+					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
+					elemEditor += '<div class="deleteButton" onclick="insertElem(\''+elementId+'\', \''+elementEditorId+'\')">AGREGAR ELEM</div>';
+				elemEditor += '</div>';
+			elemEditor += '</div>';
+		}
+		//Idem sin el agregar elem, y Texto en vez de contenedor
+
+
 		if(parentElemEditor != '')
 			$("#"+parentElemEditor).append(elemEditor);
 		else
@@ -144,32 +180,41 @@
 	}
 
 	//Se abre el popup de edicion del elemento en cuestion
-	function showDesignPopup(elemId, elemEditorId) {
-   		$("#designPopupSaveButton").on("click", function(){saveDivSettings(elemId, elemEditorId);});
+	function showDesignPopup(elementType, elemId, elemEditorId) {
+ 		$("#designPopupSaveButton").on("click", function(){saveDivSettings(elemId, elemEditorId);});
 
-   		stylesString = $("#"+elemEditorId).attr("data-styles");
-
-   		stylesArray = stylesString.split(";");
-
+ 		//Agarro los estilos guardados en el elemntor editor y los vuelco en los campos del popup
+ 		stylesString = $("#"+elemEditorId).attr("data-styles");
+ 		stylesArray = stylesString.split(";");
 		stylesArray.forEach(function(item){
 			if(item != ""){
 				particularStyleArray = item.split(":");
 				$("#designInput-"+particularStyleArray[0]).val(particularStyleArray[1]);
 			}
-		}); 		
+		});
 
 		/*stylePosition = styles.indexOf("background-color");
 		if(stylePosition > -1){
 			stylePosition
 		}*/
 
-   		$("#designPopup").show();
+		$("#designPopup .designElement").each(function(){
+			if($(this).hasClass(elementType+"-element")){
+				$(this).show();
+			}else{
+				$(this).hide();
+			}
+		});
+		
+
+
+		$("#designPopup").show();
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
-	} 
+	}
 
 	//Se asigna la funcion de cierre al popup de edicion
 	$("#designPopupCloseButton").click(function (){
-	  	closeDesignerPopup();
+	  closeDesignerPopup();
 	});
 
 	//Inicialia los popups ocultos
@@ -213,13 +258,16 @@
  		$("#designPopup input").each(function(){
  			styleAttribute = $(this).attr('name');
 
- 			if(!validateFieldValue(styleAttribute, $(this).val())){
- 				allFieldsValid = false;
- 				errorMessage = '<strong>- ';
- 				errorMessage += elementsValidations[styleAttribute]["errorMessage"];
- 				errorMessage += '</strong>';
- 				$("#designPopupErrorMessage").append(errorMessage);
- 				//agregar mensaje de error en algun lado
+ 			//Solo tengo que validar los atributos del tipo de elemento en cuestion (es decir, los visibles)
+			if($(this).is(':visible')){
+				if(!validateFieldValue(styleAttribute, $(this).val())){
+					allFieldsValid = false;
+					errorMessage = '<strong>- ';
+					errorMessage += elementsValidations[styleAttribute]["errorMessage"];
+					errorMessage += '</strong>';
+					$("#designPopupErrorMessage").append(errorMessage);
+					//agregar mensaje de error en algun lado
+ 				}
  			}
  		});
 
@@ -232,12 +280,20 @@
  		$("#designPopup input").each(function(){
  			styleAttribute = $(this).attr('name');
 
- 			$("#"+elemId).css(styleAttribute, $(this).val());
+ 			//Solo tengo que usar los atributos del tipo de elemento en cuestion (es decir, los visibles)
+			if($(this).is(':visible')){
+	 			//chequeo casos particulares
+	 			if(styleAttribute == "value"){
+	 				$("#"+elemId).html($(this).val());
+	 			}else{
+	 				$("#"+elemId).css(styleAttribute, $(this).val());
+				}
 
- 			editorTag = $("#"+elemEditorId).attr("data-styles");
+	 			editorTag = $("#"+elemEditorId).attr("data-styles");
 
- 			editorTag += styleAttribute + ":" + $(this).val() + ";";
- 			$("#"+elemEditorId).attr("data-styles", editorTag);
+	 			editorTag += styleAttribute + ":" + $(this).val() + ";";
+	 			$("#"+elemEditorId).attr("data-styles", editorTag);
+	 		}
  		});
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
 
@@ -254,9 +310,10 @@
 		return false;
 	}
 
-	//Agrega un elemto hijo adentro de otro
+	//Agrega la funcion al boton del popup, para agregar un elemento hijo adentro de otro
 	function insertElem(elemId, elemEditorId) {
-		$("#div-button-elem-creator").on("click", function(){addPanelElement(elemId, elemEditorId); closeAddElementsPopup();});
+		$("#div-button-elem-container-creator").on("click", function(){addPanelElement('contenedor', elemId, elemEditorId); closeAddElementsPopup();});
+		$("#div-button-elem-text-creator").on("click", function(){addPanelElement('texto', elemId, elemEditorId);closeAddElementsPopup();});
 
    	$("#elemsCreationPopup").show();
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
