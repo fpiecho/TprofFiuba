@@ -198,7 +198,8 @@ class MobileAppsController < ApplicationController
 
   def get_pages
     appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
-    return MobileAppsHelper.get_pages(appPath)
+    appType = @mobile_app.apptype.downcase;
+    return MobileAppsHelper.get_pages(appPath, appType);
   end
 
   def page_exists

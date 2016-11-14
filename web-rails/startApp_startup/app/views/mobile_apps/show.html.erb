@@ -69,7 +69,7 @@
       <div class="build-tab-buttons-container" style="overflow-y:auto;"">
       <% get_pages.each do |element| %>
         <div id="div-button" class="build-tab-button-div">
-          <span style="margin: auto 1px;line-height:15px;"><%= element %></li> </span>
+          <span style="margin: auto 1px;line-height:15px;"><%= element[0] %></li> </span>
           <%= link_to t('.tab', :default => "x"),
                   mobile_apps_delete_page_path(:name => element),
                   :method => 'delete',
