@@ -36,13 +36,22 @@ module MobileAppsHelper
 		end
 	end
 
-	def self.new_page(appPath, tabName, appType)
+	def self.new_page(mobileApp, appPath, tabName, appType, type, screen)
 		system("cd \"#{appPath}\" && ionic g page \"#{tabName}\"");
 
 		if (appType == 'Tabs')
 			new_tab(appPath, tabName.downcase)
 		else
 			new_menu_page(appPath, tabName.downcase)
+		end
+
+		if (type == "2")#custom screen
+			@mobile_app_screen = mobileApp.mobile_app_screens.select { |s| s.id.to_s == screen }
+			if(@mobile_app_screen.present? && @mobile_app_screen.size > 0)
+				p @mobile_app_screen.first.raw_html
+				p "custom3"
+				set_content(appPath, tabName, @mobile_app_screen.first.raw_html)
+			end
 		end
 	end
 
