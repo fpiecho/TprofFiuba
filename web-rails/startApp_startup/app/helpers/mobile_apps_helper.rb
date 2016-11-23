@@ -36,13 +36,22 @@ module MobileAppsHelper
 		end
 	end
 
-	def self.new_page(appPath, tabName, appType)
+	def self.new_page(mobileApp, appPath, tabName, appType, type, screen)
 		system("cd \"#{appPath}\" && ionic g page \"#{tabName}\"");
 
 		if (appType == 'Tabs')
 			new_tab(appPath, tabName.downcase)
 		else
 			new_menu_page(appPath, tabName.downcase)
+		end
+
+		if (type == "2")#custom screen
+			@mobile_app_screen = mobileApp.mobile_app_screens.select { |s| s.id.to_s == screen }
+			if(@mobile_app_screen.present? && @mobile_app_screen.size > 0)
+				p @mobile_app_screen.first.raw_html
+				p "custom3"
+				set_content(appPath, tabName, @mobile_app_screen.first.raw_html)
+			end
 		end
 	end
 
@@ -51,7 +60,7 @@ module MobileAppsHelper
 		tabsTsPath = appPath.join('app').join('app.ts')
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
 		replace(tabsTsPath, '@Component({') { |match| "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
-		replace(tabsTsPath, '];') { |match| ",{ title: '" + tabName + "', component: " + tabNameForPage + "Page }" + "\n" + "#{match}" }
+		replace(tabsTsPath, /\}((?!,)[\S\s])*];/) { |match| "},\n { title: '" + tabName + "', component: " + tabNameForPage + "Page }" + "\n" + "    ];" }
 
 		#app.core.css
 		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
@@ -111,17 +120,22 @@ module MobileAppsHelper
 			if (appType == 'Tabs')
 				delete_tab(appPath, tabName)
 			else
-				delete_menu_page(appPath, tabName)
+				delete_menu_page(appPath, tabName, appType)
 			end
 		end
 	end
 
-	def self.delete_menu_page(appPath, tabName)
+	def self.delete_menu_page(appPath, tabName, appType)
 		#app.ts
 		appTsPath = appPath.join('app').join('app.ts')
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
 		replace(appTsPath, "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" + "\n" ) { |match| '' }
 		replace(appTsPath, /,((?!,)[\S\s])*{ title: '#{tabName}', component: #{tabNameForPage}Page }/) { |match| '' }
+		#rootPage
+		somePage = get_pages(appPath, appType)[0][0];
+		tabNameForSomePage = somePage[0].upcase + somePage[1..somePage.length - 1]		
+		replace(appTsPath, "rootPage: any = " + tabNameForPage + "Page;") {|match| "rootPage: any = " + tabNameForSomePage +"Page;"}
+		
 
 		#app.core.css
 		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
@@ -148,9 +162,25 @@ module MobileAppsHelper
 		replace(tabsTsPath, "import { " + tabNameForPage +"Page } from '../" + tabName +"/" + tabName + "';" + "\n") { |match|  '' }
 	end
 
-	def self.get_pages(appPath)
-		tabsPath = appPath.join('app').join('pages')
-		return Dir.entries(tabsPath).delete_if {|i| i == "." || i == ".." || i == "tabs"}
+	def self.get_pages(appPath, appType)
+		if(appType == 'tabs')
+			return get_pages_tabs(appPath, appType);
+		else
+			return get_pages_menu(appPath, appType);
+		end
+
+	end
+
+	def self.get_pages_tabs(appPath, appType)
+		tabsPath = appPath.join('app').join('pages').join('tabs').join('tabs.html');
+		fileText = File.read(tabsPath);
+		return fileText.scan(/tabTitle=\"(.*)\" tabIcon/);
+	end
+
+	def self.get_pages_menu(appPath, appType)
+		appTsPath = appPath.join('app').join('app.ts')
+		fileText = File.read(appTsPath);
+		return fileText.scan(/title: \'(.*)\',/);
 	end
 
 	def self.page_exists(appPath, name)
