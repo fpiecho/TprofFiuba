@@ -319,4 +319,44 @@
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
 	}
 
+	$(function() {
+    $( "#build-screen-elem-options" ).sortable({
+
+    	update: function(event, ui) {
+        //Obtengo la nueva posicion de mi elemento y su id
+        index = ui.item.index();
+        reorderElemId = ui.item.attr("id");
+
+        //Matcheo el id del editor con su elemento de la vista
+				reorderElemId = reorderElemId.replace("editor-","");
+				// Me guardo el elemento a reubicar
+				elemToReorder = $("#"+reorderElemId);
+				//obtengo el div padre, en donde reordenare
+				parentId = $("#"+reorderElemId).parent().attr("id");
+				
+				//Para cada uno de los divs hijos (hermanos del que estoy ordenando), me fijo su nueva posicion en base al elemento reordenado
+				i = 0;
+				$("#"+parentId).children().each(function (){
+				  if(i == index)
+				  	elemToReorder.appendTo("#"+parentId);
+				  
+				  //El elemento a reordenar se agrega solo cuando se encuentra su indice
+				  if($(this).attr("id") != reorderElemId)
+				  {
+						$(this).appendTo("#"+parentId);
+						i++;
+				  }
+				});
+
+				//Esto es por si quedaba ultimo
+				if(i == index)
+				  	elemToReorder.appendTo("#"+parentId);
+      }
+
+     });
+
+    //$( ".builder-editor-elem-div" ).sortable();
+    
+  });
+
 </script>
