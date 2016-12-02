@@ -134,7 +134,7 @@ class MobileAppsController < ApplicationController
     if(@mobile_app.user_id.equal? current_user.id)
       name = params[:name].gsub(/\s+/, "")
       type = params[:type]
-      screen = params[:screen]
+      value = params[:value]
       
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
       tabPath = appPath.join('app').join('pages').join(name)
@@ -144,7 +144,7 @@ class MobileAppsController < ApplicationController
           format.json { render :show, status: :created, location: @mobile_app }
         end
       else
-        MobileAppsHelper.new_page(@mobile_app, appPath, name, @mobile_app.apptype, type, screen)
+        MobileAppsHelper.new_page(@mobile_app, appPath, name, @mobile_app.apptype, type, value)
         respond_to do |format|
           format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page ' + name +' was successfully created.' }
           format.json { render :show, status: :created, location: @mobile_app }

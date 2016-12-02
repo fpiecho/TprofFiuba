@@ -36,7 +36,7 @@ module MobileAppsHelper
 		end
 	end
 
-	def self.new_page(mobileApp, appPath, tabName, appType, type, screen)
+	def self.new_page(mobileApp, appPath, tabName, appType, type, value)
 		system("cd \"#{appPath}\" && ionic g page \"#{tabName}\"");
 
 		if (appType == 'Tabs')
@@ -45,14 +45,23 @@ module MobileAppsHelper
 			new_menu_page(appPath, tabName.downcase)
 		end
 
-		if (type == "2")#custom screen
-			@mobile_app_screen = mobileApp.mobile_app_screens.select { |s| s.id.to_s == screen }
+		content = ""
+		case type
+		when "2"#custom screen
+			@mobile_app_screen = mobileApp.mobile_app_screens.select { |s| s.id.to_s == value }
 			if(@mobile_app_screen.present? && @mobile_app_screen.size > 0)
-				p @mobile_app_screen.first.raw_html
-				p "custom3"
-				set_content(appPath, tabName, @mobile_app_screen.first.raw_html)
+				content= @mobile_app_screen.first.raw_html
 			end
+		when "3"#facebook feed
+			content = "<iframe src=\"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F" + value +"&tabs=timeline&width=270&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=268321266881752\" width=\"270\" height=\"500\" style=\"border:none;overflow:hidden\" scrolling=\"no\" frameborder=\"0\" allowTransparency=\"true\"></iframe>"
+		when "4"#instagram feed
+			puts "instagram"
+		when "5"#twitter feed
+			puts "twitter"
+		when "6"#youtube channel
+			content = "<iframe src=\"http://www.youtube.com/embed/?listType=user_uploads&list=" + value + "\" width=\"256\" height=\"216\"></iframe>"
 		end
+		set_content(appPath, tabName, content)
 	end
 
 	def self.new_menu_page(appPath, tabName)

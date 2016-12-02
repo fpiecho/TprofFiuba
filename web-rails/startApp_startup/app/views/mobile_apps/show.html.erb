@@ -50,6 +50,10 @@
           <select id="tab-type" type="text" class="form-control" name="type" onchange="changeFunc();"> 
             <option value="1">Empty</option>
             <option value="2">Pantalla custom</option>
+            <option value="3">Facebook feed</option>
+            <option value="4">Instagram feed</option>
+            <option value="5">Twitter feed</option>
+            <option value="6">Youtube channel</option>
           </select>
         </div>
       </div>
@@ -112,6 +116,15 @@
     if(selectedValue == "2"){
       customScreenClick();
     }
+    else if (selectedValue == "3"){
+      textInputClick("Página");
+    }
+    else if (selectedValue == "4" || selectedValue == "5"){
+      textInputClick("Usuario");
+    }
+    else if (selectedValue == "6"){
+      textInputClick("Canal");
+    }
 
   }
   function cleanOptions(){
@@ -123,7 +136,10 @@
 
   function customScreenClick(){
     $("#options").append("<label class=\"control-label col-sm-2\" for=\"custom-screen\">Pantalla:</label><div class=\"col-sm-10\"><select id=\"custom-screen\" type=\"text\" class=\"form-control\"><% @mobile_app.mobile_app_screens.each do |screen| %><option value=<%=screen.id%>><%=screen.name%></option><% end %></select></div><a target=\"_blank\" href=\"/mobile_apps/menu/<%= @mobile_app.id %>\">Ir a ver pantallas</a>");
-    
+  }
+
+  function textInputClick(title){
+    $("#options").append("<label class=\"control-label col-sm-2\" for=\"custom-screen\">" + title + ":</label><div class=\"col-sm-10\"><input id=\"input-text\" type=\"text\" class=\"form-control\"></input></div>");
   }
 
   function showPopup(){
@@ -131,7 +147,8 @@
   }
 
   function saveTab(){
-    //Valido todo y si todo esta bien recien ahi empiezo a setear los valores
+    hidePopupErrorMessage();
+    //Valido todo
     allFieldsValid = true;
     var title = document.getElementById('tab-title').value; 
     $("#errorMessageDescription").text("");
@@ -154,7 +171,16 @@
         errorMessage += '</strong>';
         $("#errorMessageDescription").append(errorMessage);
        }
+
+      if (document.getElementById('input-text') && document.getElementById('input-text').value ===''){
+        allFieldsValid = false;
+        errorMessage = '<strong>- ';
+        errorMessage += "Complete all fields";
+        errorMessage += '</strong>';
+        $("#errorMessageDescription").append(errorMessage);
+      }
     }
+
 
     if(!allFieldsValid){
       $("#designPopupErrorMessage").show();
@@ -162,16 +188,19 @@
     }
     var tabTypeBox = document.getElementById("tab-type");
     var tabType = tabTypeBox.options[tabTypeBox.selectedIndex].value;
-    var screenType = 1;
+    var freeValue = 1;
     if (document.getElementById('custom-screen')){
       var screenTypeBox = document.getElementById("custom-screen");
-      screenType = screenTypeBox.options[screenTypeBox.selectedIndex].value;
+      freeValue = screenTypeBox.options[screenTypeBox.selectedIndex].value;
+    } else if (document.getElementById('input-text')){
+      var inputText = document.getElementById("input-text");
+      freeValue = inputText.value;
     }
     
     $.ajax({
       type: "POST",
       url: "/mobile_apps/pages/<%= @mobile_app.id %>/" + title,
-      data: { type: tabType, screen : screenType} 
+      data: { type: tabType, value : freeValue} 
     });
     if (window.location.href.indexOf("?s=f") == -1){
       window.location.href = window.location.href + "?s=f";
@@ -192,7 +221,6 @@
   window.onload = function() {
     var iframe = document.getElementById('cellPhoneFrame');
     iframe.src = iframe.src;
-  };
-  
+  };  
 
 </script>
