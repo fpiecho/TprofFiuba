@@ -10,8 +10,20 @@ var elementsValidations = {
 		"validation": "^([0-9]{1,2}|100)%$",
 		"errorMessage": "Altura inválida"
 	},
+	"text-align": {
+		"validation": "^(left|center|right|)$",
+		"errorMessage": "Alineación inválida"
+	},
+	"padding": {
+		"validation": "^([0-9]*px|)$",
+		"errorMessage": "Padding inválido"
+	},
 	"value": {
 		"validation": "^.*$",
 		"errorMessage": "Texto inválido"
+	},
+	"font-size": {
+		"validation": "^([0-9]*|[0-9]*\.[0-9]*)em$",
+		"errorMessage": "Tamaño de letra inválido"
 	}
 };

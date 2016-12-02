@@ -13,6 +13,7 @@
 		</div>
 
 		<div class="form-horizontal">
+			<!-- Background-color: Contenedor   -->
 			<div class="form-group designElement contenedor-element">
 			  <label class="control-label col-sm-2" for="designInput-background-color">Color fondo:</label>
 			  <div class="col-sm-10 form-control-div">
@@ -20,6 +21,7 @@
 			  </div>
 		 	</div>
 			
+			<!-- Height: Contenedor   -->
 			<div class="form-group designElement contenedor-element">
 			  <label class="control-label col-sm-2" for="designInput-height">Altura:</label>
 			  <div class="col-sm-10">
@@ -27,10 +29,35 @@
 			  </div>
 		 	</div>
 
+		 	<!-- Text align: Contenedor   -->
+			<div class="form-group designElement contenedor-element">
+			  <label class="control-label col-sm-2" for="designInput-text-align">Alineanación:</label>
+			  <div class="col-sm-10">
+			    <input id="designInput-text-align" type="text" class="form-control" name="text-align"> 
+			  </div>
+		 	</div>
+
+		 	<!-- Padding: Contenedor, Texto   -->
+			<div class="form-group designElement contenedor-element texto-element">
+			  <label class="control-label col-sm-2" for="designInput-padding">Padding:</label>
+			  <div class="col-sm-10">
+			    <input id="designInput-padding" type="text" class="form-control" name="padding"> 
+			  </div>
+		 	</div>
+
+		 	<!-- Value Text: Texto   -->
 		 	<div class="form-group designElement texto-element">
 			  <label class="control-label col-sm-2" for="designInput-height">Texto:</label>
 			  <div class="col-sm-10">
 			    <input id="designInput-value" type="text" class="form-control" name="value"> 
+			  </div>
+		 	</div>
+
+			<!-- font-size: Texto   -->
+		 	<div class="form-group designElement texto-element">
+			  <label class="control-label col-sm-2" for="designInput-font-size">Tamaño letra:</label>
+			  <div class="col-sm-10">
+			    <input id="designInput-font-size" type="text" class="form-control" name="font-size"> 
 			  </div>
 		 	</div>
 	   		
@@ -139,7 +166,7 @@
 			elem = '<span id="' + elementId + '" class="builder-elem-div" style="font-size: 10px; color: #000000;">Texto</span>';	
 		}else{
 			//Container es el default
-			elem = '<div id="' + elementId + '" class="builder-elem-div" style="width:100%; height:10%; background-color: #0000DD; border:1px solid black;"></div>';
+			elem = '<div id="' + elementId + '" class="builder-elem-div" style="width:100%; height:10%; background-color: #0000DD;"></div>';
 		}
 		
 		
@@ -216,14 +243,6 @@
 	$("#designPopupCloseButton").click(function (){
 	  closeDesignerPopup();
 	});
-
-	//Inicialia los popups ocultos
-	$(document).ready(function (){
-		//Esconder el popup
-   	$("#designPopup").hide();
-   	$("#elemsCreationPopup").hide();	
-
-  });
 
 	//Esconde los mensajes de error del popup (para que se dejen de mostrar si cierra el popup y lo vuelve a abrir)
 	function hidePopupErrorMessage(){		
@@ -319,44 +338,66 @@
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
 	}
 
-	$(function() {
-    $( "#build-screen-elem-options" ).sortable({
+	function reorderScreenElements(ui, offset){
+		//Obtengo la nueva posicion de mi elemento y su id
+    index = ui.item.index();
+    index -= offset;
+    reorderElemId = ui.item.attr("id");
 
-    	update: function(event, ui) {
-        //Obtengo la nueva posicion de mi elemento y su id
-        index = ui.item.index();
-        reorderElemId = ui.item.attr("id");
+    //Matcheo el id del editor con su elemento de la vista
+		reorderElemId = reorderElemId.replace("editor-","");
+		// Me guardo el elemento a reubicar
+		elemToReorder = $("#"+reorderElemId);
+		//obtengo el div padre, en donde reordenare
+		parentId = $("#"+reorderElemId).parent().attr("id");
 
-        //Matcheo el id del editor con su elemento de la vista
-				reorderElemId = reorderElemId.replace("editor-","");
-				// Me guardo el elemento a reubicar
-				elemToReorder = $("#"+reorderElemId);
-				//obtengo el div padre, en donde reordenare
-				parentId = $("#"+reorderElemId).parent().attr("id");
-				
-				//Para cada uno de los divs hijos (hermanos del que estoy ordenando), me fijo su nueva posicion en base al elemento reordenado
-				i = 0;
-				$("#"+parentId).children().each(function (){
-				  if(i == index)
-				  	elemToReorder.appendTo("#"+parentId);
-				  
-				  //El elemento a reordenar se agrega solo cuando se encuentra su indice
-				  if($(this).attr("id") != reorderElemId)
-				  {
-						$(this).appendTo("#"+parentId);
-						i++;
-				  }
-				});
+		//Para cada uno de los divs hijos (hermanos del que estoy ordenando), me fijo su nueva posicion en base al elemento reordenado
+		i = 0;
+		$("#"+parentId).children().each(function (){
+		  if(i == index)
+		  	elemToReorder.appendTo("#"+parentId);
+	  
+		  //El elemento a reordenar se agrega solo cuando se encuentra su indice
+		  if($(this).attr("id") != reorderElemId)
+		  {
+				$(this).appendTo("#"+parentId);
+				i++;
+		  }
+		});
 
-				//Esto es por si quedaba ultimo
-				if(i == index)
-				  	elemToReorder.appendTo("#"+parentId);
-      }
+		//Esto es por si quedaba ultimo
+		if(i == index)
+		  elemToReorder.appendTo("#"+parentId);
+	}
 
-     });
+	//on ready
+	//Inicialia los popups ocultos
+	$(document).ready(function (){
+		//Esconder el popup
+   	$("#designPopup").hide();
+   	$("#elemsCreationPopup").hide();	
 
-    //$( ".builder-editor-elem-div" ).sortable();
-    
-  });
+  
+   	//Inicializo el sortable apra el editor
+		$(function() {
+	    $( "#build-screen-elem-options" ).sortable({
+
+	    	update: function(event, ui) {
+	        reorderScreenElements(ui, 0);
+	      }
+
+	    });
+
+	    $( ".builder-editor-elem-div" ).sortable({
+	   		items: "> div.builder-editor-elem-div",
+
+	   		update: function(event, ui) {
+	        reorderScreenElements(ui, 1);
+	      }
+	    });
+	    
+	  });
+
+	});
 
 </script>
