@@ -53,13 +53,13 @@ module MobileAppsHelper
 				content= @mobile_app_screen.first.raw_html
 			end
 		when "3"#facebook feed
-			content = "<iframe src=\"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F" + value +"&tabs=timeline&width=270&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=268321266881752\" width=\"270\" height=\"500\" style=\"border:none;overflow:hidden\" scrolling=\"no\" frameborder=\"0\" allowTransparency=\"true\"></iframe>"
+			content = get_fb_content(value)
 		when "4"#instagram feed
-			puts "instagram"
+			content = get_ig_content(value)
 		when "5"#twitter feed
-			puts "twitter"
+			content = get_tw_content(value)
 		when "6"#youtube channel
-			content = "<iframe src=\"http://www.youtube.com/embed/?listType=user_uploads&list=" + value + "\" width=\"256\" height=\"216\"></iframe>"
+			content = get_yt_content(value)
 		end
 		set_content(appPath, tabName, content)
 	end
@@ -196,4 +196,22 @@ module MobileAppsHelper
 		tabsPath = appPath.join('app').join('pages')
 		return Dir.entries(tabsPath).include?(name)
 	end
+
+	def self.get_fb_content(value)
+		return "<iframe src=\"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F" + value +"&tabs=timeline&width=270&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=268321266881752\" width=\"270\" height=\"500\" style=\"border:none;overflow:hidden\" scrolling=\"no\" frameborder=\"0\" allowTransparency=\"true\"></iframe>"
+	end
+
+	def self.get_tw_content(value)
+		return "<iframe border=0 frameborder=0 height=500 width=270 
+ src=\"http://twitframe.com/show?url="  + value +"\"></iframe>"
+	end
+
+	def self.get_ig_content(value)
+		return "<iframe width=\"270\" height=\"500\" src=\"http://instagram.com/p/" + value +"/embed\" frameborder=\"0\"></iframe>"
+	end
+
+	def self.get_yt_content(value)
+		return "<iframe src=\"http://www.youtube.com/embed/?listType=user_uploads&list=" + value + "\" width=\"256\" height=\"216\"></iframe>"
+	end
+
 end

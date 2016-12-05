@@ -51,8 +51,8 @@
             <option value="1">Empty</option>
             <option value="2">Pantalla custom</option>
             <option value="3">Facebook feed</option>
-            <option value="4">Instagram feed</option>
-            <option value="5">Twitter feed</option>
+            <option value="4">Instagram post</option>
+            <option value="5">Twitter post</option>
             <option value="6">Youtube channel</option>
           </select>
         </div>
@@ -119,8 +119,11 @@
     else if (selectedValue == "3"){
       textInputClick("Página");
     }
-    else if (selectedValue == "4" || selectedValue == "5"){
-      textInputClick("Usuario");
+    else if (selectedValue == "4"){
+      textInputClick("Código de post");
+    }
+    else if (selectedValue == "5"){
+      textInputClick("Url del tweet");
     }
     else if (selectedValue == "6"){
       textInputClick("Canal");
