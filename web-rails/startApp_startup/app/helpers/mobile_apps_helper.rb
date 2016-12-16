@@ -60,6 +60,9 @@ module MobileAppsHelper
 			content = get_tw_content(value)
 		when "6"#youtube channel
 			content = get_yt_content(value)
+		when "7"#chat
+			content = get_chat_content()
+			set_chat_tab(appPath, tabName, mobileApp.title)
 		end
 		set_content(appPath, tabName, content)
 	end
@@ -214,4 +217,30 @@ module MobileAppsHelper
 		return "<iframe src=\"http://www.youtube.com/embed/?listType=user_uploads&list=" + value + "\" width=\"256\" height=\"216\"></iframe>"
 	end
 
+	def self.get_chat_content()
+		return " <ion-list>
+				    <ion-item *ngFor=\"#message of chats\">
+				      <div class=\"{{ message.user == nickname ? 'item-right' : 'item-left' }}\">
+				          <span class=\"{{ message.user == nickname ? 'user' : 'other-user' }}\">{{message.user}}</span>: {{message.message}} 
+				      </div>
+				    </ion-item>
+				</ion-list>
+				<ion-input type=\"text\" [(ngModel)]=\"chatinp\" placeholder=\"Enter a message\"></ion-input>
+				<button fab (click)=\"send(chatinp)\">Send</button>"
+	end
+
+	def self.set_chat_tab(appPath, tabName, appName)
+		tabPath = appPath.join('app').join('pages').join(tabName)
+		chatModels = Rails.root.join('modelos').join('chat');
+		IO.copy_stream(chatModels.join('chat.scss'), tabPath.join(tabName + ".scss"))
+
+		tsFilePath = tabPath.join(tabName + ".ts")
+		IO.copy_stream(chatModels.join('chat.ts'), tsFilePath)
+
+		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1];
+		replace(tsFilePath, 'chat/chat.html') { |match| tabName + "/" + tabName + ".html"}
+		replace(tsFilePath, 'ChatPage') { |match| tabNameForPage + "Page"}
+		replace(tsFilePath, '[appName]') { |match| appName}
+		
+	end
 end
