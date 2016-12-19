@@ -130,22 +130,22 @@ module MobileAppsHelper
 	end
 
 
-	def self.delete_page(appPath, tabName, appType)
+	def self.delete_page(appPath, originalName, appType)
 		tabsPath = appPath.join('app').join('pages');
+		tabName = transform_name(originalName)
 		count = Dir.entries(tabsPath).delete_if {|i| i == "." || i == ".." || i == "tabs"}.count;
 		if(count > 1)
 			FileUtils.rm_rf(tabsPath.join(tabName))
 
 			if (appType == 'Tabs')
-				delete_tab(appPath, tabName)
+				delete_tab(appPath, originalName, tabName)
 			else
-				delete_menu_page(appPath, tabName, appType)
+				delete_menu_page(appPath, originalName, appType, tabName)
 			end
 		end
 	end
 
-	def self.delete_menu_page(appPath, originalName, appType)
-		tabName = transform_name(originalName)
+	def self.delete_menu_page(appPath, originalName, appType, tabName)
 		#app.ts
 		appTsPath = appPath.join('app').join('app.ts')
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
@@ -164,8 +164,7 @@ module MobileAppsHelper
 
 	end
 
-	def self.delete_tab(appPath, originalName)
-		tabName = transform_name(originalName)
+	def self.delete_tab(appPath, originalName, tabName)
 		#app.core.css
 		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
 		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
