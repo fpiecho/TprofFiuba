@@ -65,6 +65,8 @@ module MobileAppsHelper
 		when "7"#chat
 			content = get_chat_content()
 			set_chat_tab(appPath, tabName, mobileApp.title)
+		when "8"#Google map
+			content = get_map_content(value)
 		end
 		set_content(appPath, tabName, content)
 	end
@@ -235,6 +237,10 @@ module MobileAppsHelper
 				</ion-list>
 				<ion-input type=\"text\" [(ngModel)]=\"chatinp\" placeholder=\"Enter a message\"></ion-input>
 				<button fab (click)=\"send(chatinp)\">Send</button>"
+	end
+
+	def self.get_map_content(value)
+		return "<iframe src=\"https://www.google.com/maps/d/embed?mid=" + value + "\" width=\"256\" height=\"345\"></iframe>"
 	end
 
 	def self.set_chat_tab(appPath, tabName, appName)
