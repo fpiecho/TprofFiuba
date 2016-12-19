@@ -132,7 +132,7 @@ class MobileAppsController < ApplicationController
   #POST /mobile_apps/pages/:id/:name
   def new_page
     if(@mobile_app.user_id.equal? current_user.id)
-      name = params[:name].gsub(/\s+/, "")
+      name = params[:name]
       type = params[:type]
       value = params[:value]
       
@@ -158,7 +158,8 @@ class MobileAppsController < ApplicationController
     if(@mobile_app.user_id.equal? current_user.id)
       name = params[:name]
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
-      tabPath = appPath.join('app').join('pages').join(name)
+      tabName = MobileAppsHelper.transform_name(name)
+      tabPath = appPath.join('app').join('pages').join(tabName)
       if (File.directory?(tabPath))
         MobileAppsHelper.delete_page(appPath, name, @mobile_app.apptype)
         respond_to do |format|
