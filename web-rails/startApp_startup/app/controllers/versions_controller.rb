@@ -29,14 +29,11 @@ class VersionsController < ApplicationController
     @version = Version.new(version_params)
     @mobile_app = MobileApp.find(@version.mobile_app_id)
     if(@mobile_app.user_id.equal? current_user.id)
-      @version = Version.new(version_params)
       backupPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description) 
       FileUtils.mkdir_p(backupPath) unless File.directory?(backupPath)
 
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@version.mobile_app.title).join('*')
-      p appPath
       FileUtils.cp_r Dir[appPath] , backupPath
-
 
       respond_to do |format|
         if @version.save
@@ -74,6 +71,8 @@ class VersionsController < ApplicationController
   # DELETE /versions/1.json
   def destroy
     mobile_app_id = @version.mobile_app_id.to_s
+    versionPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description) 
+    FileUtils.rm_rf(versionPath)
     @version.destroy
     respond_to do |format|
       format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version was successfully destroyed.' }
