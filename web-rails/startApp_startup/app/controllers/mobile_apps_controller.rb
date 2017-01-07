@@ -1,3 +1,20 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Gist
+ @LeandroRodriguez
+ Unwatch 2
+  Unstar 1
+ Fork 0 fpiecho/TprofFiuba
+ Code  Issues 2  Pull requests 0  Projects 0  Wiki  Pulse  Graphs
+Tree: 7f89c2b080 Find file Copy pathTprofFiuba/web-rails/startApp_startup/app/controllers/mobile_apps_controller.rb
+7f89c2b  19 days ago
+@fpiecho fpiecho Fixes en los nombres de los tabs
+2 contributors @fpiecho @LeandroRodriguez
+RawBlameHistory    
+228 lines (199 sloc)  7.86 KB
 class MobileAppsController < ApplicationController
   helper_method :get_pages
   before_action :authenticate_user!
@@ -132,7 +149,7 @@ class MobileAppsController < ApplicationController
   #POST /mobile_apps/pages/:id/:name
   def new_page
     if(@mobile_app.user_id.equal? current_user.id)
-      name = params[:name].gsub(/\s+/, "")
+      name = params[:name]
       type = params[:type]
       value = params[:value]
       
@@ -158,7 +175,8 @@ class MobileAppsController < ApplicationController
     if(@mobile_app.user_id.equal? current_user.id)
       name = params[:name]
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
-      tabPath = appPath.join('app').join('pages').join(name)
+      tabName = MobileAppsHelper.transform_name(name)
+      tabPath = appPath.join('app').join('pages').join(tabName)
       if (File.directory?(tabPath))
         MobileAppsHelper.delete_page(appPath, name, @mobile_app.apptype)
         respond_to do |format|
@@ -224,3 +242,5 @@ class MobileAppsController < ApplicationController
       params.require(:mobile_app).permit(:title, :description, :apptype)
     end
 end
+Contact GitHub API Training Shop Blog About
+© 2017 GitHub, Inc. Terms Privacy Security Status Help

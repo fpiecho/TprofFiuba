@@ -36,13 +36,15 @@ module MobileAppsHelper
 		end
 	end
 
-	def self.new_page(mobileApp, appPath, tabName, appType, type, value)
+	def self.new_page(mobileApp, appPath, originalName, appType, type, value)
+		tabName = transform_name(originalName)
+		
 		system("cd \"#{appPath}\" && ionic g page \"#{tabName}\"");
 
 		if (appType == 'Tabs')
-			new_tab(appPath, tabName.downcase)
+			new_tab(appPath, tabName, originalName)
 		else
-			new_menu_page(appPath, tabName.downcase)
+			new_menu_page(appPath, tabName, originalName)
 		end
 
 		content = ""
@@ -63,16 +65,18 @@ module MobileAppsHelper
 		when "7"#chat
 			content = get_chat_content()
 			set_chat_tab(appPath, tabName, mobileApp.title)
+		when "8"#Google map
+			content = get_map_content(value)
 		end
 		set_content(appPath, tabName, content)
 	end
 
-	def self.new_menu_page(appPath, tabName)
+	def self.new_menu_page(appPath, tabName, originalName)
 		#app.ts
 		tabsTsPath = appPath.join('app').join('app.ts')
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
 		replace(tabsTsPath, '@Component({') { |match| "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
-		replace(tabsTsPath, /\}((?!,)[\S\s])*];/) { |match| "},\n { title: '" + tabName + "', component: " + tabNameForPage + "Page }" + "\n" + "    ];" }
+		replace(tabsTsPath, /\}((?!,)[\S\s])*];/) { |match| "},\n { title: '" + originalName + "', component: " + tabNameForPage + "Page }" + "\n" + "    ];" }
 
 		#app.core.css
 		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
@@ -87,10 +91,11 @@ module MobileAppsHelper
 		replace(pagePath, '<ion-navbar>') { |match| "#{match}" + '<button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>' }
+    	replace(pagePath, '<ion-title>' + tabName + '</ion-title>'){ |match| "<ion-title>" + originalName + "</ion-title>" }
 
 	end
 
-	def self.new_tab(appPath, tabName)
+	def self.new_tab(appPath, tabName, originalName)
 		#app.core.css
 		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
 		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
@@ -101,7 +106,7 @@ module MobileAppsHelper
 
 		#tabs.html
 		tabsPath = appPath.join('app').join('pages').join('tabs').join('tabs.html')
-		tabLine = '<ion-tab [root]="tab' + tabName + '" tabTitle="' + tabName +'" tabIcon="' + tabName + '"></ion-tab>' + "\n"
+		tabLine = '<ion-tab [root]="tab' + tabName + '" tabTitle="' + originalName +'" tabIcon="' + tabName + '"></ion-tab>' + "\n"
 		replace(tabsPath, /<\/ion-tabs>/mi) { |match| tabLine + "#{match}"}
 
 		#tabs.ts
@@ -110,6 +115,10 @@ module MobileAppsHelper
 		replace(tabsTsPath, 'constructor() {') { |match| "#{match}" + "\n" + "this.tab" + tabName + " = " + tabNameForPage + "Page;"}
 		replace(tabsTsPath, 'export class TabsPage {') { |match| "#{match}" + "\n" + "public tab" + tabName + ": any;"}
 		replace(tabsTsPath, '@Component({') { |match| "import { " + tabNameForPage +"Page } from '../" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
+
+		#page.html 
+		pagePath = appPath.join('app').join('pages').join(tabName).join(tabName + '.html')
+    	replace(pagePath, '<ion-title>' + tabName + '</ion-title>'){ |match| "<ion-title>" + originalName + "</ion-title>" }
 	end
 
 	def self.replace(filepath, regexp, *args, &block)
@@ -123,26 +132,27 @@ module MobileAppsHelper
 	end
 
 
-	def self.delete_page(appPath, tabName, appType)
+	def self.delete_page(appPath, originalName, appType)
 		tabsPath = appPath.join('app').join('pages');
+		tabName = transform_name(originalName)
 		count = Dir.entries(tabsPath).delete_if {|i| i == "." || i == ".." || i == "tabs"}.count;
 		if(count > 1)
 			FileUtils.rm_rf(tabsPath.join(tabName))
 
 			if (appType == 'Tabs')
-				delete_tab(appPath, tabName)
+				delete_tab(appPath, originalName, tabName)
 			else
-				delete_menu_page(appPath, tabName, appType)
+				delete_menu_page(appPath, originalName, appType, tabName)
 			end
 		end
 	end
 
-	def self.delete_menu_page(appPath, tabName, appType)
+	def self.delete_menu_page(appPath, originalName, appType, tabName)
 		#app.ts
 		appTsPath = appPath.join('app').join('app.ts')
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
 		replace(appTsPath, "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" + "\n" ) { |match| '' }
-		replace(appTsPath, /,((?!,)[\S\s])*{ title: '#{tabName}', component: #{tabNameForPage}Page }/) { |match| '' }
+		replace(appTsPath, /,((?!,)[\S\s])*{ title: '#{originalName}', component: #{tabNameForPage}Page }/) { |match| '' }
 		#rootPage
 		somePage = get_pages(appPath, appType)[0][0];
 		tabNameForSomePage = somePage[0].upcase + somePage[1..somePage.length - 1]		
@@ -156,7 +166,7 @@ module MobileAppsHelper
 
 	end
 
-	def self.delete_tab(appPath, tabName)
+	def self.delete_tab(appPath, originalName, tabName)
 		#app.core.css
 		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
 		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
@@ -164,7 +174,7 @@ module MobileAppsHelper
 
 		#tabs.html
 		tabsPath = appPath.join('app').join('pages').join('tabs').join('tabs.html')
-		replace(tabsPath, /<ion-tab \[root\]=\".*\" tabTitle=\"#{tabName}\" tabIcon=\".*\"><\/ion-tab>\n/) { |match| ''}
+		replace(tabsPath, /<ion-tab \[root\]=\".*\" tabTitle=\"#{originalName}\" tabIcon=\".*\"><\/ion-tab>\n/) { |match| ''}
 
 		#tabs.ts
 		tabsTsPath = appPath.join('app').join('pages').join('tabs').join('tabs.ts') 
@@ -229,6 +239,10 @@ module MobileAppsHelper
 				<button fab (click)=\"send(chatinp)\">Send</button>"
 	end
 
+	def self.get_map_content(value)
+		return "<iframe src=\"https://www.google.com/maps/d/embed?mid=" + value + "\" width=\"256\" height=\"345\"></iframe>"
+	end
+
 	def self.set_chat_tab(appPath, tabName, appName)
 		tabPath = appPath.join('app').join('pages').join(tabName)
 		chatModels = Rails.root.join('modelos').join('chat');
@@ -242,5 +256,25 @@ module MobileAppsHelper
 		replace(tsFilePath, 'ChatPage') { |match| tabNameForPage + "Page"}
 		replace(tsFilePath, '[appName]') { |match| appName}
 		
+	end
+
+	def self.transform_name(originalName)
+		tabName = originalName.gsub(/\s+/, "").downcase
+		tabName = replace_numbers(tabName)
+		return tabName
+	end
+
+	def self.replace_numbers(name)
+		name = name.gsub('1', "one")
+		name = name.gsub('2', "two")
+		name = name.gsub('3', "three")
+		name = name.gsub('4', "four")
+		name = name.gsub('5', "five")
+		name = name.gsub('6', "six")
+		name = name.gsub('7', "seven")
+		name = name.gsub('8', "eight")
+		name = name.gsub('9', "nine")
+		name = name.gsub('0', "ten")
+		return name;
 	end
 end

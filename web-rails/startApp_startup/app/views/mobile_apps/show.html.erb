@@ -38,15 +38,15 @@
 
     <div class="form-horizontal">
       <div class="form-group">
-        <label class="control-label col-sm-2" for="tab-title">Título:</label>
-        <div class="col-sm-10 form-control-div">
+        <label class="control-label col-sm-3" for="tab-title">Título:</label>
+        <div class="col-sm-9 form-control-div">
           <input id="tab-title" type="text" class="form-control" name="title"> 
         </div>
         </div>
       
       <div class="form-group">
-        <label class="control-label col-sm-2" for="tab-type">Tipo:</label>
-        <div class="col-sm-10">
+        <label class="control-label col-sm-3" for="tab-type">Tipo:</label>
+        <div class="col-sm-9">
           <select id="tab-type" type="text" class="form-control" name="type" onchange="changeFunc();"> 
             <option value="1">Empty</option>
             <option value="2">Pantalla custom</option>
@@ -55,6 +55,7 @@
             <option value="5">Twitter post</option>
             <option value="6">Youtube channel</option>
             <option value="7">Chat</option>
+            <option value="8">Google map</option>
           </select>
         </div>
       </div>
@@ -96,6 +97,8 @@
                 mobile_apps_path, :class => 'btn btn-default'  %>
   <%= link_to t('.edit', :default => "Editar"),
                 edit_mobile_app_path(@mobile_app), :class => 'btn btn-default' %>
+  <%= link_to t('.version', :default => "Versiones anteriores"),
+                versions_index_path(@mobile_app), :class => 'btn btn-default' %>
   <%= link_to t('.build', :default => "Build"), mobile_apps_build_path,
                 :class => 'btn btn-build'  %>
   <%= link_to t('.destroy', :default => "Eliminar"),
@@ -104,12 +107,10 @@
                 :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "¿Estas seguro?")) },
                 :class => 'btn btn-danger' %>
 </div class='buttons'>
-
 <script type="text/javascript">
   $("#designPopupCloseButton").click(function (){
       $("#tabPopup").hide();
   })
-
   function changeFunc(){
     cleanOptions();
     var selectBox = document.getElementById("tab-type");
@@ -129,7 +130,9 @@
     else if (selectedValue == "6"){
       textInputClick("Canal");
     }
-
+    else if (selectedValue == "8"){
+      textInputClick("Map id");
+    }
   }
   function cleanOptions(){
     var node = document.getElementById('options'); 
@@ -137,13 +140,12 @@
       node.removeChild(node.lastChild);
     }
   }
-
   function customScreenClick(){
-    $("#options").append("<label class=\"control-label col-sm-2\" for=\"custom-screen\">Pantalla:</label><div class=\"col-sm-10\"><select id=\"custom-screen\" type=\"text\" class=\"form-control\"><% @mobile_app.mobile_app_screens.each do |screen| %><option value=<%=screen.id%>><%=screen.name%></option><% end %></select></div><a target=\"_blank\" href=\"/mobile_apps/menu/<%= @mobile_app.id %>\">Ir a ver pantallas</a>");
+    $("#options").append("<label class=\"control-label col-sm-3\" for=\"custom-screen\">Pantalla:</label><div class=\"col-sm-9\"><select id=\"custom-screen\" type=\"text\" class=\"form-control\"><% @mobile_app.mobile_app_screens.each do |screen| %><option value=<%=screen.id%>><%=screen.name%></option><% end %></select></div><a target=\"_blank\" href=\"/mobile_apps/menu/<%= @mobile_app.id %>\">Ir a ver pantallas</a>");
   }
 
   function textInputClick(title){
-    $("#options").append("<label class=\"control-label col-sm-2\" for=\"custom-screen\">" + title + ":</label><div class=\"col-sm-10\"><input id=\"input-text\" type=\"text\" class=\"form-control\"></input></div>");
+    $("#options").append("<label class=\"control-label col-sm-3\" for=\"custom-screen\">" + title + ":</label><div class=\"col-sm-9\"><input id=\"input-text\" type=\"text\" class=\"form-control\"></input></div>");
   }
 
   function showPopup(){

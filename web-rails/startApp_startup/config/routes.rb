@@ -14,9 +14,14 @@ Rails.application.routes.draw do
   match '/mobile_apps/pages/:id/:name', to: 'mobile_apps#delete_page', as: 'delete_page', :via => [:delete], :as => :mobile_apps_delete_page
   match '/mobile_apps/content/:id/:name', to: 'mobile_apps#set_content', as: 'set_content', :via => [:get,:post], :as => :mobile_apps_set_content
   match '/mobile_apps/pages/:id/:name/exists', to: 'mobile_apps#page_exists', as: 'page_exists', :via => [:get], :as => :mobile_apps_page_exists
+  match '/versions/:id', to: 'versions#update', as: 'version_update', :via => [:post], :as => :versions_update
+  match '/versions/restore/:id', to: 'versions#restore', as: 'version_restore', :via => [:post], :as => :versions_restore
+  match '/versions/:id', to: 'versions#index', as: 'versions_index', :via => [:get], :as => :versions_index
+  match '/versions/new/:id', to: 'versions#new', as: 'versions_new', :via => [:get, :post], :as => :versions_new
 
   match '/mobile_apps/menu/:id', to: 'mobile_apps#menu', as: 'menu', :via => [:get,:post], :as => :mobile_apps_menu
 
+  resources :versions
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
