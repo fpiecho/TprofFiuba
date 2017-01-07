@@ -1,7 +1,6 @@
 class MobileApp < ActiveRecord::Base
 	belongs_to :user
 	has_many :mobile_app_screens, dependent: :destroy
-	has_many :versions, dependent: :destroy
 
 	validates :title, presence: { message: "Title is required" }
 

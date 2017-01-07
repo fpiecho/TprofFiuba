@@ -53,6 +53,22 @@
 			  </div>
 		 	</div>
 
+		 	<!-- WS Text: Nombre de la variable devuelta por el WS (si usa)   -->
+		 	<div class="form-group designElement texto-element">
+			  <label class="control-label col-sm-2" for="designInput-height">Campo Servicio:</label>
+			  <div class="col-sm-10">
+			    <input id="designInput-campoWS" type="text" class="form-control" name="campoWS"> 
+			  </div>
+		 	</div>
+
+		 	<!-- URL WS: Url del WS (si usa)   -->
+		 	<div class="form-group designElement wsElem-element">
+			  <label class="control-label col-sm-2" for="designInput-height">Url Servicio:</label>
+			  <div class="col-sm-10">
+			    <input id="designInput-urlWS" type="text" class="form-control" name="urlWS"> 
+			  </div>
+		 	</div>
+
 			<!-- font-size: Texto   -->
 		 	<div class="form-group designElement texto-element">
 			  <label class="control-label col-sm-2" for="designInput-font-size">Tamaño letra:</label>
@@ -129,6 +145,11 @@
 				<span class="tooltiptext">Agregar</span>
 			</div>
 
+			<div id="div-button" class="build-screen-button-div tooltipCustom" onclick="addPanelElement('wsElem')">
+				<span style="margin: auto 0px;line-height:15px;">Servicio Externo (WS)</span>
+				<span class="tooltiptext">Agregar</span>
+			</div>
+
 		</div>
 	</div>
 </div>
@@ -139,6 +160,10 @@
 <!-- ********************************************** -->
 
 <script type="text/javascript">
+	function avoidRunWS(){
+		return true;	
+	}
+
 
 	//Borra un elemento y sus elementos hijos de la pantalla
 	function deleteElem(elemId, elemEditorId){
@@ -162,7 +187,32 @@
 		//Elemento de pantalla visible
 		elementId = "builder-div-" + biggerDivIndex;
 		
-		if(elementType=="texto"){
+		if(elementType=="wsElem"){
+			elem = '<div id="' + elementId + '" class="builder-elem-div" style="font-size: 10px; color: #000000;">';
+			
+			//Cuando modifico la url en la parte de edicion, deberia pisar todo este div, usando el param que me pasaron en la parte que se concatena la url
+
+			elem += '<script>';
+			elem += '$(document).ready(function (){';
+			
+			elem +=	'if ((typeof avoidRunWS === \'undefined\') || (!avoidRunWS())) {';	
+				elem += '$.ajax({';
+					elem += 'url: "http://www.mocky.io/v2/5856ee671300004917fddcca",';
+					elem += 'dataType: "jsonp"';
+				elem += '}).then(function(response) {';
+						elem += '$.each(response.data, function(key, value){';
+							elem += '$(".control-class-ws-"+key).html(value);';
+						elem += '});';
+				elem += '});';
+      elem +=	'}';
+    	
+			elem += '});';
+
+			elem += '</'
+			elem += 'script>';
+			elem += '</div>';	
+		}
+		else if(elementType=="texto"){
 			elem = '<span id="' + elementId + '" class="builder-elem-div" style="font-size: 10px; color: #000000;">Texto</span>';	
 		}else{
 			//Container es el default
@@ -178,16 +228,25 @@
 		//Elemento de edicion complementario
 		elementEditorId = "builder-editor-div-" + biggerDivIndex;
 		
-		if(elementType=="texto"){
-			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">'
-				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Texto'
+
+		if(elementType=="wsElem"){
+			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">';
+				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Servicio Externo (WS)';
+					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
+					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
+				elemEditor += '</div>';
+			elemEditor += '</div>';
+		}
+		else if(elementType=="texto"){
+			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">';
+				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Texto';
 					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
 					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
 				elemEditor += '</div>';
 			elemEditor += '</div>';
 		}else{
-			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">'
-				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Contenedor'
+			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">';
+				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Contenedor';
 					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
 					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
 					elemEditor += '<div class="deleteButton" onclick="insertElem(\''+elementId+'\', \''+elementEditorId+'\')">AGREGAR ELEM</div>';
@@ -215,8 +274,12 @@
  		stylesArray = stylesString.split(";");
 		stylesArray.forEach(function(item){
 			if(item != ""){
-				particularStyleArray = item.split(":");
-				$("#designInput-"+particularStyleArray[0]).val(particularStyleArray[1]);
+				//particularStyleArray = item.split(":");
+				firstIndex = item.indexOf(":");
+
+				p0 = item.substring(0, firstIndex);
+				p1 = item.substring(firstIndex + 1);
+				$("#designInput-"+p0).val(p1);
 			}
 		});
 
@@ -266,7 +329,8 @@
 	//Se cierra el popup de agregado de elementos
 	function closeAddElementsPopup(){
 		$("#elemsCreationPopup").hide();
-	  $("#div-button-elem-creator").off("click");
+	  $("#div-button-elem-container-creator").off("click");
+	  $("#div-button-elem-text-creator").off("click");
 	}
 
 	//Se guarda los cambios hechos en la edicion de un elemento
@@ -304,7 +368,32 @@
 	 			//chequeo casos particulares
 	 			if(styleAttribute == "value"){
 	 				$("#"+elemId).html($(this).val());
-	 			}else{
+	 			}
+				else if(styleAttribute == "campoWS"){
+					//Para poder pisar el valor que viene en el ws, 
+	 				$("#"+elemId).addClass("control-class-ws-"+$(this).val());
+	 			}
+	 			else if(styleAttribute == "urlWS"){
+	 				elem = '<script>';
+					elem += '$(document).ready(function (){';	
+					elem +=	'if ((typeof avoidRunWS === \'undefined\') || (!avoidRunWS())) {';
+					elem += '$.ajax({';
+					elem += 'url: "'+$(this).val()+'",';
+					elem += 'dataType: "jsonp"';
+					elem += '}).then(function(response) {';
+					elem += '$.each(response.data, function(key, value){';
+					elem += '$(".control-class-ws-"+key).html(value);';
+					elem += '});';
+					elem += '});';
+      		elem +=	'}';
+					elem += '});';
+					elem += '</'
+					elem += 'script>';
+					elem += '</div>';	
+
+					$("#"+elemId).html(elem);
+	 			}
+	 			else{
 	 				$("#"+elemId).css(styleAttribute, $(this).val());
 				}
 
@@ -398,6 +487,10 @@
 	    
 	  });
 
+	  //callWS();
+
 	});
+
+
 
 </script>

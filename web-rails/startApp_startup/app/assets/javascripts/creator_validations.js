@@ -22,6 +22,14 @@ var elementsValidations = {
 		"validation": "^.*$",
 		"errorMessage": "Texto inválido"
 	},
+	"campoWS": {
+		"validation": "^.*$",
+		"errorMessage": "Nombre inválido"
+	},
+	"urlWS": {
+		"validation": "^.*$",
+		"errorMessage": "URL inválida"
+	},
 	"font-size": {
 		"validation": "^([0-9]*|[0-9]*\.[0-9]*)em$",
 		"errorMessage": "Tamaño de letra inválido"
