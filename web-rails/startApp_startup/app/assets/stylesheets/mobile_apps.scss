@@ -6,6 +6,13 @@
     margin-left: 250px;
 }
 
+.right-button{
+	margin-right: 100px;
+	width:1%;
+	position: absolute;
+	right: 0px;
+}
+
 .tabs-container{
 	margin-right: 100px;
 	width:25%;
@@ -48,6 +55,15 @@
  	background-color: #d9534f;
  	height: 28px;
  	font-size: 10px;
+ 	margin-top: 2px;
+ 	margin-right: 2px;
+}
+
+.btn-tab-edit{
+ 	background-color: #EEEEEE;
+ 	height: 30px;
+ 	widht: 15px;
+ 	margin-top: 5px;
 }
 
 .tab-create-div{

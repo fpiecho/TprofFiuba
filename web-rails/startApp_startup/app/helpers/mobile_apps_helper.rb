@@ -211,20 +211,20 @@ module MobileAppsHelper
 	end
 
 	def self.get_fb_content(value)
-		return "<iframe src=\"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F" + value +"&tabs=timeline&width=270&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=268321266881752\" width=\"270\" height=\"500\" style=\"border:none;overflow:hidden\" scrolling=\"no\" frameborder=\"0\" allowTransparency=\"true\"></iframe>"
+		return "<iframe src=\"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F" + value +"&tabs=timeline&width=270&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=268321266881752\" width=\"100%\" height=\"100%\" style=\"border:none;overflow:hidden\" scrolling=\"no\" frameborder=\"0\" allowTransparency=\"true\"></iframe>"
 	end
 
 	def self.get_tw_content(value)
-		return "<iframe border=0 frameborder=0 height=500 width=270 
+		return "<iframe border=0 frameborder=0 height=100% width=100% 
  src=\"http://twitframe.com/show?url="  + value +"\"></iframe>"
 	end
 
 	def self.get_ig_content(value)
-		return "<iframe width=\"270\" height=\"500\" src=\"http://instagram.com/p/" + value +"/embed\" frameborder=\"0\"></iframe>"
+		return "<iframe width=\"100%\" height=\"100%\" src=\"http://instagram.com/p/" + value +"/embed\" frameborder=\"0\"></iframe>"
 	end
 
 	def self.get_yt_content(value)
-		return "<iframe src=\"http://www.youtube.com/embed/?listType=user_uploads&list=" + value + "\" width=\"256\" height=\"216\"></iframe>"
+		return "<iframe src=\"http://www.youtube.com/embed/?listType=user_uploads&list=" + value + "\" width=\"100%\" height=\"100%\"></iframe>"
 	end
 
 	def self.get_chat_content()
@@ -240,7 +240,7 @@ module MobileAppsHelper
 	end
 
 	def self.get_map_content(value)
-		return "<iframe src=\"https://www.google.com/maps/d/embed?mid=" + value + "\" width=\"256\" height=\"345\"></iframe>"
+		return "<iframe src=\"https://www.google.com/maps/d/embed?mid=" + value + "\" width=\"100%\" height=\"100%\"></iframe>"
 	end
 
 	def self.set_chat_tab(appPath, tabName, appName)
