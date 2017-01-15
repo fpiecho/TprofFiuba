@@ -1,7 +1,7 @@
 <!-- ********************************************** -->
 <!-- Pop up para editar el contenido de un elemento -->
 <!-- ********************************************** -->
-<div id="designPopup"> 
+<div id="designPopup">
   <div id="contenido">
   	<div class="modal-header">
      	<button id="designPopupCloseButton" type="button" class="close" data-dismiss="modal">&times;</button>
@@ -22,7 +22,7 @@
 		 	</div>
 			
 			<!-- Height: Contenedor   -->
-			<div class="form-group designElement contenedor-element">
+			<div class="form-group designElement contenedor-element wsContenedor-element">
 			  <label class="control-label col-sm-2" for="designInput-height">Altura:</label>
 			  <div class="col-sm-10">
 			    <input id="designInput-height" type="text" class="form-control" name="height"> 
@@ -30,7 +30,7 @@
 		 	</div>
 
 		 	<!-- Text align: Contenedor   -->
-			<div class="form-group designElement contenedor-element">
+			<div class="form-group designElement contenedor-element wsContenedor-element">
 			  <label class="control-label col-sm-2" for="designInput-text-align">Alineanación:</label>
 			  <div class="col-sm-10">
 			    <input id="designInput-text-align" type="text" class="form-control" name="text-align"> 
@@ -38,7 +38,7 @@
 		 	</div>
 
 		 	<!-- Padding: Contenedor, Texto   -->
-			<div class="form-group designElement contenedor-element texto-element">
+			<div class="form-group designElement contenedor-element texto-element wsContenedor-element">
 			  <label class="control-label col-sm-2" for="designInput-padding">Padding:</label>
 			  <div class="col-sm-10">
 			    <input id="designInput-padding" type="text" class="form-control" name="padding"> 
@@ -107,6 +107,10 @@
 					<span style="margin: auto 0px;line-height:15px;">Texto</span>
 					<span class="tooltiptext">Agregar</span>
 				</div>
+				<div id="div-button-elem-WsContainer-creator" class="build-screen-button-div tooltipCustom">
+					<span style="margin: auto 0px;line-height:15px;">Contenedor Datos WS</span>
+					<span class="tooltiptext">Agregar</span>
+				</div>
 			</div>
 		</div>
   </div>
@@ -150,6 +154,11 @@
 				<span class="tooltiptext">Agregar</span>
 			</div>
 
+			<div id="div-button" class="build-screen-button-div tooltipCustom" onclick="addPanelElement('wsContenedor')">
+				<span style="margin: auto 0px;line-height:15px;">Contenedor Datos WS</span>
+				<span class="tooltiptext">Agregar</span>
+			</div>
+
 		</div>
 	</div>
 </div>
@@ -169,6 +178,9 @@
 	function deleteElem(elemId, elemEditorId){
 		$("#"+elemId).remove();
 		$("#"+elemEditorId).remove();
+		//TODO: tengo que ver como borro en el wsElemToCopy el elemento container (puedo meter hardcode y ya)
+		if(elemId == "wsElemToCopy")
+			$("#wsElemCopiesContainer").remove();
 	}
 
 	//Agrega un elemento a la pantalla
@@ -190,27 +202,48 @@
 		if(elementType=="wsElem"){
 			elem = '<div id="' + elementId + '" class="builder-elem-div" style="font-size: 10px; color: #000000;">';
 			
+			elem += '<div id="loading" style="display:none;text-align:center; position:absolute; top:0px;left:0px; width:100%;height:100%;"><div style="margin:auto; background-color:grey; opacity:0.8; width:100%;height:100%; font-size:20px;padding-top:60%;">LOADING</div></div>';
+
 			//Cuando modifico la url en la parte de edicion, deberia pisar todo este div, usando el param que me pasaron en la parte que se concatena la url
-
 			elem += '<script>';
-			elem += '$(document).ready(function (){';
-			
-			elem +=	'if ((typeof avoidRunWS === \'undefined\') || (!avoidRunWS())) {';	
-				elem += '$.ajax({';
-					elem += 'url: "http://www.mocky.io/v2/5856ee671300004917fddcca",';
-					elem += 'dataType: "jsonp"';
-				elem += '}).then(function(response) {';
-						elem += '$.each(response.data, function(key, value){';
-							elem += '$(".control-class-ws-"+key).html(value);';
+			elem += '$(document).ready(function (){';	
+				elem +=	'if ((typeof avoidRunWS === \'undefined\') || (!avoidRunWS())) {';
+					elem += '$("#loading").show();';
+					elem += '$.ajax({';
+						elem += 'url: "http://www.mocky.io/v2/5856ee671300004917fddcca",';
+						elem += 'dataType: "jsonp"';
+					elem += '}).then(function(response) {';
+						elem += '$.each(response.data, function(index, dataArray){';
+							//clone el divWS segun el id (como lo consigo? en el peor de los casos solo se puede llamar un WS por pantalla, entonces el id es algo fijo).
+							elem += 'elemToClone = $("#wsElemToCopy").clone();';
+							elem += 'elemToClone.attr("id", "wsDivCopy"+index);';
+							//sacar el display none
+							elem += 'elemToClone.css("display", "block");';
+							elem += 'elemHeight = elemToClone.css("height");';
+							elem += 'if(elemHeight.includes("%")){';
+								elem += 'elemHeight = elemHeight.replace("%","");';
+								elem += 'totalHeight = $("#build-screen-area").height();';
+								elem += 'fixedHeight = totalHeight*elemHeight/100;';
+								elem += 'elemToClone.css("height", fixedHeight+"px");';
+							elem += '}';
+							elem += '$.each(dataArray, function(key, value){';
+								//aca cambio la data con la key dentro del id del elemento padre
+								elem += '$("#wsElemCopiesContainer").append(elemToClone);';
+								elem += '$("#wsDivCopy"+index+" .control-class-ws-"+key).html(value);';
+							elem += '});';
 						elem += '});';
-				elem += '});';
-      elem +=	'}';
-    	
+						elem += '$("#loading").hide();';
+					elem += '});';
+  			elem +=	'}';
 			elem += '});';
-
 			elem += '</'
 			elem += 'script>';
-			elem += '</div>';	
+			elem += '</div>';
+		}
+		else if(elementType=="wsContenedor"){
+			elementId = "wsElemToCopy";
+			elem = '<div id="' + elementId + '" class="builder-elem-div" style="display:none; width:100%; height:20%;  background-color: #0000DD;"></div>';
+			elem += '<div id="wsElemCopiesContainer" class="builder-elem-div" style=""></div>';
 		}
 		else if(elementType=="texto"){
 			elem = '<span id="' + elementId + '" class="builder-elem-div" style="font-size: 10px; color: #000000;">Texto</span>';	
@@ -234,6 +267,15 @@
 				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Servicio Externo (WS)';
 					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
 					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
+				elemEditor += '</div>';
+			elemEditor += '</div>';
+		}
+		else if(elementType=="wsContenedor"){
+			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">';
+				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Contenedor WS';
+					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
+					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
+					elemEditor += '<div class="deleteButton" onclick="insertElem(\''+elementId+'\', \''+elementEditorId+'\')">AGREGAR ELEM</div>';
 				elemEditor += '</div>';
 			elemEditor += '</div>';
 		}
@@ -331,6 +373,7 @@
 		$("#elemsCreationPopup").hide();
 	  $("#div-button-elem-container-creator").off("click");
 	  $("#div-button-elem-text-creator").off("click");
+	  $("#div-button-elem-WsContainer-creator").off("click");
 	}
 
 	//Se guarda los cambios hechos en la edicion de un elemento
@@ -374,22 +417,50 @@
 	 				$("#"+elemId).addClass("control-class-ws-"+$(this).val());
 	 			}
 	 			else if(styleAttribute == "urlWS"){
-	 				elem = '<script>';
+	 				elem = '<div id="loading" style="display:none;text-align:center; position:absolute; top:0px;left:0px; width:100%;height:100%;"><div style="margin:auto; background-color:grey; opacity:0.8; width:100%;height:100%; font-size:20px;padding-top:60%;">LOADING</div></div>';
+	 				elem += '<script>';
 					elem += '$(document).ready(function (){';	
 					elem +=	'if ((typeof avoidRunWS === \'undefined\') || (!avoidRunWS())) {';
+					elem += '$("#loading").show();';
 					elem += '$.ajax({';
 					elem += 'url: "'+$(this).val()+'",';
 					elem += 'dataType: "jsonp"';
 					elem += '}).then(function(response) {';
-					elem += '$.each(response.data, function(key, value){';
-					elem += '$(".control-class-ws-"+key).html(value);';
+					//elem += '$.each(response.data, function(key, value){';
+						elem += '$.each(response.data, function(index, dataArray){';
+							//clone el divWS segun el id (como lo consigo? en el peor de los casos solo se puede llamar un WS por pantalla, entonces el id es algo fijo).
+							elem += 'elemToClone = $("#wsElemToCopy").clone();';
+							elem += 'elemToClone.attr("id", "wsDivCopy"+index);';
+							//sacar el display none
+							elem += 'elemToClone.css("display", "block");';
+							elem += 'elemHeight = elemToClone.css("height");';
+
+
+							elem += 'if(elemHeight.includes("%")){';
+								elem += 'elemHeight = elemHeight.replace("%","");';
+								elem += 'totalHeight = $("#build-screen-area").height();';
+								elem += 'fixedHeight = totalHeight*elemHeight/100;';
+								elem += 'elemToClone.css("height", fixedHeight+"px");';
+							elem += '}';
+
+
+							//elem += 'elemToClone.css("position", "absolute");';
+							//id nuevo div = idFijo+index
+						elem += '$.each(dataArray, function(key, value){';
+							//aca cambio la data con la key dentro del id del elemento padre
+							elem += '$("#wsElemCopiesContainer").append(elemToClone);';
+							elem += '$("#wsDivCopy"+index+" .control-class-ws-"+key).html(value);';
+						//elem += 'alert(key+":"+value);';
+						elem += '});';
+					//elem += '$(".control-class-ws-"+key).html(value);';
 					elem += '});';
+					elem += '$("#loading").hide();';
 					elem += '});';
       		elem +=	'}';
 					elem += '});';
 					elem += '</'
 					elem += 'script>';
-					elem += '</div>';	
+					elem += '</div>';
 
 					$("#"+elemId).html(elem);
 	 			}
@@ -422,6 +493,7 @@
 	function insertElem(elemId, elemEditorId) {
 		$("#div-button-elem-container-creator").on("click", function(){addPanelElement('contenedor', elemId, elemEditorId); closeAddElementsPopup();});
 		$("#div-button-elem-text-creator").on("click", function(){addPanelElement('texto', elemId, elemEditorId);closeAddElementsPopup();});
+		$("#div-button-elem-WsContainer-creator").on("click", function(){addPanelElement('wsContenedor', elemId, elemEditorId);closeAddElementsPopup();});
 
    	$("#elemsCreationPopup").show();
 		//Desde aca, antes de hacer el show puedo setear opciones dependiendo el elemento
