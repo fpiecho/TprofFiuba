@@ -19,9 +19,15 @@ Rails.application.routes.draw do
   match '/versions/:id', to: 'versions#index', as: 'versions_index', :via => [:get], :as => :versions_index
   match '/versions/new/:id', to: 'versions#new', as: 'versions_new', :via => [:get, :post], :as => :versions_new
 
+  match '/notifications/:id', to: 'notifications#update', as: 'notification_update', :via => [:post], :as => :notifications_update
+  match '/notifications/:id', to: 'notifications#index', as: 'notification_index', :via => [:get], :as => :notifications_index
+  match '/notifications/new/:id', to: 'notifications#new', as: 'notification_new', :via => [:get, :post], :as => :notifications_new
+
+  
   match '/mobile_apps/menu/:id', to: 'mobile_apps#menu', as: 'menu', :via => [:get,:post], :as => :mobile_apps_menu
 
   resources :versions
+  resources :notifications
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

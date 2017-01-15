@@ -5,7 +5,9 @@ class VersionsController < ApplicationController
   # GET /versions
   # GET /versions.json
   def index
-    @versions = Version.all.where(mobile_app: @mobile_app)
+    if(@mobile_app.user_id.equal? current_user.id)
+      @versions = Version.all.where(mobile_app: @mobile_app)
+    end
   end
 
   # GET /versions/1
@@ -29,14 +31,13 @@ class VersionsController < ApplicationController
     @version = Version.new(version_params)
     @mobile_app = MobileApp.find(@version.mobile_app_id)
     if(@mobile_app.user_id.equal? current_user.id)
-      backupPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description) 
-      FileUtils.mkdir_p(backupPath) unless File.directory?(backupPath)
-
-      appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@version.mobile_app.title).join('*')
-      FileUtils.cp_r Dir[appPath] , backupPath
-
       respond_to do |format|
         if @version.save
+          backupPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description) 
+          FileUtils.mkdir_p(backupPath) unless File.directory?(backupPath)
+          appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@version.mobile_app.title).join('*')
+          FileUtils.cp_r Dir[appPath] , backupPath
+
           format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version was successfully created.' }
           format.json { render :show, status: :created, location: @version }
         else
@@ -50,19 +51,21 @@ class VersionsController < ApplicationController
   # PATCH/PUT /versions/1
   # PATCH/PUT /versions/1.json
   def update
-    @oldVersion = Version.find(@version.id)
-    oldDescription = @oldVersion.description
-    p oldDescription
-    respond_to do |format|
-      if @version.update(version_params)
-        oldBackupPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(oldDescription)
-        newBackupPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description) 
-        File.rename oldBackupPath, newBackupPath
-        format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version was successfully updated.' }
-        format.json { render :show, status: :ok, location: @version }
-      else
-        format.html { render :edit }
-        format.json { render json: @version.errors, status: :unprocessable_entity }
+    @mobile_app = MobileApp.find(@version.mobile_app_id)
+    if(@mobile_app.user_id.equal? current_user.id)
+      @oldVersion = Version.find(@version.id)
+      oldDescription = @oldVersion.description
+      respond_to do |format|
+        if @version.update(version_params)
+          oldBackupPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(oldDescription)
+          newBackupPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description) 
+          File.rename oldBackupPath, newBackupPath
+          format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version was successfully updated.' }
+          format.json { render :show, status: :ok, location: @version }
+        else
+          format.html { render :edit }
+          format.json { render json: @version.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -70,13 +73,16 @@ class VersionsController < ApplicationController
   # DELETE /versions/1
   # DELETE /versions/1.json
   def destroy
-    mobile_app_id = @version.mobile_app_id.to_s
-    versionPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description) 
-    FileUtils.rm_rf(versionPath)
-    @version.destroy
-    respond_to do |format|
-      format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version was successfully destroyed.' }
-      format.json { head :no_content }
+    @mobile_app = MobileApp.find(@version.mobile_app_id)
+    if(@mobile_app.user_id.equal? current_user.id)
+      mobile_app_id = @version.mobile_app_id.to_s
+      versionPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description) 
+      FileUtils.rm_rf(versionPath)
+      @version.destroy
+      respond_to do |format|
+        format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version was successfully destroyed.' }
+        format.json { head :no_content }
+      end
     end
   end
 

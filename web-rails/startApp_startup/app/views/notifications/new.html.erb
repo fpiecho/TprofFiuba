@@ -1,0 +1,11 @@
+<%- model_class = Notification -%>
+<div class="row internalRow">
+	<%= bootstrap_flash %>
+	<div class="col-lg-12 internalContent">
+		<div class="page-header">
+		  <h1><%=t '.title', :default => [:'helpers.titles.new', 'Nueva push notification'], :model => model_class.model_name.human.titleize %></h1>
+		</div>
+		<%= render :partial => 'form' %>
+
+	</div>
+</div>

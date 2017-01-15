@@ -1,5 +1,11 @@
-<h1>Nueva versión anterior</h1>
+<%- model_class = Version -%>
+<div class="row internalRow">
+	<%= bootstrap_flash %>
+	<div class="col-lg-12 internalContent">
+		<div class="page-header">
+		  <h1><%=t '.title', :default => [:'helpers.titles.new', 'Nueva versión'], :model => model_class.model_name.human.titleize %></h1>
+		</div>
 
-<%= render 'form' %>
-
-<%= link_to 'Back', versions_index_path() %>
+		<%= render 'form' %>
+	</div>
+</div>

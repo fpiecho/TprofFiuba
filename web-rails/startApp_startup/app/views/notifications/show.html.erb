@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Message:</strong>
+  <%= @notification.message %>
+</p>
+
+<p>
+  <strong>Mobile app:</strong>
+  <%= @notification.mobile_app_id %>
+</p>
+
+<p>
+  <strong>Action date:</strong>
+  <%= @notification.action_date %>
+</p>
+
+<%= link_to 'Edit', edit_notification_path(@notification) %> |
+<%= link_to 'Back', notifications_path %>
