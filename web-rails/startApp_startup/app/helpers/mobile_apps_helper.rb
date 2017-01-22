@@ -72,23 +72,20 @@ module MobileAppsHelper
 	end
 
 	def self.new_menu_page(appPath, tabName, originalName)
-		#app.ts
-		tabsTsPath = appPath.join('app').join('app.ts')
+		#app.component.ts
+		componentTsPath = appPath.join('src').join('app').join('app.component.ts')
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
-		replace(tabsTsPath, '@Component({') { |match| "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
-		replace(tabsTsPath, /\}((?!,)[\S\s])*];/) { |match| "},\n { title: '" + originalName + "', component: " + tabNameForPage + "Page }" + "\n" + "    ];" }
+		replace(componentTsPath, '@Component({') { |match| "import { " + tabNameForPage +"Page } from '../pages/" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
+		replace(componentTsPath, /\}((?!,)[\S\s])*];/) { |match| "},\n      { title: '" + originalName + "', component: " + tabNameForPage + "Page }" + "\n" + "    ];" }
 
-		#app.core.css
-		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
-		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
-		
-		File.open(coreCssPath, "a+") do |f|
-  			f << importCore
-		end
+		#app.module.ts
+		moduleTsPath = appPath.join('src').join('app').join('app.module.ts')
+		replace(moduleTsPath, '@NgModule({') { |match| "import { " + tabNameForPage +"Page } from '../pages/" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
+		replace(moduleTsPath, 'MyApp,') { |match| "MyApp,\n    " + tabNameForPage + "Page," }
 
 		#page.html 
-		pagePath = appPath.join('app').join('pages').join(tabName).join(tabName + '.html')
-		replace(pagePath, '<ion-navbar>') { |match| "#{match}" + '<button menuToggle>
+		pagePath = appPath.join('src').join('pages').join(tabName).join(tabName + '.html')
+		replace(pagePath, '<ion-navbar>') { |match| "#{match}" + '<button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>' }
     	replace(pagePath, '<ion-title>' + tabName + '</ion-title>'){ |match| "<ion-title>" + originalName + "</ion-title>" }
@@ -96,29 +93,26 @@ module MobileAppsHelper
 	end
 
 	def self.new_tab(appPath, tabName, originalName)
-		#app.core.css
-		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
-		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
-		
-		File.open(coreCssPath, "a+") do |f|
-  			f << importCore
-		end
-
 		#tabs.html
-		tabsPath = appPath.join('app').join('pages').join('tabs').join('tabs.html')
+		tabsPath = appPath.join('src').join('pages').join('tabs').join('tabs.html')
 		tabLine = '<ion-tab [root]="tab' + tabName + '" tabTitle="' + originalName +'" tabIcon="' + tabName + '"></ion-tab>' + "\n"
 		replace(tabsPath, /<\/ion-tabs>/mi) { |match| tabLine + "#{match}"}
 
 		#tabs.ts
-		tabsTsPath = appPath.join('app').join('pages').join('tabs').join('tabs.ts') 
+		tabsTsPath = appPath.join('src').join('pages').join('tabs').join('tabs.ts') 
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]
-		replace(tabsTsPath, 'constructor() {') { |match| "#{match}" + "\n" + "this.tab" + tabName + " = " + tabNameForPage + "Page;"}
-		replace(tabsTsPath, 'export class TabsPage {') { |match| "#{match}" + "\n" + "public tab" + tabName + ": any;"}
+		replace(tabsTsPath, 'export class TabsPage {') { |match| "#{match}" + "\n  tab" + tabName + ": any = " + tabNameForPage + "Page;"}
 		replace(tabsTsPath, '@Component({') { |match| "import { " + tabNameForPage +"Page } from '../" + tabName +"/" + tabName + "';" + "\n" + "#{match}" }
 
-		#page.html 
-		pagePath = appPath.join('app').join('pages').join(tabName).join(tabName + '.html')
+		#page.html
+		pagePath = appPath.join('src').join('pages').join(tabName).join(tabName + '.html')
     	replace(pagePath, '<ion-title>' + tabName + '</ion-title>'){ |match| "<ion-title>" + originalName + "</ion-title>" }
+
+		#app.module.ts
+		moduleTsPath = appPath.join('src').join('app').join('app.module.ts')
+		replace(moduleTsPath, '@NgModule({') { |match| "import { " + tabNameForPage +"Page } from '../pages/" + tabName + "/" + tabName + "';" + "\n" + "#{match}" }
+		replace(moduleTsPath, 'MyApp,') { |match| "MyApp,\n    " + tabNameForPage + "Page," }
+
 	end
 
 	def self.replace(filepath, regexp, *args, &block)
@@ -127,13 +121,13 @@ module MobileAppsHelper
 	end
 
 	def self.set_content(appPath, tabName, content)
-		tabPath = appPath.join('app').join('pages').join(tabName).join(tabName + '.html')
+		tabPath = appPath.join('src').join('pages').join(tabName).join(tabName + '.html')
 		replace(tabPath, /<ion-content padding>\n(.*\n)*<\/ion-content>/) { |match| "<ion-content padding>" + "\n" + content + "\n" + "</ion-content>"}
 	end
 
 
 	def self.delete_page(appPath, originalName, appType)
-		tabsPath = appPath.join('app').join('pages');
+		tabsPath = appPath.join('src').join('pages');
 		tabName = transform_name(originalName)
 		count = Dir.entries(tabsPath).delete_if {|i| i == "." || i == ".." || i == "tabs"}.count;
 		if(count > 1)
@@ -148,40 +142,40 @@ module MobileAppsHelper
 	end
 
 	def self.delete_menu_page(appPath, originalName, appType, tabName)
-		#app.ts
-		appTsPath = appPath.join('app').join('app.ts')
+		#app.component.ts
+		appComponentTsPath = appPath.join('src').join('app').join('app.component.ts')
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
-		replace(appTsPath, "import { " + tabNameForPage +"Page } from './pages/" + tabName +"/" + tabName + "';" + "\n" ) { |match| '' }
-		replace(appTsPath, /,((?!,)[\S\s])*{ title: '#{originalName}', component: #{tabNameForPage}Page }/) { |match| '' }
+		replace(appComponentTsPath, "import { " + tabNameForPage +"Page } from '../pages/" + tabName +"/" + tabName + "';" + "\n" ) { |match| '' }
+		replace(appComponentTsPath, /,((?!,)[\S\s])*{ title: '#{originalName}', component: #{tabNameForPage}Page }/) { |match| '' }
+
 		#rootPage
 		somePage = get_pages(appPath, appType)[0][0];
+		somePage = transform_name(somePage);
 		tabNameForSomePage = somePage[0].upcase + somePage[1..somePage.length - 1]		
-		replace(appTsPath, "rootPage: any = " + tabNameForPage + "Page;") {|match| "rootPage: any = " + tabNameForSomePage +"Page;"}
+		replace(appComponentTsPath, "rootPage: any = " + tabNameForPage + "Page;") {|match| "rootPage: any = " + tabNameForSomePage +"Page;"}
 		
-
-		#app.core.css
-		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
-		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
-		replace(coreCssPath, importCore) { |match|  }
+		#app.module.ts
+		moduleTsPath = appPath.join('src').join('app').join('app.module.ts')
+		replace(moduleTsPath, "import { " + tabNameForPage +"Page } from '../pages/" + tabName + "/" + tabName + "';" + "\n" ) { |match| '' }
+		replace(moduleTsPath, /,((?!,)[\S\s])*#{tabNameForPage}Page/) { |match| '' }
 
 	end
 
 	def self.delete_tab(appPath, originalName, tabName)
-		#app.core.css
-		importCore = '@import "../pages/' + tabName + '/' + tabName + '";'+ "\n"
-		coreCssPath = appPath.join('app').join('theme').join('app.core.scss')
-		replace(coreCssPath, importCore) { |match|  }
-
 		#tabs.html
-		tabsPath = appPath.join('app').join('pages').join('tabs').join('tabs.html')
+		tabsPath = appPath.join('src').join('pages').join('tabs').join('tabs.html')
 		replace(tabsPath, /<ion-tab \[root\]=\".*\" tabTitle=\"#{originalName}\" tabIcon=\".*\"><\/ion-tab>\n/) { |match| ''}
 
 		#tabs.ts
-		tabsTsPath = appPath.join('app').join('pages').join('tabs').join('tabs.ts') 
+		tabsTsPath = appPath.join('src').join('pages').join('tabs').join('tabs.ts') 
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]
-		replace(tabsTsPath, /this.tab.* = #{tabNameForPage}Page;\n/) { |match| ''  }
-		replace(tabsTsPath, "public tab" + tabName + ": any;"+ "\n") { |match| ''}
+		replace(tabsTsPath, "tab" + tabName + ": any = " + tabNameForPage + "Page;\n") { |match| '' }
 		replace(tabsTsPath, "import { " + tabNameForPage +"Page } from '../" + tabName +"/" + tabName + "';" + "\n") { |match|  '' }
+
+		#app.module.ts
+		moduleTsPath = appPath.join('src').join('app').join('app.module.ts')
+		replace(moduleTsPath, "import { " + tabNameForPage +"Page } from '../pages/" + tabName +"/" + tabName + "';" + "\n" ) { |match| '' }
+		replace(moduleTsPath, /,((?!,)[\S\s])*#{tabNameForPage}Page/) { |match| '' }
 	end
 
 	def self.get_pages(appPath, appType)
@@ -194,19 +188,19 @@ module MobileAppsHelper
 	end
 
 	def self.get_pages_tabs(appPath, appType)
-		tabsPath = appPath.join('app').join('pages').join('tabs').join('tabs.html');
+		tabsPath = appPath.join('src').join('pages').join('tabs').join('tabs.html');
 		fileText = File.read(tabsPath);
 		return fileText.scan(/tabTitle=\"(.*)\" tabIcon/);
 	end
 
 	def self.get_pages_menu(appPath, appType)
-		appTsPath = appPath.join('app').join('app.ts')
+		appTsPath = appPath.join('src').join('app').join('app.component.ts')
 		fileText = File.read(appTsPath);
 		return fileText.scan(/title: \'(.*)\',/);
 	end
 
 	def self.page_exists(appPath, name)
-		tabsPath = appPath.join('app').join('pages')
+		tabsPath = appPath.join('src').join('pages')
 		return Dir.entries(tabsPath).include?(name)
 	end
 
@@ -244,7 +238,7 @@ module MobileAppsHelper
 	end
 
 	def self.set_chat_tab(appPath, tabName, appName)
-		tabPath = appPath.join('app').join('pages').join(tabName)
+		tabPath = appPath.join('src').join('pages').join(tabName)
 		chatModels = Rails.root.join('modelos').join('chat');
 		IO.copy_stream(chatModels.join('chat.scss'), tabPath.join(tabName + ".scss"))
 

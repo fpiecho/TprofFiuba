@@ -7,7 +7,6 @@
     <tr>
       <th>Mensaje</th>
       <th>Fecha de envío</th>
-      <th><%=t '.actions', :default => "Opciones" %></th>
     </tr>
   </thead>
 
@@ -16,14 +15,6 @@
       <tr>
         <td><%= notification.message %></td>
         <td><%= notification.action_date.strftime("%d/%m/%Y %H:%M %p") %></td>
-        <td>
-        <%= link_to t('.edit', :default => "Editar"),
-                      edit_notification_path(notification), :class => 'btn btn-default btn-xs', method: :get %>
-         <%= link_to t('.destroy', :default => "Eliminar"),
-                      notification_path(notification),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %></td>
       </tr>
     <% end %>
   </tbody>

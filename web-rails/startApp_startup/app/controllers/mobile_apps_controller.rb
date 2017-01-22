@@ -137,7 +137,7 @@ class MobileAppsController < ApplicationController
       value = params[:value]
       
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
-      tabPath = appPath.join('app').join('pages').join(name)
+      tabPath = appPath.join('src').join('pages').join(name)
       if (File.directory?(tabPath))
         respond_to do |format|
           format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page already created.' }
@@ -145,6 +145,7 @@ class MobileAppsController < ApplicationController
         end
       else
         MobileAppsHelper.new_page(@mobile_app, appPath, name, @mobile_app.apptype, type, value)
+        sleep 7
         respond_to do |format|
           format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page ' + name +' was successfully created.' }
           format.json { render :show, status: :created, location: @mobile_app }
@@ -159,9 +160,10 @@ class MobileAppsController < ApplicationController
       name = params[:name]
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
       tabName = MobileAppsHelper.transform_name(name)
-      tabPath = appPath.join('app').join('pages').join(tabName)
+      tabPath = appPath.join('src').join('pages').join(tabName)
       if (File.directory?(tabPath))
         MobileAppsHelper.delete_page(appPath, name, @mobile_app.apptype)
+        sleep 7
         respond_to do |format|
           format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page deleted.' }
           format.json { render :show, status: :created, location: @mobile_app }
@@ -183,7 +185,7 @@ class MobileAppsController < ApplicationController
       name = params[:name]
       content = params[:content]
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@mobile_app.title) 
-      tabPath = appPath.join('app').join('pages').join(name).join(name + '.html')
+      tabPath = appPath.join('src').join('pages').join(name).join(name + '.html')
       if (File.exist?(tabPath))
         MobileAppsHelper.set_content(appPath, name, content)
         respond_to do |format|

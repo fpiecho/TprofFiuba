@@ -29,6 +29,7 @@ class NotificationsController < ApplicationController
   # POST /notifications.json
   def create
     @notification = Notification.new(notification_params)
+    @notification.sent = false;
     @mobile_app = MobileApp.find(@notification.mobile_app_id)
     if(@mobile_app.user_id.equal? current_user.id)  
       respond_to do |format|
