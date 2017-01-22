@@ -1,10 +1,10 @@
-import {Page} from 'ionic-angular';
+import {Component} from '@angular/core';
 import { AlertController } from 'ionic-angular';
 import {NgZone} from '@angular/core';
 declare var io;
 
-@Page({
-  templateUrl: 'build/pages/chat/chat.html'
+@Component({
+  templateUrl: 'chat.html'
 })
 export class ChatPage {
     chatinp: string= null;

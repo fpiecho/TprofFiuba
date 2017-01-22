@@ -223,14 +223,14 @@ module MobileAppsHelper
 
 	def self.get_chat_content()
 		return " <ion-list>
-				    <ion-item *ngFor=\"#message of chats\">
+				    <ion-item *ngFor=\"let message of chats\">
 				      <div class=\"{{ message.user == nickname ? 'item-right' : 'item-left' }}\">
 				          <span class=\"{{ message.user == nickname ? 'user' : 'other-user' }}\">{{message.user}}</span>: {{message.message}} 
 				      </div>
 				    </ion-item>
 				</ion-list>
 				<ion-input type=\"text\" [(ngModel)]=\"chatinp\" placeholder=\"Enter a message\"></ion-input>
-				<button fab (click)=\"send(chatinp)\">Send</button>"
+				<button ion-fab (click)=\"send(chatinp)\">Send</button>"
 	end
 
 	def self.get_map_content(value)
@@ -246,7 +246,7 @@ module MobileAppsHelper
 		IO.copy_stream(chatModels.join('chat.ts'), tsFilePath)
 
 		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1];
-		replace(tsFilePath, 'chat/chat.html') { |match| tabName + "/" + tabName + ".html"}
+		replace(tsFilePath, 'chat.html') { |match| tabName + ".html"}
 		replace(tsFilePath, 'ChatPage') { |match| tabNameForPage + "Page"}
 		replace(tsFilePath, '[appName]') { |match| appName}
 		
