@@ -5,15 +5,14 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-"use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-__export(require('./src/pipes'));
-__export(require('./src/directives'));
-__export(require('./src/forms-deprecated'));
-__export(require('./src/common_directives'));
-__export(require('./src/location'));
-var localization_1 = require('./src/localization');
-exports.NgLocalization = localization_1.NgLocalization;
+/**
+ * @module
+ * @description
+ * Entry point for all public APIs of the common package.
+ */
+export * from './src/location';
+export { NgLocalization } from './src/localization';
+export { CommonModule } from './src/common_module';
+export { NgClass, NgFor, NgIf, NgPlural, NgPluralCase, NgStyle, NgSwitch, NgSwitchCase, NgSwitchDefault, NgTemplateOutlet } from './src/directives/index';
+export { AsyncPipe, DatePipe, I18nPluralPipe, I18nSelectPipe, JsonPipe, LowerCasePipe, CurrencyPipe, DecimalPipe, PercentPipe, SlicePipe, UpperCasePipe } from './src/pipes/index';
 //# sourceMappingURL=index.js.map

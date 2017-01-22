@@ -10,7 +10,7 @@ import { Observable } from '../facade/async';
  * An unmodifiable list of items that Angular keeps up to date when the state
  * of the application changes.
  *
- * The type of object that {@link QueryMetadata} and {@link ViewQueryMetadata} provide.
+ * The type of object that {@link Query} and {@link ViewQueryMetadata} provide.
  *
  * Implements an iterable interface, therefore it can be used in both ES6
  * javascript `for (var i of items)` loops as well as in Angular templates with
@@ -47,6 +47,11 @@ export declare class QueryList<T> {
      * [Array.filter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
      */
     filter(fn: (item: T, index: number, array: T[]) => boolean): T[];
+    /**
+     * See
+     * [Array.find](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)
+     */
+    find(fn: (item: T, index: number, array: T[]) => boolean): T;
     /**
      * See
      * [Array.reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)

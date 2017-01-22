@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import { AnimationKeyframe } from '../animation/animation_keyframe';
 import { AnimationPlayer } from '../animation/animation_player';
 import { AnimationStyles } from '../animation/animation_styles';
@@ -7,7 +14,7 @@ export declare class DebugDomRootRenderer implements RootRenderer {
     constructor(_delegate: RootRenderer);
     renderComponent(componentProto: RenderComponentType): Renderer;
 }
-export declare class DebugDomRenderer implements Renderer {
+export declare class DebugDomRenderer {
     private _delegate;
     constructor(_delegate: Renderer);
     selectRootElement(selectorOrNode: string | any, debugInfo?: RenderDebugInfo): any;
@@ -28,5 +35,5 @@ export declare class DebugDomRenderer implements Renderer {
     setElementStyle(renderElement: any, styleName: string, styleValue: string): void;
     invokeElementMethod(renderElement: any, methodName: string, args?: any[]): void;
     setText(renderNode: any, text: string): void;
-    animate(element: any, startingStyles: AnimationStyles, keyframes: AnimationKeyframe[], duration: number, delay: number, easing: string): AnimationPlayer;
+    animate(element: any, startingStyles: AnimationStyles, keyframes: AnimationKeyframe[], duration: number, delay: number, easing: string, previousPlayers?: AnimationPlayer[]): AnimationPlayer;
 }

@@ -18,7 +18,7 @@ export declare enum ChangeDetectionStrategy {
  */
 export declare enum ChangeDetectorStatus {
     /**
-     * `CheckedOnce` means that after calling detectChanges the mode of the change detector
+     * `CheckOnce` means that after calling detectChanges the mode of the change detector
      * will become `Checked`.
      */
     CheckOnce = 0,
@@ -48,12 +48,4 @@ export declare enum ChangeDetectorStatus {
      */
     Destroyed = 5,
 }
-/**
- * List of possible {@link ChangeDetectionStrategy} values.
- */
-export declare var CHANGE_DETECTION_STRATEGY_VALUES: ChangeDetectionStrategy[];
-/**
- * List of possible {@link ChangeDetectorStatus} values.
- */
-export declare var CHANGE_DETECTOR_STATUS_VALUES: ChangeDetectorStatus[];
 export declare function isDefaultChangeDetectionStrategy(changeDetectionStrategy: ChangeDetectionStrategy): boolean;
