@@ -41,6 +41,22 @@ module MobileAppsHelper
 		
 		system("cd \"#{appPath}\" && ionic g page \"#{tabName}\"");
 
+		# modelPath = Rails.root.join('modelos').join('page')
+		# tabsPath = appPath.join('src').join('pages');
+		# tabPath = tabsPath.join(tabName);
+		# FileUtils.mkdir_p(tabPath);
+		# FileUtils.cp_r modelPath, tabsPath
+		# File.rename(tabsPath.join('page'), tabPath)
+		# File.rename(tabPath.join('tab.html'), tabPath.join(tabName + ".html"));
+		# #File.rename(tabPath.join('tab.scss'), tabPath.join(tabName + ".scss"));
+		# File.rename(tabPath.join('tab.ts'), tabPath.join(tabName + ".ts"));
+		# replace(tabPath.join(tabName + ".html"), 'tab') { |match| tabName }
+		# tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
+		# replace(tabPath.join(tabName + ".ts"), 'Tab') { |match| tabNameForPage }
+		# replace(tabPath.join(tabName + ".ts"), 'tab') { |match| tabName }
+		# #replace(tabPath.join(tabName + ".scss"), 'tab') { |match| tabName }
+
+
 		if (appType == 'Tabs')
 			new_tab(appPath, tabName, originalName)
 		else
@@ -131,13 +147,12 @@ module MobileAppsHelper
 		tabName = transform_name(originalName)
 		count = Dir.entries(tabsPath).delete_if {|i| i == "." || i == ".." || i == "tabs"}.count;
 		if(count > 1)
-			FileUtils.rm_rf(tabsPath.join(tabName))
-
 			if (appType == 'Tabs')
 				delete_tab(appPath, originalName, tabName)
 			else
 				delete_menu_page(appPath, originalName, appType, tabName)
 			end
+			FileUtils.rm_rf(tabsPath.join(tabName))			
 		end
 	end
 
