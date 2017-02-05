@@ -27,7 +27,7 @@
 
   <div class="form-group">
     <div class="col-lg-10">
-      <%= submit_tag "Guardar", :id => "save_mobile_app_screen", :class => "btn btn-primary", :onclick => "saveHtmlValues();" %>
+      <%= submit_tag "Guardar", :id => "save_mobile_app_screen", :class => "btn btn-primary", :onclick => "return saveHtmlValues();" %>
       <%= link_to t('.cancel', :default => "Cancelar"),
                 mobile_app_screens_path, :class => 'btn btn-default' %>
     </div>
@@ -41,6 +41,7 @@
     function saveHtmlValues(){
       $("#raw-html-input").val($("#build-screen-area").html());
       $("#editor-html-input").val($("#build-screen-elem-options").html());
+      return true;
     }
   
 </script>

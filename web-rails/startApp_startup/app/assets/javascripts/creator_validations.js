@@ -18,6 +18,18 @@ var elementsValidations = {
 		"validation": "^([0-9]*px|)$",
 		"errorMessage": "Padding inválido"
 	},
+	"border-style": {
+		"validation": "^(solid|)$",
+		"errorMessage": "Estilo borde inválido"
+	},
+	"border-width": {
+		"validation": "^([0-9]*px|)$",
+		"errorMessage": "Ancho borde inválido"
+	},
+	"border-color": {
+		"validation": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}|)$",
+		"errorMessage": "Color Borde inválido"
+	},
 	"value": {
 		"validation": "^.*$",
 		"errorMessage": "Texto inválido"
