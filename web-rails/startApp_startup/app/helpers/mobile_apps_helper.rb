@@ -7,8 +7,27 @@ module MobileAppsHelper
         modelPath = Rails.root.join('modelos').join(modelName);
         FileUtils.cp_r modelPath, appPath
         replace_on_app_creation(appPath, name, modelName);
-
+        system("cd \"#{appPath}\" && ionic login --email fpiechotka@gmail.com --password 123123 && ionic io init");
+        replace_app_id(appPath);
 	end
+
+	def self.replace_app_id(appPath)
+		appId = get_app_id(appPath)
+		replace(appPath.join('src').join('app').join('app.module.ts'), '[APPID]') { |match| appId }
+		
+	end	
+
+	def self.get_app_id(appPath)
+		File.open(appPath.join('ionic.config.json')) do |f|
+		  f.each_line do |line|
+		    if line =~ /\"app_id\"/
+		      return line.scan( /: \"([^>]*)\"/).last.first
+		    end
+		  end
+		end
+		return "";
+	end
+
 
 	def self.replace_on_app_creation(appPath, appName, modelName)
 		replace(appPath.join('package.json'), modelName) { |match| appName }

@@ -82,7 +82,7 @@ class NotificationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def notification_params
-      params.require(:notification).permit(:message, :mobile_app_id, :action_date)
+      params.require(:notification).permit(:message, :title, :mobile_app_id, :action_date)
     end
 
     def set_mobile_app

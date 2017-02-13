@@ -5,6 +5,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
+      <th>Título</th>
       <th>Mensaje</th>
       <th>Fecha de envío</th>
     </tr>
@@ -13,8 +14,10 @@
   <tbody>
     <% @notifications.each do |notification| %>
       <tr>
+        <td><%= notification.title %></td>
         <td><%= notification.message %></td>
         <td><%= notification.action_date.strftime("%d/%m/%Y %H:%M %p") %></td>
+        <td><%= notification.sent %></td>
       </tr>
     <% end %>
   </tbody>

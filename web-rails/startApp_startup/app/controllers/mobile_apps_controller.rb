@@ -28,7 +28,7 @@ class MobileAppsController < ApplicationController
       Thread.new {
         system("cd \"#{appPath}\"  && ionic serve -p #{free_port} --nobrowser --address localhost");
       }
-      sleep 17
+      sleep 19
       @mobile_app.port = free_port.to_s
       @mobile_app.save
     else
@@ -145,7 +145,7 @@ class MobileAppsController < ApplicationController
         end
       else
         MobileAppsHelper.new_page(@mobile_app, appPath, name, @mobile_app.apptype, type, value)
-        sleep 7
+        sleep 9
         respond_to do |format|
           format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page ' + name +' was successfully created.' }
           format.json { render :show, status: :created, location: @mobile_app }
@@ -163,7 +163,7 @@ class MobileAppsController < ApplicationController
       tabPath = appPath.join('src').join('pages').join(tabName)
       if (File.directory?(tabPath))
         MobileAppsHelper.delete_page(appPath, name, @mobile_app.apptype)
-        sleep 7
+        sleep 9
         respond_to do |format|
           format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page deleted.' }
           format.json { render :show, status: :created, location: @mobile_app }
