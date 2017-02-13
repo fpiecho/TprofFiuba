@@ -14,7 +14,7 @@
 
 		<div class="form-horizontal">
 			<!-- Background-color: Contenedor   -->
-			<div class="form-group designElement contenedor-element">
+			<div class="form-group designElement contenedor-element wsContenedor-element">
 			  <label class="control-label col-sm-2" for="designInput-background-color">Color fondo:</label>
 			  <div class="col-sm-10 form-control-div">
 			    <input id="designInput-background-color" type="text" class="jscolor {hash:true, styleElement:'none'}" name="background-color"> 
@@ -26,6 +26,30 @@
 			  <label class="control-label col-sm-2" for="designInput-height">Altura:</label>
 			  <div class="col-sm-10">
 			    <input id="designInput-height" type="text" class="form-control" name="height"> 
+			  </div>
+		 	</div>
+
+			<!-- Border-style: Contenedor   -->
+			<div class="form-group designElement contenedor-element wsContenedor-element">
+			  <label class="control-label col-sm-2" for="designInput-background-color">Estilo borde:</label>
+			  <div class="col-sm-10 form-control-div">
+			    <input id="designInput-border-style" type="text" class="formControl" name="border-style"> 
+			  </div>
+		 	</div>
+
+		 	<!-- Border-width: Contenedor   -->
+			<div class="form-group designElement contenedor-element wsContenedor-element">
+			  <label class="control-label col-sm-2" for="designInput-background-color">Tamaño borde:</label>
+			  <div class="col-sm-10 form-control-div">
+			    <input id="designInput-border-width" type="text" class="formControl" name="border-width"> 
+			  </div>
+		 	</div>
+
+		 	<!-- Border-color: Contenedor   -->
+			<div class="form-group designElement contenedor-element wsContenedor-element">
+			  <label class="control-label col-sm-2" for="designInput-background-color">Color borde:</label>
+			  <div class="col-sm-10 form-control-div">
+			    <input id="designInput-border-color" type="text" class="jscolor {hash:true, styleElement:'none'}" name="border-color"> 
 			  </div>
 		 	</div>
 
@@ -187,9 +211,9 @@
 	function addPanelElement(elementType, parentElem = "", parentElemEditor = ""){
 		biggerDivIndex = -1;
 		//Busco el idx del div mayor asi me aseguro de no repetir ids
-		$('#build-screen-area .builder-elem-div').each(function(){
+		$('#build-screen-elem-options .builder-editor-elem-div').each(function(){
 			elemId = $(this).attr('id');
-			elemNumber = parseInt(elemId.replace("builder-div-",""));
+			elemNumber = parseInt(elemId.replace("builder-editor-div-",""));
 			if(elemNumber > biggerDivIndex){
 				biggerDivIndex = elemNumber;
 			}
@@ -210,7 +234,7 @@
 				elem +=	'if ((typeof avoidRunWS === \'undefined\') || (!avoidRunWS())) {';
 					elem += '$("#loading").show();';
 					elem += '$.ajax({';
-						elem += 'url: "http://www.mocky.io/v2/5856ee671300004917fddcca",';
+						elem += 'url: "http://www.mocky.io/v2/5872bafb0f0000b71ac6acb7",';
 						elem += 'dataType: "jsonp"';
 					elem += '}).then(function(response) {';
 						elem += '$.each(response.data, function(index, dataArray){';
@@ -234,6 +258,7 @@
 						elem += '});';
 						elem += '$("#loading").hide();';
 					elem += '});';
+					//.error ??
   			elem +=	'}';
 			elem += '});';
 			elem += '</'
