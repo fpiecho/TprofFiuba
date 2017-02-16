@@ -109,7 +109,7 @@
   <%= link_to t('.edit', :default => "Editar"),
                 edit_mobile_app_path(@mobile_app), :class => 'btn btn-default' %>
   <%= link_to t('.build', :default => "Build"), mobile_apps_build_path,
-                :class => 'btn btn-build', :method => 'post'  %>
+                :class => 'btn btn-build', :method => 'post', :onclick => 'showLoading()' %>
   <%= link_to t('.destroy', :default => "Eliminar"),
                 mobile_app_path(@mobile_app),
                 :method => 'delete',

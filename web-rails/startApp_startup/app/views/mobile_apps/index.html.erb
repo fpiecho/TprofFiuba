@@ -23,7 +23,8 @@
           <%= link_to t('.screen', :default => "Pantallas"),
                       mobile_apps_menu_path(mobile_app), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.show', :default => "Ver"),
-                      mobile_app_path(mobile_app), :class => 'btn btn-default btn-xs' %>
+                      mobile_app_path(mobile_app), :class => 'btn btn-default btn-xs', 
+                      :onclick => 'showLoading()' %>
           <%= link_to t('.edit', :default => "Editar"),
                       edit_mobile_app_path(mobile_app), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.destroy', :default => "Eliminar"),

@@ -39,10 +39,13 @@ class MobileAppScreensController < ApplicationController
     @mobile_app_screen.editor_html = @editor_html
 
     respond_to do |format|
+      
       if @mobile_app_screen.save
+        puts "-------------why????------------"
         format.html { redirect_to @mobile_app_screen, notice: 'Mobile app screen was successfully created.' }
         format.json { render :show, status: :created, location: @mobile_app_screen }
       else
+        puts "--------good------------"
         format.html { render :new }
         format.json { render json: @mobile_app_screen.errors, status: :unprocessable_entity }
       end
