@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
+import { Push, PushToken } from '@ionic/cloud-angular';
 
 import { PageonePage } from '../pages/pageone/pageone';
 import { PagetwoPage } from '../pages/pagetwo/pagetwo';
@@ -16,7 +17,7 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform) {
+  constructor(public platform: Platform, public push: Push) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -26,6 +27,12 @@ export class MyApp {
       { title: 'Page2', component: PagetwoPage }
     ];
 
+    if (!this.platform.is('core')) {
+      this.push.register().then((t: PushToken) => { return this.push.saveToken(t); }).then((t: PushToken) => {
+        console.log('Token saved:', t.token);
+      });
+      this.push.rx.notification().subscribe((msg) => { alert(msg.title + ': ' + msg.text); });
+    }
   }
 
   initializeApp() {

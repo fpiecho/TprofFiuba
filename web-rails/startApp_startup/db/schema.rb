@@ -11,7 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170116035217) do
+ActiveRecord::Schema.define(version: 20170209035027) do
+
+  create_table "backups", force: :cascade do |t|
+    t.string   "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",         default: 0, null: false
+    t.integer  "attempts",         default: 0, null: false
+    t.text     "handler",                      null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "progress_stage"
+    t.integer  "progress_current", default: 0
+    t.integer  "progress_max",     default: 0
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority"
 
   create_table "mobile_app_screens", force: :cascade do |t|
     t.string   "mobile_app"
@@ -33,6 +58,7 @@ ActiveRecord::Schema.define(version: 20170116035217) do
     t.string   "apptype"
     t.integer  "user_id"
     t.string   "port"
+    t.string   "token"
   end
 
   add_index "mobile_apps", ["user_id"], name: "index_mobile_apps_on_user_id"
@@ -44,6 +70,7 @@ ActiveRecord::Schema.define(version: 20170116035217) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.boolean  "sent"
+    t.string   "title"
   end
 
   create_table "users", force: :cascade do |t|

@@ -45,6 +45,8 @@ gem 'selenium-webdriver'
 
 gem 'rails-i18n'
 
+#task scheduler
+gem 'rufus-scheduler'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
