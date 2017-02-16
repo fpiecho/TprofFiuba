@@ -32,7 +32,7 @@
     
   <div> </center>
 
-<div id="tabPopup" style="display: none;">
+<div id="tabPopupApps" style="display: none;">
    
    <div id="contenido">
     
@@ -102,23 +102,24 @@
       </div>
   </div>
 </div>
-<br><br><br><br>
 <div class='buttons'>
+  <div padding-bottom="30px">
   <%= link_to t('.back', :default => "Volver"),
                 mobile_apps_path, :class => 'btn btn-default'  %>
   <%= link_to t('.edit', :default => "Editar"),
                 edit_mobile_app_path(@mobile_app), :class => 'btn btn-default' %>
   <%= link_to t('.build', :default => "Build"), mobile_apps_build_path,
-                :class => 'btn btn-build', :method => 'post', :onclick => 'showLoading()' %>
+                :class => 'btn btn-build', :method => 'post'%>
   <%= link_to t('.destroy', :default => "Eliminar"),
                 mobile_app_path(@mobile_app),
                 :method => 'delete',
                 :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "¿Estas seguro?")) },
                 :class => 'btn btn-danger' %>
-</div class='buttons'>
+  </div>
+</div >
 <script type="text/javascript">
   $("#designPopupCloseButton").click(function (){
-      $("#tabPopup").hide();
+      $("#tabPopupApps").hide();
   })
   function changeFunc(){
     cleanOptions();
@@ -158,7 +159,7 @@
   }
 
   function showPopup(){
-    $("#tabPopup").show();
+    $("#tabPopupApps").show();
   }
 
   function saveTab(){

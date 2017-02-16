@@ -39,7 +39,7 @@
 
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">
-      <%= f.submit "Guardar", :class => 'btn btn-primary' %>
+      <%= f.submit "Guardar", :class => 'btn btn-primary', :onclick => 'showLoading()' %>
       <%= link_to t('.cancel', :default => "Cancelar"),
                 mobile_apps_path, :class => 'btn btn-default' %>
     </div>

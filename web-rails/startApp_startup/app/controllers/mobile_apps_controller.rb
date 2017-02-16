@@ -28,7 +28,7 @@ class MobileAppsController < ApplicationController
       Thread.new {
         system("cd \"#{appPath}\"  && ionic serve -p #{free_port} --nobrowser --address localhost");
       }
-      sleep 19
+      sleep 22
       @mobile_app.port = free_port.to_s
       @mobile_app.save
     else

@@ -20,7 +20,7 @@
         <%= link_to t('.restore', :default => "Restaurar"),
                       versions_restore_path(version.id), 
                       :method => :post,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-default btn-xs' %>
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-default btn-xs', :onclick => 'showLoading()'   %>
         <%= link_to t('.edit', :default => "Editar"),
                       edit_version_path(version), :class => 'btn btn-default btn-xs' %>
         <%= link_to t('.destroy', :default => "Eliminar"),
