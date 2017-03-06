@@ -166,6 +166,8 @@ GEM
     responders (2.2.0)
       railties (>= 4.2.0, < 5.1)
     rubyzip (1.2.0)
+    rufus-scheduler (3.3.4)
+      tzinfo
     sass (3.4.22)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
@@ -224,6 +226,7 @@ DEPENDENCIES
   omniauth-facebook
   rails (= 4.2.6)
   rails-i18n
+  rufus-scheduler
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   selenium-webdriver

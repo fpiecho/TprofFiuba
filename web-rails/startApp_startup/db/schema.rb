@@ -11,32 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170209035027) do
-
-  create_table "backups", force: :cascade do |t|
-    t.string   "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",         default: 0, null: false
-    t.integer  "attempts",         default: 0, null: false
-    t.text     "handler",                      null: false
-    t.text     "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "progress_stage"
-    t.integer  "progress_current", default: 0
-    t.integer  "progress_max",     default: 0
-  end
-
-  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority"
+ActiveRecord::Schema.define(version: 20170306034626) do
 
   create_table "mobile_app_screens", force: :cascade do |t|
     t.string   "mobile_app"
@@ -46,6 +21,7 @@ ActiveRecord::Schema.define(version: 20170209035027) do
     t.integer  "mobile_app_id"
     t.text     "raw_html"
     t.text     "editor_html"
+    t.text     "wsURL"
   end
 
   add_index "mobile_app_screens", ["mobile_app_id"], name: "index_mobile_app_screens_on_mobile_app_id"

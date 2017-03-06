@@ -38,6 +38,8 @@ class MobileAppScreensController < ApplicationController
     @editor_html = @editor_html.gsub(/[\r\n\t]/,'')
     @mobile_app_screen.editor_html = @editor_html
 
+    @mobile_app_screen.wsURL = params[:wsURL]
+
     respond_to do |format|
       
       if @mobile_app_screen.save
@@ -62,6 +64,8 @@ class MobileAppScreensController < ApplicationController
     @editor_html = params[:editor_html]
     @editor_html = @editor_html.gsub(/[\r\n\t]/,'')
     @mobile_app_screen.editor_html = @editor_html
+
+    @mobile_app_screen.wsURL = params[:wsURL]
 
     respond_to do |format|
       if @mobile_app_screen.update(mobile_app_screen_params)
@@ -92,7 +96,7 @@ class MobileAppScreensController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def mobile_app_screen_params
-      params.require(:mobile_app_screen).permit(:mobile_app, :name, :raw_html, :editor_html)
+      params.require(:mobile_app_screen).permit(:mobile_app, :name, :raw_html, :editor_html, :wsURL)
     end
 
     def set_mobile_app

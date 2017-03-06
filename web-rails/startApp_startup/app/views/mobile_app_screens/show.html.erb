@@ -3,6 +3,8 @@
   <h2>Pantalla</h2>
 </div>
 
+<div id="wsUrl" style="display:none;"><%= @mobile_app_screen.wsURL %></div>
+
 <dl class="dl-horizontal">
   <dt><strong><%= "Nombre:" %></strong></dt>
   <dd><%= @mobile_app_screen.name %></dd>
@@ -30,8 +32,38 @@
 
 <script type="text/javascript">
 
-  function avoidRunWS(){
-    return false;  
-  }
+  $(document).ready(function (){
+    wsUrl = $("#wsUrl").html();
+    if(wsUrl!=""){
+      //Intento obtener la url del WS, si no la consigo es porque no hay ws
+      $("#loading").show();
+      $.ajax({
+        url: wsUrl,
+        dataType: "jsonp"
+      }).then(function(response) {
+        $.each(response.data, function(index, dataArray){
+          //clone el divWS segun el id (como lo consigo? en el peor de los casos solo se puede llamar un WS por pantalla, entonces el id es algo fijo).
+          elemToClone = $("#wsElemToCopy").clone();
+          elemToClone.attr("id", "wsDivCopy"+index);
+          //sacar el display none
+          elemToClone.css("display", "block");
+          elemHeight = elemToClone.css("height");
+          if(elemHeight.includes("%")){
+            elemHeight = elemHeight.replace("%","");
+            totalHeight = $("#build-screen-area").height();
+            fixedHeight = totalHeight*elemHeight/100;
+            elemToClone.css("height", fixedHeight+"px");
+          }
+          $.each(dataArray, function(key, value){
+            //aca cambio la data con la key dentro del id del elemento padre
+            $("#wsElemCopiesContainer").append(elemToClone);
+            $("#wsDivCopy"+index+" .control-class-ws-"+key).html(value);
+          });
+        });
+        $("#loading").hide();
+      });
+    
+    }  
+  });
 
 </script>

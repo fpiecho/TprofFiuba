@@ -193,10 +193,6 @@
 <!-- ********************************************** -->
 
 <script type="text/javascript">
-	function avoidRunWS(){
-		return true;	
-	}
-
 
 	//Borra un elemento y sus elementos hijos de la pantalla
 	function deleteElem(elemId, elemEditorId){
@@ -229,7 +225,7 @@
 			elem += '<div id="loading" style="display:none;text-align:center; position:absolute; top:0px;left:0px; width:100%;height:100%;"><div style="margin:auto; background-color:grey; opacity:0.8; width:100%;height:100%; font-size:20px;padding-top:60%;">LOADING</div></div>';
 
 			//Cuando modifico la url en la parte de edicion, deberia pisar todo este div, usando el param que me pasaron en la parte que se concatena la url
-			elem += '<script>';
+			/*elem += '<script>';
 			elem += '$(document).ready(function (){';	
 				elem +=	'if ((typeof avoidRunWS === \'undefined\') || (!avoidRunWS())) {';
 					elem += '$("#loading").show();';
@@ -263,7 +259,11 @@
 			elem += '});';
 			elem += '</'
 			elem += 'script>';
-			elem += '</div>';
+			elem += '</div>';*/
+
+			//TODO: Seteo una variable particular de este caso, para setear la url en el hidden input "serviceUrl"
+			url = "http://www.mocky.io/v2/5872bafb0f0000b71ac6acb7";
+			$("#wsUrl").val(url);
 		}
 		else if(elementType=="wsContenedor"){
 			elementId = "wsElemToCopy";
@@ -443,7 +443,7 @@
 	 			}
 	 			else if(styleAttribute == "urlWS"){
 	 				elem = '<div id="loading" style="display:none;text-align:center; position:absolute; top:0px;left:0px; width:100%;height:100%;"><div style="margin:auto; background-color:grey; opacity:0.8; width:100%;height:100%; font-size:20px;padding-top:60%;">LOADING</div></div>';
-	 				elem += '<script>';
+	 				/*elem += '<script>';
 					elem += '$(document).ready(function (){';	
 					elem +=	'if ((typeof avoidRunWS === \'undefined\') || (!avoidRunWS())) {';
 					elem += '$("#loading").show();';
@@ -485,9 +485,12 @@
 					elem += '});';
 					elem += '</'
 					elem += 'script>';
-					elem += '</div>';
+					elem += '</div>';*/
 
 					$("#"+elemId).html(elem);
+
+					url = $(this).val();
+					$("#wsUrl").val(url);
 	 			}
 	 			else{
 	 				$("#"+elemId).css(styleAttribute, $(this).val());
@@ -588,6 +591,57 @@
 
 	});
 
+/*
+var loadingElement = document.getElementById('loading');
+    
+    loadingElement.style.display = 'block';
 
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+        if (xmlhttp.status == 200) {
+          console.log('OK');
+          var jsonResponse = JSON.parse(xmlhttp.responseText);
+          var data = jsonResponse["data"];
+
+          for (var i = 0; i < data.length; i++){
+            var obj = data[i];
+            var elemToClone = document.getElementById('wsElemToCopy').cloneNode(true);
+            (elemToClone as HTMLElement).id = "wsDivCopy"+i;
+            (elemToClone as HTMLElement).style.display = 'block';           
+            
+            var elemHeight = (elemToClone as HTMLElement).style.height;
+            if(elemHeight.includes("%")){
+              var elemHeightNumber = Number(elemHeight.replace("%",""));
+              var totalHeight = document.getElementsByClassName('scroll-content')[1].clientHeight;
+              var fixedHeight = totalHeight*elemHeightNumber/100;
+              (elemToClone as HTMLElement).style.height = fixedHeight+"px";
+            }
+            document.getElementById('wsElemCopiesContainer').appendChild(elemToClone);
+
+            for (var key in obj){
+              var attrName = key;
+              var attrValue = obj[key];
+              document.getElementById('wsDivCopy'+i).getElementsByClassName('control-class-ws-'+key)[0].innerHTML = attrValue;
+            }
+          }
+        }
+        else if (xmlhttp.status == 400) {
+          console.log('400');
+        }
+        else {
+          console.log('NOSE');
+        }
+        loadingElement.style.display = 'none';
+      }
+    };
+
+    xmlhttp.open("GET", "http://www.mocky.io/v2/58b63fec11000005099c40ff", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");s
+    xmlhttp.withCredentials = false;
+    xmlhttp.send();
+
+*/
 
 </script>
