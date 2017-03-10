@@ -24,7 +24,7 @@
   <%= render 'creator' %>
   <%= hidden_field_tag(:raw_html, "", :id => "raw-html-input") %>
   <%= hidden_field_tag(:editor_html, "", :id => "editor-html-input") %>
-  <%= hidden_field_tag(:wsURL, "", :id => "wsUrl") %>
+  <%= hidden_field_tag(:wsURL, "", :id => "wsUrl", :value => @mobile_app_screen.wsURL) %>
 
   <div class="form-group">
     <div class="col-lg-10">

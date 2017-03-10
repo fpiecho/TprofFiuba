@@ -206,3 +206,11 @@ hr{
   z-index: 100;
 }
 
+
+.table-striped > tbody > tr:nth-of-type(even) {
+    color: #FFFFFF;
+}
+
+.table-striped > thead {
+    color: #F2F2F2;
+}

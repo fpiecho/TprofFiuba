@@ -1,18 +1,3 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-
-/*
-  Generated class for the Custom page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
-@Component({
-  selector: 'page-custom',
-  templateUrl: 'custom.html'
-})
-export class CustomPage {
-
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
   
@@ -67,25 +52,10 @@ export class CustomPage {
       }
     };
 
-    /*xmlhttp.open("GET", "http://www.mocky.io/v2/58b39c0a110000240e1c4289", true);*/
-    xmlhttp.open("GET", "http://www.mocky.io/v2/58b63fec11000005099c40ff", true);
+    xmlhttp.open("GET", [WsUrl]], true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.setRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8,application/json");
     xmlhttp.withCredentials = false;
     xmlhttp.send();
   }
 
-}
-
-
-/*
-For request CROSS to work
-
-Access-Control-Allow-Origin: *
-
-
-Access-Control-Allow-Methods: POST, GET, OPTIONS
-Access-Control-Allow-Headers: Content-Type
-Access-Control-Allow-Credentials: true
-
-*/
