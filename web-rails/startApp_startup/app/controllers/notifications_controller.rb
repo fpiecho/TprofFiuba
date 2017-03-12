@@ -2,6 +2,8 @@ class NotificationsController < ApplicationController
   before_action :set_notification, only: [:show, :edit, :update, :destroy]
   before_action :set_mobile_app, only: [:index, :new]
 
+  layout "application_internal_styled"
+
   # GET /notifications
   # GET /notifications.json
   def index

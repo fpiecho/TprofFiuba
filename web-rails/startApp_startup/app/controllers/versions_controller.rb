@@ -2,6 +2,8 @@ class VersionsController < ApplicationController
   before_action :set_version, only: [:show, :edit, :update, :destroy, :restore]
   before_action :set_mobile_app, only: [:index, :new]
 
+  layout "application_internal_styled"
+
   # GET /versions
   # GET /versions.json
   def index

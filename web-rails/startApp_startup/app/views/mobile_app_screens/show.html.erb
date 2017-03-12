@@ -1,34 +1,32 @@
 <%- model_class = MobileAppScreen -%>
 <div class="page-header">
-  <h2>Pantalla</h2>
+  <h2>Pantalla: <%=@mobile_app_screen.name%></h2>
 </div>
 
-<div id="wsUrl" style="display:none;"><%= @mobile_app_screen.wsURL %></div>
+<div id="screenPreview">
 
-<dl class="dl-horizontal">
-  <dt><strong><%= "Nombre:" %></strong></dt>
-  <dd><%= @mobile_app_screen.name %></dd>
-  <dt><strong><%= "App:" %></strong></dt>
-  <dd><%= @mobile_app_screen.mobile_app.title %></dd>
-</dl>
+  <div id="wsUrl" style="display:none;"><%= @mobile_app_screen.wsURL %></div>
 
-<center><div class="appPreviewContainer">
-  <div class="appPreviewHeadContent"><div><%= Time.zone.now.to_s(:time) %></div></div>
-  <div id="build-screen-area" class="build-screen-area" style="width:300px; height:500px; margin-left: 7px; background-color: #AAAAAA;">
-	<%= @mobile_app_screen.raw_html.html_safe if @mobile_app_screen.raw_html %>
-  </div>
-<div></center>
-<br><br>
+  <center><div class="appPreviewContainer">
+    <div class="appPreviewHeadContent"><div><%= Time.zone.now.to_s(:time) %></div></div>
+    <div id="build-screen-area" class="build-screen-area" style="width:235px; height:352px; margin-left: 7px; background-color: #AAAAAA;">
+  	<%= @mobile_app_screen.raw_html.html_safe if @mobile_app_screen.raw_html %>
+    </div>
+  <div></center>
+  <br><br>
 
-<%= link_to t('.back', :default => "Volver"),
-              mobile_app_screens_path, :class => 'btn btn-default'  %>
-<%= link_to t('.edit', :default => "Editar"),
-              edit_mobile_app_screen_path(@mobile_app_screen), :class => 'btn btn-default' %>
-<%= link_to t('.destroy', :default => "Eliminar"),
-              mobile_app_screen_path(@mobile_app_screen),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "¿Estas seguro?")) },
-              :class => 'btn btn-danger' %>
+  <%= link_to t('.back', :default => "Volver"),
+                mobile_app_screens_path, :class => 'btn btn-default'  %>
+  <%= link_to t('.edit', :default => "Editar"),
+                edit_mobile_app_screen_path(@mobile_app_screen), :class => 'btn btn-default' %>
+  <%= link_to t('.destroy', :default => "Eliminar"),
+                mobile_app_screen_path(@mobile_app_screen),
+                :method => 'delete',
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "¿Estas seguro?")) },
+                :class => 'btn btn-danger' %>
+
+</div>
+
 
 <script type="text/javascript">
 
