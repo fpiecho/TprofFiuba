@@ -103,7 +103,7 @@ hr{
 	margin: 20px auto;
 	padding: 10px;
     width: 90%;
-    background-color: #e2e2e2;
+    background-color: rgba(226,226,226,0.85);
 
 }
 
@@ -207,10 +207,10 @@ hr{
 }
 
 
-.table-striped > tbody > tr:nth-of-type(even) {
+/*.table-striped > tbody > tr:nth-of-type(even) {
     color: #FFFFFF;
 }
 
 .table-striped > thead {
     color: #F2F2F2;
-}
+}*/

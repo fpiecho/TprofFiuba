@@ -2,6 +2,8 @@ class MobileAppScreensController < ApplicationController
   before_action :set_mobile_app_screen, only: [:show, :edit, :update, :destroy]
   before_action :set_mobile_app
 
+  layout "application_internal_styled"
+
   # GET /mobile_app_screens
   # GET /mobile_app_screens.json
   def index

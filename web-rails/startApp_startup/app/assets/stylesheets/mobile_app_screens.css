@@ -6,7 +6,7 @@
 	margin: 10px 0;
 	font-size: 15px;
 	font-weight: bold;
-	color: #FFFFFF;
+	color: #000000;
 }
 
 .build-screen-container{
@@ -168,3 +168,27 @@
 #elemsCreationPopup .build-screen-section-title{
   color: #000000;
 }
+
+/*Particular para la vista de la screen*/
+#screenPreview .appPreviewContainer {
+    width: 275px;
+    height: 450px;
+    background-image: url(smartphone.png);
+    background-size: 100% 100%;
+    padding: 41px 19px 34px 13px;
+    text-align: center;
+    display: inline-block;
+    background-color: transparent;
+}
+
+#screenPreview .appPreviewHeadContent >div{
+  line-height: 16px;
+  font-size: 11px;
+}
+
+#screenPreview .appPreviewHeadContent{
+  height: 16px;
+  width: 240px;
+}
+
+
