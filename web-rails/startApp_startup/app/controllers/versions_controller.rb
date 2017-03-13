@@ -91,10 +91,10 @@ class VersionsController < ApplicationController
   def restore
     if(@version.mobile_app.user_id.equal? current_user.id)
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@version.mobile_app.title)
-      versionPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description).join('.')
+      versionPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description)
       if(File.directory?(versionPath))
         FileUtils.rm_rf(appPath)
-        FileUtils.cp_r versionPath, appPath
+        FileUtils.copy_entry versionPath, appPath
         respond_to do |format|
           format.html { redirect_to @version.mobile_app, notice: 'Version ' + @version.description + ' was successfully restored.' }
           format.json { render :show, status: :created, location: @version.mobile_app }

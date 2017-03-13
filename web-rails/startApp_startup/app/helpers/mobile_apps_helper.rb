@@ -106,6 +106,7 @@ module MobileAppsHelper
 			content = value
 		end
 		set_content(appPath, tabName, content)
+		before_reload()
 	end
 
 	def self.new_menu_page(appPath, tabName, originalName)
@@ -175,6 +176,11 @@ module MobileAppsHelper
 			end
 			FileUtils.rm_rf(tabsPath.join(tabName))			
 		end
+		before_reload()
+	end
+
+	def self.before_reload
+		sleep 9
 	end
 
 	def self.delete_menu_page(appPath, originalName, appType, tabName)
@@ -241,36 +247,38 @@ module MobileAppsHelper
 	end
 
 	def self.get_fb_content(value)
-		return "<iframe src=\"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F" + value +"&tabs=timeline&width=270&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=268321266881752\" width=\"100%\" height=\"100%\" style=\"border:none;overflow:hidden\" scrolling=\"no\" frameborder=\"0\" allowTransparency=\"true\"></iframe>"
+		return get_tab_content('fb.html', value)
 	end
 
 	def self.get_tw_content(value)
-		return "<iframe border=0 frameborder=0 height=100% width=100% 
- src=\"http://twitframe.com/show?url="  + value +"\"></iframe>"
+		return get_tab_content('tw.html', value)
 	end
 
 	def self.get_ig_content(value)
-		return "<iframe width=\"100%\" height=\"100%\" src=\"http://instagram.com/p/" + value +"/embed\" frameborder=\"0\"></iframe>"
+		return get_tab_content('ig.html', value)
 	end
 
 	def self.get_yt_content(value)
-		return "<iframe src=\"http://www.youtube.com/embed/?listType=user_uploads&list=" + value + "\" width=\"100%\" height=\"100%\"></iframe>"
+		return get_tab_content('yt.html', value)
 	end
 
 	def self.get_chat_content()
-		return " <ion-list>
-				    <ion-item *ngFor=\"let message of chats\">
-				      <div class=\"{{ message.user == nickname ? 'item-right' : 'item-left' }}\">
-				          <span class=\"{{ message.user == nickname ? 'user' : 'other-user' }}\">{{message.user}}</span>: {{message.message}} 
-				      </div>
-				    </ion-item>
-				</ion-list>
-				<ion-input type=\"text\" [(ngModel)]=\"chatinp\" placeholder=\"Ingrese un mensaje\"></ion-input>
-				<button ion-fab (click)=\"send(chatinp)\">Enviar</button>"
+		return get_tab_content('chat.html', '')
 	end
 
 	def self.get_map_content(value)
-		return "<iframe src=\"https://www.google.com/maps/d/embed?mid=" + value + "\" width=\"100%\" height=\"100%\"></iframe>"
+		return get_tab_content('map.html', value)
+	end
+
+	def self.get_tab_content(fileName, value)
+		modelPath = get_model_path().join(fileName)
+		content = File.read(modelPath)
+		content.sub! '[value]', value
+		return content
+	end
+
+	def self.get_model_path()
+		return Rails.root.join('modelos').join('htmls');
 	end
 
 	def self.set_chat_tab(appPath, tabName, appName)
@@ -286,6 +294,10 @@ module MobileAppsHelper
 		replace(tsFilePath, 'ChatPage') { |match| tabNameForPage + "Page"}
 		replace(tsFilePath, '[appName]') { |match| appName}
 		
+	end
+
+	def self.show
+		sleep 22
 	end
 
 	def self.transform_name(originalName)
