@@ -88,6 +88,13 @@ module MobileAppsHelper
 			@mobile_app_screen = mobileApp.mobile_app_screens.select { |s| s.id.to_s == value }
 			if(@mobile_app_screen.present? && @mobile_app_screen.size > 0)
 				content= @mobile_app_screen.first.raw_html
+
+				if (@mobile_app_screen.first.wsURL.present?)
+					puts "present"
+					set_ws_tab(appPath, tabName, mobileApp.title, @mobile_app_screen.first.wsURL)
+				else
+					puts "not present"
+				end
 			end
 		when "3"#facebook feed
 			content = get_fb_content(value)
@@ -293,7 +300,18 @@ module MobileAppsHelper
 		replace(tsFilePath, 'chat.html') { |match| tabName + ".html"}
 		replace(tsFilePath, 'ChatPage') { |match| tabNameForPage + "Page"}
 		replace(tsFilePath, '[appName]') { |match| appName}
-		
+	end
+
+	def self.set_ws_tab(appPath, tabName, appName, wsUrl)
+		tabPath = appPath.join('src').join('pages').join(tabName).join(tabName + ".ts")
+		wsModel = Rails.root.join('modelos').join('dummyForWS.ts');
+		IO.copy_stream(wsModel, tabPath)
+
+		tabNameForPage = tabName[0].upcase + tabName[1..tabName.length - 1]		
+		replace(tabPath, '[WsUrl]') { |match| wsUrl}
+		replace(tabPath, '[pageName]') { |match| tabName}
+		replace(tabPath, '[pageTitle]') { |match| tabNameForPage + "Page"}
+
 	end
 
 	def self.show

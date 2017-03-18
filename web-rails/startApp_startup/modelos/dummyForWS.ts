@@ -1,9 +1,22 @@
+import { Component } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
+
+/*
+  Generated class for the Empty page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+*/
+@Component({
+  selector: 'page-[pageName]',
+  templateUrl: '[pageName].html'
+})
+export class [pageTitle] {
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
-  
-
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CustomPage');
+    console.log('ionViewDidLoad [pageTitle]');
 
     var loadingElement = document.getElementById('loading');
     
@@ -52,10 +65,12 @@
       }
     };
 
-    xmlhttp.open("GET", [WsUrl]], true);
+    xmlhttp.open("GET", "[WsUrl]", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.setRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8,application/json");
     xmlhttp.withCredentials = false;
     xmlhttp.send();
   }
+
+}
 
