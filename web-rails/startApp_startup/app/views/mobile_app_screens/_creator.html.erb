@@ -8,11 +8,11 @@
   	 	<h4 class="modal-title">Editor del elemento</h4>
     </div>
 
-		<div id="designPopupErrorMessage" class="alert alert-danger" style="display:none">
-			<a href="#" class="close" onclick="hidePopupErrorMessage()">&times;</a>
-		</div>
+		<div id="formDesignPopup" class="form-horizontal">
+			<div id="designPopupErrorMessage" class="alert alert-danger" style="display:none">
+				<a href="#" class="close" onclick="hidePopupErrorMessage()">&times;</a>
+			</div>
 
-		<div class="form-horizontal">
 			<!-- Background-color: Contenedor   -->
 			<div class="form-group designElement contenedor-element wsContenedor-element">
 			  <label class="control-label col-sm-2" for="designInput-background-color">Color fondo:</label>
@@ -224,50 +224,14 @@
 			
 			elem += '<div id="loading" style="display:none;text-align:center; position:absolute; top:0px;left:0px; width:100%;height:100%;"><div style="margin:auto; background-color:grey; opacity:0.8; width:100%;height:100%; font-size:20px;padding-top:60%;">LOADING</div></div>';
 
-			//Cuando modifico la url en la parte de edicion, deberia pisar todo este div, usando el param que me pasaron en la parte que se concatena la url
-			/*elem += '<script>';
-			elem += '$(document).ready(function (){';	
-				elem +=	'if ((typeof avoidRunWS === \'undefined\') || (!avoidRunWS())) {';
-					elem += '$("#loading").show();';
-					elem += '$.ajax({';
-						elem += 'url: "http://www.mocky.io/v2/5872bafb0f0000b71ac6acb7",';
-						elem += 'dataType: "jsonp"';
-					elem += '}).then(function(response) {';
-						elem += '$.each(response.data, function(index, dataArray){';
-							//clone el divWS segun el id (como lo consigo? en el peor de los casos solo se puede llamar un WS por pantalla, entonces el id es algo fijo).
-							elem += 'elemToClone = $("#wsElemToCopy").clone();';
-							elem += 'elemToClone.attr("id", "wsDivCopy"+index);';
-							//sacar el display none
-							elem += 'elemToClone.css("display", "block");';
-							elem += 'elemHeight = elemToClone.css("height");';
-							elem += 'if(elemHeight.includes("%")){';
-								elem += 'elemHeight = elemHeight.replace("%","");';
-								elem += 'totalHeight = $("#build-screen-area").height();';
-								elem += 'fixedHeight = totalHeight*elemHeight/100;';
-								elem += 'elemToClone.css("height", fixedHeight+"px");';
-							elem += '}';
-							elem += '$.each(dataArray, function(key, value){';
-								//aca cambio la data con la key dentro del id del elemento padre
-								elem += '$("#wsElemCopiesContainer").append(elemToClone);';
-								elem += '$("#wsDivCopy"+index+" .control-class-ws-"+key).html(value);';
-							elem += '});';
-						elem += '});';
-						elem += '$("#loading").hide();';
-					elem += '});';
-					//.error ??
-  			elem +=	'}';
-			elem += '});';
-			elem += '</'
-			elem += 'script>';
-			elem += '</div>';*/
-
-			//TODO: Seteo una variable particular de este caso, para setear la url en el hidden input "serviceUrl"
+			//Seteo una variable particular de este caso, para setear la url en el hidden input "serviceUrl"
 			url = "http://www.mocky.io/v2/5872bafb0f0000b71ac6acb7";
 			$("#wsUrl").val(url);
+			//http://www.mocky.io/v2/58ca088a0f000003236b8b67
 		}
 		else if(elementType=="wsContenedor"){
 			elementId = "wsElemToCopy";
-			elem = '<div id="' + elementId + '" class="builder-elem-div" style="display:none; width:100%; height:20%;  background-color: #0000DD;"></div>';
+			elem = '<div id="' + elementId + '" class="builder-elem-div" style="display:none; width:100%; height:20%; background-color: #0000DD;"></div>';
 			elem += '<div id="wsElemCopiesContainer" class="builder-elem-div" style=""></div>';
 		}
 		else if(elementType=="texto"){
@@ -289,39 +253,38 @@
 
 		if(elementType=="wsElem"){
 			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">';
-				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Servicio Externo (WS)';
-					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
-					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
+				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles=""><span>Servicio Externo (WS)</span>';
+					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')"></div>';
+					elemEditor += '<div class="editButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')"></div>';
 				elemEditor += '</div>';
 			elemEditor += '</div>';
 		}
 		else if(elementType=="wsContenedor"){
-			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">';
-				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Contenedor WS';
-					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
-					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
-					elemEditor += '<div class="deleteButton" onclick="insertElem(\''+elementId+'\', \''+elementEditorId+'\')">AGREGAR ELEM</div>';
+			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="height:20%;background-color:#0000DD;">';
+				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles=""><span>Contenedor WS</span>';
+					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')"></div>';
+					elemEditor += '<div class="editButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')"></div>';
+					elemEditor += '<div class="addElemButton" onclick="insertElem(\''+elementId+'\', \''+elementEditorId+'\')"></div>';
 				elemEditor += '</div>';
 			elemEditor += '</div>';
 		}
 		else if(elementType=="texto"){
-			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">';
-				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Texto';
-					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
-					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
+			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="value:Texto;font-size:10px;">';
+				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles=""><span>Texto</span>';
+					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')"></div>';
+					elemEditor += '<div class="editButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')"></div>';
 				elemEditor += '</div>';
 			elemEditor += '</div>';
 		}else{
-			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="">';
-				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles="">Contenedor';
-					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')">BORRAR</div>';
-					elemEditor += '<div class="deleteButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')">EDITAR</div>';
-					elemEditor += '<div class="deleteButton" onclick="insertElem(\''+elementId+'\', \''+elementEditorId+'\')">AGREGAR ELEM</div>';
+			elemEditor = '<div id="' + elementEditorId + '" class="builder-editor-elem-div" data-styles="height:10%;background-color:#0000DD;">';
+				elemEditor += '<div class="builder-editor-elem-div-properties" data-styles=""><span>Contenedor</span>';
+					elemEditor += '<div class="deleteButton" onclick="deleteElem(\''+elementId+'\', \''+elementEditorId+'\')"></div>';
+					elemEditor += '<div class="editButton" onclick="showDesignPopup(\''+elementType+'\', \''+elementId+'\', \''+elementEditorId+'\')"></div>';
+					elemEditor += '<div class="addElemButton" onclick="insertElem(\''+elementId+'\', \''+elementEditorId+'\')"></div>';
 				elemEditor += '</div>';
 			elemEditor += '</div>';
 		}
 		//Idem sin el agregar elem, y Texto en vez de contenedor
-
 
 		if(parentElemEditor != '')
 			$("#"+parentElemEditor).append(elemEditor);
@@ -424,6 +387,7 @@
 
  		if(!allFieldsValid){
  			$("#designPopupErrorMessage").show();
+ 			$("#formDesignPopup").animate({scrollTop:0}, 'slow')
  			return;
  		}
 
@@ -443,49 +407,6 @@
 	 			}
 	 			else if(styleAttribute == "urlWS"){
 	 				elem = '<div id="loading" style="display:none;text-align:center; position:absolute; top:0px;left:0px; width:100%;height:100%;"><div style="margin:auto; background-color:grey; opacity:0.8; width:100%;height:100%; font-size:20px;padding-top:60%;">LOADING</div></div>';
-	 				/*elem += '<script>';
-					elem += '$(document).ready(function (){';	
-					elem +=	'if ((typeof avoidRunWS === \'undefined\') || (!avoidRunWS())) {';
-					elem += '$("#loading").show();';
-					elem += '$.ajax({';
-					elem += 'url: "'+$(this).val()+'",';
-					elem += 'dataType: "jsonp"';
-					elem += '}).then(function(response) {';
-					//elem += '$.each(response.data, function(key, value){';
-						elem += '$.each(response.data, function(index, dataArray){';
-							//clone el divWS segun el id (como lo consigo? en el peor de los casos solo se puede llamar un WS por pantalla, entonces el id es algo fijo).
-							elem += 'elemToClone = $("#wsElemToCopy").clone();';
-							elem += 'elemToClone.attr("id", "wsDivCopy"+index);';
-							//sacar el display none
-							elem += 'elemToClone.css("display", "block");';
-							elem += 'elemHeight = elemToClone.css("height");';
-
-
-							elem += 'if(elemHeight.includes("%")){';
-								elem += 'elemHeight = elemHeight.replace("%","");';
-								elem += 'totalHeight = $("#build-screen-area").height();';
-								elem += 'fixedHeight = totalHeight*elemHeight/100;';
-								elem += 'elemToClone.css("height", fixedHeight+"px");';
-							elem += '}';
-
-
-							//elem += 'elemToClone.css("position", "absolute");';
-							//id nuevo div = idFijo+index
-						elem += '$.each(dataArray, function(key, value){';
-							//aca cambio la data con la key dentro del id del elemento padre
-							elem += '$("#wsElemCopiesContainer").append(elemToClone);';
-							elem += '$("#wsDivCopy"+index+" .control-class-ws-"+key).html(value);';
-						//elem += 'alert(key+":"+value);';
-						elem += '});';
-					//elem += '$(".control-class-ws-"+key).html(value);';
-					elem += '});';
-					elem += '$("#loading").hide();';
-					elem += '});';
-      		elem +=	'}';
-					elem += '});';
-					elem += '</'
-					elem += 'script>';
-					elem += '</div>';*/
 
 					$("#"+elemId).html(elem);
 
@@ -589,6 +510,12 @@
 
 	  //callWS();
 
+
 	});
+
+	function testingThis(){
+		$("#build-screen-area").html(wsViewModel);
+		$("#build-screen-elem-options").html(wsEditorViewModel);
+	}
 
 </script>

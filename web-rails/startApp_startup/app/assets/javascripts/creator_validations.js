@@ -27,7 +27,7 @@ var elementsValidations = {
 		"errorMessage": "Ancho borde inválido"
 	},
 	"border-color": {
-		"validation": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}|)$",
+		"validation": "^(#[A-Fa-f0-9]{6}|#[A-Fa-f0-9]{3}|)$",
 		"errorMessage": "Color Borde inválido"
 	},
 	"value": {
@@ -43,7 +43,8 @@ var elementsValidations = {
 		"errorMessage": "URL inválida"
 	},
 	"font-size": {
-		"validation": "^([0-9]*|[0-9]*\.[0-9]*)em$",
+		/*"validation": "^([0-9]*|[0-9]*\.[0-9]*)em$",*/
+		"validation": "^([0-9]*px|)$",
 		"errorMessage": "Tamaño de letra inválido"
 	}
 };

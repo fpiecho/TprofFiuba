@@ -22,6 +22,7 @@
 .build-screen-elem-options{
 	height:390px;
 	background-color: #CCCCCC;
+  overflow: auto;
 }
 
 .build-screen-area{
@@ -89,18 +90,61 @@
   padding: 2px 2px 2px 5px;
 }
 .builder-editor-elem-div .deleteButton{
-  width:20%;
+  width:12%;
   cursor:pointer;
   margin-right: 10px;
   margin-left: 10px;
   font-size: 10px;
   display:inline-block;
+  background-image: url(icon_delete.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 27px;
+  position: absolute;
+  right:0px;
+}
+.builder-editor-elem-div .editButton{
+  width:12%;
+  cursor:pointer;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 10px;
+  display:inline-block;
+  background-image: url(icon_edit.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 27px;
+  position: absolute;
+  right:40px;
+}
+.builder-editor-elem-div .addElemButton{
+  width:12%;
+  cursor:pointer;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 10px;
+  display:inline-block;
+  background-image: url(icon_add.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 27px;
+  position: absolute;
+  right:80px;
 }
 
 .builder-editor-elem-div-properties{
   width:100%;
   background-color: #E2E2E2;
   display:inline-block;
+  position: relative;
+  min-height: 30px;
+}
+
+.builder-editor-elem-div-properties >span{
+  line-height: 30px;
 }
 
 /* POPUP para modificacion de estilos de los componentes */
@@ -113,6 +157,18 @@
   width: 50%;
   height: 50%;
   margin: 0 auto;
+}
+
+#designPopup #contenido{
+  height: 100%;
+}
+#designPopup .modal-header{
+  height: 15%;
+}
+#designPopup .form-horizontal{
+  height: 85%;
+  width: 100%;
+  overflow: auto;
 }
 
 .DesignPopupSaveButton{
