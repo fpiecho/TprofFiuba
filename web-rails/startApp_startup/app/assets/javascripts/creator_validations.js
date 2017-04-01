@@ -31,7 +31,7 @@ var elementsValidations = {
 		"errorMessage": "Color Borde inválido"
 	},
 	"value": {
-		"validation": "^.*$",
+		"validation": "",
 		"errorMessage": "Texto inválido"
 	},
 	"campoWS": {
