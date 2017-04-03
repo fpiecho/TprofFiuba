@@ -40,7 +40,7 @@ class VersionsController < ApplicationController
           appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(@version.mobile_app.title).join('*')
           FileUtils.cp_r Dir[appPath] , backupPath
 
-          format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version was successfully created.' }
+          format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version creada exitosamente.' }
           format.json { render :show, status: :created, location: @version }
         else
           format.html { render :new }
@@ -62,7 +62,7 @@ class VersionsController < ApplicationController
           oldBackupPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(oldDescription)
           newBackupPath = Rails.root.join('versions').join(current_user.id.to_s).join(@version.mobile_app.title).join(@version.description) 
           File.rename oldBackupPath, newBackupPath
-          format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version was successfully updated.' }
+          format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version actualizada exitosamente.' }
           format.json { render :show, status: :ok, location: @version }
         else
           format.html { render :edit }
@@ -82,7 +82,7 @@ class VersionsController < ApplicationController
       FileUtils.rm_rf(versionPath)
       @version.destroy
       respond_to do |format|
-        format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version was successfully destroyed.' }
+        format.html { redirect_to versions_url + "/" + @version.mobile_app_id.to_s, notice: 'Version eliminada exitosamente.' }
         format.json { head :no_content }
       end
     end
@@ -96,7 +96,7 @@ class VersionsController < ApplicationController
         FileUtils.rm_rf(appPath)
         FileUtils.copy_entry versionPath, appPath
         respond_to do |format|
-          format.html { redirect_to @version.mobile_app, notice: 'Version ' + @version.description + ' was successfully restored.' }
+          format.html { redirect_to @version.mobile_app, notice: 'Version ' + @version.description + ' restaurada exitosamente.' }
           format.json { render :show, status: :created, location: @version.mobile_app }
         end
       end

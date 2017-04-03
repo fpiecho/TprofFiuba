@@ -36,7 +36,7 @@ class NotificationsController < ApplicationController
     if(@mobile_app.user_id.equal? current_user.id)  
       respond_to do |format|
         if @notification.save
-          format.html { redirect_to notifications_url + "/" + @notification.mobile_app_id.to_s, notice: 'Notification was successfully created.' }
+          format.html { redirect_to notifications_url + "/" + @notification.mobile_app_id.to_s, notice: 'Notificacion creada exitosamente.' }
           format.json { render :show, status: :created, location: @notification }
         else
           format.html { render :new }
@@ -53,7 +53,7 @@ class NotificationsController < ApplicationController
     if(@mobile_app.user_id.equal? current_user.id)
       respond_to do |format|
         if @notification.update(notification_params)
-          format.html { redirect_to notifications_url + "/" + @notification.mobile_app_id.to_s, notice: 'Notification was successfully updated.' }
+          format.html { redirect_to notifications_url + "/" + @notification.mobile_app_id.to_s, notice: 'Notificacion actualizada exitosamente.' }
           format.json { render :show, status: :ok, location: @notification }
         else
           format.html { render :edit }
@@ -70,7 +70,7 @@ class NotificationsController < ApplicationController
     if(@mobile_app.user_id.equal? current_user.id)
       @notification.destroy
       respond_to do |format|
-        format.html { redirect_to notifications_url + "/" + @notification.mobile_app_id.to_s, notice: 'Notification was successfully destroyed.' }
+        format.html { redirect_to notifications_url + "/" + @notification.mobile_app_id.to_s, notice: 'Notificacion destruida exitosamente.' }
         format.json { head :no_content }
       end
     end

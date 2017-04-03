@@ -252,3 +252,12 @@
 }
 
 
+#designPopup .dropdown{
+  text-align: left;
+}
+
+#designPopup .dropdown-toggle{
+  background-color: #FFFFFF;
+  color: #000000;
+  border-color: #D2D2D2;
+}

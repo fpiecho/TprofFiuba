@@ -62,7 +62,7 @@ class MobileAppsController < ApplicationController
         userPath = Rails.root.join('mobileApps').join(current_user.id.to_s)
         MobileAppsHelper.create_app(name, userPath, appType)
 
-        format.html { redirect_to @mobile_app, notice: 'Mobile app ' + name +' was successfully created.' }
+        format.html { redirect_to @mobile_app, notice: 'La aplicacion ' + name +' fue creada exitosamente.' }
         format.json { render :show, status: :created, location: @mobile_app }
       else
         format.html { render :new }
@@ -88,7 +88,7 @@ class MobileAppsController < ApplicationController
     respond_to do |format|
       if(@mobile_app.user_id.equal? current_user.id)
         if @mobile_app.update(mobile_app_params)
-          format.html { redirect_to @mobile_app, notice: 'Mobile app was successfully updated.' }
+          format.html { redirect_to @mobile_app, notice: 'La aplicación fue actualizada exitosamente.' }
           format.json { render :show, status: :ok, location: @mobile_app }
         else
           format.html { render :edit }
@@ -107,7 +107,7 @@ class MobileAppsController < ApplicationController
       appPath = Rails.root.join('mobileApps').join(current_user.id.to_s).join(title);
       FileUtils.rm_rf(appPath)
       respond_to do |format|
-        format.html { redirect_to mobile_apps_url, notice: 'Mobile app was successfully destroyed.' }
+        format.html { redirect_to mobile_apps_url, notice: 'La aplicación fue eliminada exitosamente.' }
         format.json { head :no_content }
       end
     end
@@ -138,13 +138,13 @@ class MobileAppsController < ApplicationController
       tabPath = appPath.join('src').join('pages').join(name)
       if (File.directory?(tabPath))
         respond_to do |format|
-          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page already created.' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'La pagina ya fue creada.' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
       else
         MobileAppsHelper.new_page(@mobile_app, appPath, name, @mobile_app.apptype, type, value)
         respond_to do |format|
-          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page ' + name +' was successfully created.' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Pagina ' + name +' creada exitosamente.' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
       end
@@ -161,12 +161,12 @@ class MobileAppsController < ApplicationController
       if (File.directory?(tabPath))
         MobileAppsHelper.delete_page(appPath, name, @mobile_app.apptype)
         respond_to do |format|
-          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page deleted.' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Pagina eliminada.' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
       else
         respond_to do |format|
-          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Page ' + name +' does not exist' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'La pagina ' + name +' no existe' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
         
@@ -185,13 +185,13 @@ class MobileAppsController < ApplicationController
       if (File.exist?(tabPath))
         MobileAppsHelper.set_content(appPath, name, content)
         respond_to do |format|
-          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Tab ' + name +' was successfully edited.' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Tab ' + name +' editado exitosamente.' }
           format.json { render :show, status: :created, location: @mobile_app }
         end
         
       else
         respond_to do |format|
-          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'Tab does not exist.' }
+          format.html { redirect_to mobile_apps_show_url(s: 'f'), notice: 'El Tab no existe.' }
           format.json { render :show, status: :created, location: @mobile_app }
         end        
       end

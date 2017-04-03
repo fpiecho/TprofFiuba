@@ -46,7 +46,7 @@ class MobileAppScreensController < ApplicationController
       
       if @mobile_app_screen.save
         puts "-------------why????------------"
-        format.html { redirect_to @mobile_app_screen, notice: 'Mobile app screen was successfully created.' }
+        format.html { redirect_to @mobile_app_screen, notice: 'La pantalla fue creada exitosamente.' }
         format.json { render :show, status: :created, location: @mobile_app_screen }
       else
         puts "--------good------------"
@@ -71,7 +71,7 @@ class MobileAppScreensController < ApplicationController
 
     respond_to do |format|
       if @mobile_app_screen.update(mobile_app_screen_params)
-        format.html { redirect_to @mobile_app_screen, notice: 'Mobile app screen was successfully updated.' }
+        format.html { redirect_to @mobile_app_screen, notice: 'La pantalla fue actualizada exitosamente.' }
         format.json { render :show, status: :ok, location: @mobile_app_screen }
       else
         format.html { render :edit }
@@ -85,7 +85,7 @@ class MobileAppScreensController < ApplicationController
   def destroy
     @mobile_app_screen.destroy
     respond_to do |format|
-      format.html { redirect_to mobile_app_screens_url, notice: 'Mobile app screen was successfully destroyed.' }
+      format.html { redirect_to mobile_app_screens_url, notice: 'La pantalla fue eliminada exitosamente.' }
       format.json { head :no_content }
     end
   end

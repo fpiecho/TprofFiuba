@@ -57,13 +57,26 @@
 			<div class="form-group designElement contenedor-element wsContenedor-element">
 			  <label class="control-label col-sm-2" for="designInput-text-align">Alineanación:</label>
 			  <div class="col-sm-10">
-			    <input id="designInput-text-align" type="text" class="form-control" name="text-align"> 
+			    <input id="designInput-text-align" style="display:none;" type="text" class="form-control" name="text-align">
+
+
+			    <div id="dropdownAlignment" class="dropdown">
+					  <button id="dropdownAlignmentButton" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Centrado
+					  <span class="caret"></span></button>
+					  <ul class="dropdown-menu">
+					    <li><a href="#" onclick="selectAlign('left','Izquierda')">Izquierda</a></li>
+					    <li><a href="#" onclick="selectAlign('center','Centrado')">Centrado</a></li>
+					    <li><a href="#" onclick="selectAlign('right','Derecha')">Derecha</a></li>
+					  </ul>
+					</div>
+
+
 			  </div>
 		 	</div>
 
 		 	<!-- Padding: Contenedor, Texto   -->
 			<div class="form-group designElement contenedor-element texto-element wsContenedor-element">
-			  <label class="control-label col-sm-2" for="designInput-padding">Padding:</label>
+			  <label class="control-label col-sm-2" for="designInput-padding">Espaciado:</label>
 			  <div class="col-sm-10">
 			    <input id="designInput-padding" type="text" class="form-control" name="padding"> 
 			  </div>
@@ -193,6 +206,12 @@
 <!-- ********************************************** -->
 
 <script type="text/javascript">
+	//Funcion auxiliar para mostrar con un dropdown la alineacion
+	function selectAlign(alginment, showText){
+		$("#dropdownAlignmentButton").html(showText+' <span class="caret"></span>');
+		$("#designInput-text-align").val(alginment);
+	}
+
 
 	//Borra un elemento y sus elementos hijos de la pantalla
 	function deleteElem(elemId, elemEditorId){
@@ -312,7 +331,15 @@
 				//Caso particular para el textarea, por los enters
 				if(p0=="value"){
 					$("#designInput-"+p0).val(p1.replace(/<br\s?\/?>/g,"\n"));
-				}else{
+				}
+				if(p0=="text-align"){
+					$("#designInput-"+p0).val(p1);
+					alignmentText = "Centrado";
+					if(p1=="left") alignmentText = "Izquierda";
+					if(p1=="right") alignmentText = "Derecha";
+					$("#dropdownAlignmentButton").html(alignmentText+' <span class="caret"></span>');
+				}
+				else{
 					$("#designInput-"+p0).val(p1);
 				}
 			}
@@ -381,7 +408,7 @@
  			styleAttribute = $(this).attr('name');
 
  			//Solo tengo que validar los atributos del tipo de elemento en cuestion (es decir, los visibles)
-			if($(this).is(':visible')){
+			if($(this).is(':visible') || styleAttribute=="text-align"){
 				if(!validateFieldValue(styleAttribute, $(this).val())){
 					allFieldsValid = false;
 					errorMessage = '<strong>- ';
@@ -396,7 +423,7 @@
  		$("#designPopup textarea").each(function(){
  			styleAttribute = $(this).attr('name');
  			//Solo tengo que validar los atributos del tipo de elemento en cuestion (es decir, los visibles)
-			if($(this).is(':visible')){
+			if($(this).is(':visible') || styleAttribute=="text-align"){
 				if(!validateFieldValue(styleAttribute, $(this).val())){
 					allFieldsValid = false;
 					errorMessage = '<strong>- ';
@@ -419,7 +446,7 @@
  			styleAttribute = $(this).attr('name');
 
  			//Solo tengo que usar los atributos del tipo de elemento en cuestion (es decir, los visibles)
-			if($(this).is(':visible')){
+			if($(this).is(':visible') || styleAttribute=="text-align"){
 	 			//chequeo casos particulares
 	 			if(styleAttribute == "value"){
 	 				$("#"+elemId).html($(this).val());
@@ -451,7 +478,7 @@
  			styleAttribute = $(this).attr('name');
 
  			//Solo tengo que usar los atributos del tipo de elemento en cuestion (es decir, los visibles)
-			if($(this).is(':visible')){
+			if($(this).is(':visible') || styleAttribute=="text-align"){
 	 			//chequeo casos particulares
 	 			if(styleAttribute == "value"){
 	 				//$(this).val().replace(/\r\n|\r|\n/g,"<br />")
