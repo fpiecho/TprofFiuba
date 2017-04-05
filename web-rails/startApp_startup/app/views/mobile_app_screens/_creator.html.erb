@@ -332,7 +332,7 @@
 				if(p0=="value"){
 					$("#designInput-"+p0).val(p1.replace(/<br\s?\/?>/g,"\n"));
 				}
-				if(p0=="text-align"){
+				else if(p0=="text-align"){
 					$("#designInput-"+p0).val(p1);
 					alignmentText = "Centrado";
 					if(p1=="left") alignmentText = "Izquierda";
